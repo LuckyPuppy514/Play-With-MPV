@@ -87,10 +87,10 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 
 ## 安装
 
-这个项目使用 [mpv](https://github.com/mpv-player/mpv) 或 [mpv-lazy](https://github.com/hooke007/MPV_lazy)。请确保你本地安装了它们。
+这个项目使用 [mpv](https://github.com/mpv-player/mpv) 或 [mpv-lazy](https://github.com/hooke007/MPV_lazy)。请确保你本地安装了它们。  
 其中 [mpv](https://github.com/mpv-player/mpv) 需要单独安装 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 以支持 youtube
 
-推荐使用：[mpv-lazy](https://github.com/hooke007/MPV_lazy) 集成图形化OSD，多种着色器，插件以及常用配置
+推荐使用：[mpv-lazy](https://github.com/hooke007/MPV_lazy) 集成图形化OSD，多种着色器，插件以及常用配置  
 推荐插件：[Glsl_Running_Mode_Cache](https://github.com/LuckyPuppy514/MPV_Glsl_Running_Mode_Cache) 集成 [Anime4K](https://github.com/bloc97/Anime4K) 着色器，可自动缓存上次使用的着色器配置，下次播放自动打开
 
 1. 浏览器安装油猴插件
@@ -98,10 +98,10 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 [Google Chrome](https://chrome.google.com/extensions/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
 2. 安装油猴脚本
-[Play-With-MPV]()
+[Play-With-MPV](https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv)
 
 3. 下载 powershell 脚本
-[Play-With-MPV]()
+[Play-With-MPV](https://github.com/LuckyPuppy514/Play-With-MPV/releases/tag/v1.0.0)
 
 4. 执行 Play-With-MPV 中的 install.ps1 脚本，请注意：
 ```
@@ -135,7 +135,7 @@ a. 接受浏览器参数，调用 MPV 播放
 
 ## 使用说明
 打开支持网址，选择视频，点击左下角播放按钮，稍等片刻即可
-附运行效果图：
+附运行效果图：  
 
 
 
