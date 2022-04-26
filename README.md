@@ -93,17 +93,17 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 推荐使用：[mpv-lazy](https://github.com/hooke007/MPV_lazy) 集成图形化OSD，多种着色器，插件以及常用配置  
 推荐插件：[Glsl_Running_Mode_Cache](https://github.com/LuckyPuppy514/MPV_Glsl_Running_Mode_Cache) 集成 [Anime4K](https://github.com/bloc97/Anime4K) 着色器，可自动缓存上次使用的着色器配置，下次播放自动打开
 
-1. 浏览器安装油猴插件
+1. 浏览器安装油猴插件  
 [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
 [Google Chrome](https://chrome.google.com/extensions/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
-2. 安装油猴脚本
+2. 安装油猴脚本  
 [Play-With-MPV](https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv)
 
-3. 下载 powershell 脚本
+3. 下载 powershell 脚本  
 [Play-With-MPV](https://github.com/LuckyPuppy514/Play-With-MPV/releases/tag/v1.0.0)
 
-4. 执行 Play-With-MPV 中的 install.ps1 脚本，请注意：
+4. 执行 Play-With-MPV 中的 install.ps1 脚本，请注意：  
 ```
 a. windows10/11默认禁止运行powershell脚本运行，解决办法：
 以管理员身份打开 PowerShell 输入：
