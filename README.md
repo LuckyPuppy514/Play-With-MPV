@@ -136,7 +136,13 @@ a. 接受浏览器参数，调用 MPV 播放
 ## 使用说明
 打开支持网址，选择视频，点击左下角播放按钮，稍等片刻即可
 附运行效果图：  
-
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_youtube.jpg" />  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_bilibili_bangumi.jpg" />  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_bilibili_video.jpg" />  
+<img src="https://www.lckp.top:8888/work_picture/work_on_bilibili_bangumi.jpg" />  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_ddrk.jpg" />  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_imomoe.jpg">  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_yhdmp.jpg">  
 
 
 ## 徽章

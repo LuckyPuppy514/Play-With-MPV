@@ -20,7 +20,7 @@
 // @include                 https://www.yhdmp.net/vp/*
 // @include                 https://ddrk.me/*
 // @run-at                  document-end
-// @require      			https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js
+// @require                 https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js
 // @grant                   GM_xmlhttpRequest
 // ==/UserScript==
 
