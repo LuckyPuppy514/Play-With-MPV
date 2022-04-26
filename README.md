@@ -111,7 +111,7 @@ set-executionpolicy remotesigned
 ``` 
 
 ``` 
-b. 建议把 Play-With-MPV 放在 MPV 安装目录下
+b. 建议把 Play-With-MPV （文件夹名称请删除版本号，修改为：Play-With-MPV）放在 MPV 安装目录下
 然后右键使用 powershell 运行
 注意：路径不能有中文，C盘建议放在C:\Users\用户名 子目录下，否则权限不足
 ``` 

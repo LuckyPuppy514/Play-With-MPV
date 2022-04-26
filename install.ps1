@@ -79,15 +79,15 @@ mpv -version
 echo ""
 echo ""
 
-echo "是否添加环境变量(是：y，否：n)："
-$addPathFlag = Read-Host "add mpv environment?(yes: y，no: n)"
+echo "是否添加环境变量？（请确保目录名称为Play-With-MPV）(是：y，否：n)："
+$addPathFlag = Read-Host "add mpv environment?(ensure floder name: Play-With-MPV)(yes: y，no: n)"
 if($addPathFlag -eq "y"){
     echo "=============================================================================="
     echo "开始添加环境变量 ......"
     echo "start add ......"
     $path = [Environment]::GetEnvironmentVariable('Path', 'Machine')
     $mpvpath = $PSScriptRoot
-    $mpvpath = $mpvpath.subString(0, $mpvpath.Length-12)
+    $mpvpath = $mpvpath.subString(0, $mpvpath.Length-14)
     $newpath = $path + ";" + $mpvpath
     # echo $newpath
     [Environment]::SetEnvironmentVariable('Path', $newpath, 'Machine')
