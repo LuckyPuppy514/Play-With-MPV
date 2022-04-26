@@ -1,0 +1,16 @@
+Windows Registry Editor Version 5.00  
+[HKEY_CLASSES_ROOT\PlayWithMPV]
+@="PlayWithMPV Protocol"
+"URL Protocol"=""
+
+[HKEY_CLASSES_ROOT\PlayWithMPV\DefaultIcon]
+@=""
+
+[HKEY_CLASSES_ROOT\PlayWithMPV\shell]
+@=""
+
+[HKEY_CLASSES_ROOT\PlayWithMPV\shell\open]
+@=""
+
+[HKEY_CLASSES_ROOT\PlayWithMPV\shell\open\command]
+@="powershell -WindowStyle Minimized D:\\daily\\mpv-lazy\\Play-With-MPV\\playwithmpv.ps1 %1"
