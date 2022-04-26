@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name                    Play-With-MPV
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.0.0
+// @version                 1.1.0
 // @description:zh-CN       通过MPV播放网页上的视频（支持：youtube，bilibili，ddrk；部分支持：imomoe，yhdmp(一小部分，m3u8返回jpg后缀，mpv播放报错)），需要安装powershell脚本以支持浏览器打开mpv，详细说明见github
 // @description             play website video using MPV(support:youtube,bilibili,ddrk; partial support: imomoe,yhdmp(a little part, m3u8 return .jpg, mpv play error)), need powershell ps1 to support browser run mpv, details see github
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
@@ -285,6 +285,12 @@ function getBilibiliVideoUrlByBvid(bvid) {
             let json = JSON.parse(res.response);
             let avid = json.data.aid;
             let cid = json.data.cid;
+            let index = currentUrl.indexOf("?p=");
+            if (index != -1) {
+                let p = currentUrl.substring(index + 3, currentUrl.length);
+                cid = json.data.pages[p - 1].cid;
+            }
+
             debug("avid: " + avid);
             debug("cid: " + cid);
 
@@ -370,8 +376,8 @@ function init() {
 
     // first try to get video url after 1s(wait page load)
     setTimeout(refreshCurrentVideoUrl, 1000);
-    // try to refresh video url every 3s(avoid get video url fail)
-    setInterval(refreshCurrentVideoUrl, 3000);
+    // try to refresh video url every 2s(avoid get video url fail)
+    setInterval(refreshCurrentVideoUrl, 2000);
     // page change listener
     setInterval(pageChangeListener, 500);
 }
