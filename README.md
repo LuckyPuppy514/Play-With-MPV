@@ -101,7 +101,7 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 [Play-With-MPV](https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv)
 
 3. 下载 powershell 脚本  
-[Play-With-MPV](https://github.com/LuckyPuppy514/Play-With-MPV/releases/tag/v1.0.0)
+[Play-With-MPV](https://github.com/LuckyPuppy514/Play-With-MPV/releases)
 
 4. 执行 Play-With-MPV 中的 install.ps1 脚本，请注意：  
 ```
@@ -139,7 +139,6 @@ a. 接受浏览器参数，调用 MPV 播放
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_youtube.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_bilibili_bangumi.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_bilibili_video.jpg" />  
-<img src="https://www.lckp.top:8888/work_picture/work_on_bilibili_bangumi.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_ddrk.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_imomoe.jpg">  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_yhdmp.jpg">  
