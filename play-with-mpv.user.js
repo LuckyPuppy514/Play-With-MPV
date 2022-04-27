@@ -2,8 +2,8 @@
 // @name                    Play-With-MPV
 // @namespace               https://github.com/LuckyPuppy514
 // @version                 1.2.0
-// @description:zh-CN       通过MPV播放网页上的视频（支持：youtube，bilibili，ddrk；部分支持：imomoe，yhdmp(一小部分，m3u8返回jpg后缀，mpv播放报错)），需要安装powershell脚本以支持浏览器打开mpv，详细说明见github
-// @description             play website video using MPV(support:youtube,bilibili,ddrk; partial support: imomoe,yhdmp(a little part, m3u8 return .jpg, mpv play error)), need powershell ps1 to support browser run mpv, details see github
+// @description             通过MPV播放网页上的视频（支持：youtube，bilibili，ddrk；部分支持：imomoe，yhdmp(一小部分，m3u8返回jpg后缀，mpv播放报错)），需要安装powershell脚本以支持浏览器打开mpv，详细说明见github
+// @description:en-US       play website video using MPV(support:youtube,bilibili,ddrk; partial support: imomoe,yhdmp(a little part, m3u8 return .jpg, mpv play error)), need powershell ps1 to support browser run mpv, details see github
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
