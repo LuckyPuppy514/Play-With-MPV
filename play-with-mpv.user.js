@@ -1,7 +1,9 @@
 // ==UserScript==
 // @name                    Play-With-MPV
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.2.0
+// @version                 1.2.1
+// @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
+// @commit:en-US            v1.2.1 add powershell scripts update remind
 // @description             通过MPV播放网页上的视频（支持：youtube，bilibili，ddrk；部分支持：imomoe，yhdmp(一小部分，m3u8返回jpg后缀，mpv播放报错)），需要安装powershell脚本以支持浏览器打开mpv，详细说明见github
 // @description:en-US       play website video using MPV(support:youtube,bilibili,ddrk; partial support: imomoe,yhdmp(a little part, m3u8 return .jpg, mpv play error)), need powershell ps1 to support browser run mpv, details see github
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
@@ -31,6 +33,8 @@ function debug(data) {
     // console.log(data);
     // alert(data);
 }
+
+const CURRENT_VERSION = "v1.2.1";
 
 // Play With MPV CSS
 const PWM_CSS = `
@@ -152,7 +156,8 @@ function playCurrentVideoWithMPV() {
     let protocolLink = PWM_PROTOCOL + Base64.encode(
         currentDomain + PWM_PT_SPLIT_CHAR +
         currentVideoUrl + PWM_PT_SPLIT_CHAR +
-        document.title
+        document.title + PWM_PT_SPLIT_CHAR +
+        CURRENT_VERSION
     );
 
     // bilibili/video pause will cause the page error(need to refresh), open in another page is ok.
