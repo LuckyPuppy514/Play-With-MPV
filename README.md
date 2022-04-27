@@ -103,35 +103,52 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 3. 下载 powershell 脚本  
 [Play-With-MPV](https://github.com/LuckyPuppy514/Play-With-MPV/releases)
 
-4. 执行 Play-With-MPV 中的 install.ps1 脚本，请注意：  
+4. 安装 powershell 脚本
+
 ```
-a. windows10/11默认禁止运行powershell脚本运行，解决办法：
-以管理员身份打开 PowerShell 输入：
-set-executionpolicy remotesigned
+a. 允许 windows 执行 powershell 脚本
+   以管理员身份打开 PowerShell 输入：
+   set-executionpolicy remotesigned
 ``` 
 
 ``` 
-b. 建议把 Play-With-MPV （文件夹名称请删除版本号，修改为：Play-With-MPV）放在 MPV 安装目录下
-然后右键使用 powershell 运行
-注意：路径不能有中文，C盘建议放在C:\Users\用户名 子目录下，否则权限不足
-``` 
-``` 
-脚本说明：
-install.ps1
-a. 为浏览器添加 URL Protocol 打开应用程序时，记住选项框，仅支持 https
-b. 添加自定义 URL Protocol 协议：PlayWithMPV://，
-使浏览器能够调用playwithmpv.ps1打开 MPV
-c. 添加 MPV 环境变量
+b. 执行 install.ps1 脚本进行安装
+   首先把压缩包解压到 MPV 安装目录，修改解压后的文件夹名称为：Play-With-MPV
+   然后打开 Play-With-MPV 目录，右键 install.ps1 使用 powershell 运行
 
-提示：该脚本主要是添加注册表信息，运行失败，
-可使用 chromeEdgeOpenCheckbox.reg 和 playwithmpv.reg 直接添加，
-注意：playwithmpv.reg中的playwithmpv.ps1路径，需要修改成你自己的路径；
-MPV 环境变量也可自己手动添加：
-windows图标=>右键=>系统=>高级设置=>环境变量=>path，添加 MPV 路径
-
-playwithmpv.ps1
-a. 接受浏览器参数，调用 MPV 播放
+注意：
+   MPV 安装路径路径不能有中文；
+   C盘建议放在C:\Users\用户名 子目录下，否则权限不足；
+   添加 MPV 环境变量后需要注销或重启电脑；
 ``` 
+
+``` 
+脚本功能说明：
+   install.ps1
+   a. 为浏览器添加 URL Protocol 打开应用程序时，记住选项框，仅支持 https
+   b. 添加自定义 URL Protocol 协议：PlayWithMPV://，
+      使浏览器能够调用playwithmpv.ps1打开 MPV
+   c. 添加 MPV 环境变量
+
+   若执行失败，可自行手动安装：
+   a. 双击运行 chromeEdgeOpenCheckbox.reg
+   b. 右键编辑 playwithmpv.reg 中的 playwithmpv.ps1 路径，
+      保存后双击运行 playwithmpv.reg
+   c. 手动添加 MPV 环境变量：
+      windows图标=>右键=>系统=>高级设置=>环境变量=>path，添加 MPV 路径
+
+   playwithmpv.ps1
+   a. 接受并解析浏览器参数
+   b. 调用 MPV 播放
+``` 
+
+5. 安装yt-dlp（mpv-lazy 或 不看youtube 则不需要安装）  
+下载 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 并安装  
+添加 yt-dlp 环境变量  
+修改 MPV 配置文件 %appdata%/mpv/mpv.conf，没有请新建，添加：  
+script-opts=ytdl_hook-ytdl_path=yt-dlp
+
+
 
 ## 使用说明
 打开支持网址，选择视频，点击左下角播放按钮，稍等片刻即可
