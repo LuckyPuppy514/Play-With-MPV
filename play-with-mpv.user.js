@@ -21,7 +21,7 @@
 // @include                 https://ddrk.me/*
 // @run-at                  document-end
 // @require                 https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js
-// @grant                   GM_xmlhttpRequest
+// @require                 https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
 // ==/UserScript==
 
 'use strict';
@@ -276,19 +276,26 @@ function getDdrkVideoUrl() {
 }
 
 function getBilibiliVideoUrlByBvid(bvid) {
-    GM_xmlhttpRequest({
-        method: "get",
+    $.ajax({
+        type: "GET",
         url: BILIBILI_API + "/x/web-interface/view?bvid=" + bvid,
-        onload: (res) => {
+        xhrFields: {
+            // add cookie (CORS ignore cookie)
+            withCredentials: true
+        },
+        success: function (res) {
             debug("get acid and cid by bvid result: ");
             debug(res);
-            let json = JSON.parse(res.response);
-            let avid = json.data.aid;
-            let cid = json.data.cid;
+            let avid = res.data.aid;
+            let cid = res.data.cid;
             let index = currentUrl.indexOf("?p=");
             if (index != -1) {
-                let p = currentUrl.substring(index + 3, currentUrl.length);
-                cid = json.data.pages[p - 1].cid;
+                let p = currentUrl.substring(index + 3);
+                let endIndex = p.indexOf("&");
+                if(endIndex != -1){
+                    p = p.substring(0, endIndex);
+                }
+                cid = res.data.pages[p - 1].cid;
             }
 
             debug("avid: " + avid);
@@ -298,14 +305,17 @@ function getBilibiliVideoUrlByBvid(bvid) {
                 + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
                 + "&avid=" + avid
                 + "&cid=" + cid;
-            GM_xmlhttpRequest({
-                method: "get",
+            $.ajax({
+                type: "GET",
                 url: BILIBILI_API + queryBilibiliVideoUrl,
-                onload: (res) => {
+                xhrFields: {
+                    // add cookie (CORS ignore cookie)
+                    withCredentials: true
+                },
+                success: function (res) {
                     debug("get video url by bvid result: ");
                     debug(res);
-                    let json = JSON.parse(res.response);
-                    currentVideoUrl = json.data.durl[0].url;
+                    currentVideoUrl = res.data.durl[0].url;
                     setVisiable();
                 }
             })
@@ -314,14 +324,17 @@ function getBilibiliVideoUrlByBvid(bvid) {
 }
 
 function getBilibiliVideoUrlByEpid(epid) {
-    GM_xmlhttpRequest({
-        method: "get",
+    $.ajax({
+        type: "GET",
         url: BILIBILI_API + "/pgc/view/web/season?ep_id=" + epid,
-        onload: (res) => {
+        xhrFields: {
+            // add cookie (CORS ignore cookie)
+            withCredentials: true
+        },
+        success: function (res) {
             debug("get acid and cid by epid result: ");
             debug(res);
-            let json = JSON.parse(res.response);
-            var episodes = json.result.episodes;
+            var episodes = res.result.episodes;
             var num;
             // get episode num from title
             var playerTitle = document.getElementById('player-title');
@@ -353,14 +366,17 @@ function getBilibiliVideoUrlByEpid(epid) {
                 + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
                 + "&avid=" + avid
                 + "&cid=" + cid;
-            GM_xmlhttpRequest({
-                method: "get",
+            $.ajax({
+                type: "GET",
                 url: BILIBILI_API + queryBilibiliVideoUrl,
-                onload: (res) => {
+                xhrFields: {
+                    // add cookie (CORS ignore cookie)
+                    withCredentials: true
+                },
+                success: function (res) {
                     debug("get video url by epid result: ");
                     debug(res);
-                    let json = JSON.parse(res.response);
-                    currentVideoUrl = json.result.durl[0].url;
+                    currentVideoUrl = res.result.durl[0].url;
                     setVisiable();
                 }
             });
@@ -406,5 +422,3 @@ function changePage() {
 debug("Play With MPV");
 addPlayWithMPVDiv();
 init();
-
-
