@@ -1,6 +1,6 @@
 param($data)
 
-$CURRENT_VERSION = "v1.2.2"
+$CURRENT_VERSION = "v1.2.3"
 # v1.2.1 add update remind
 # v1.2.2 fix title has | error
 

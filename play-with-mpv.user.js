@@ -1,11 +1,13 @@
 // ==UserScript==
 // @name                    Play-With-MPV
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.2.2
+// @version                 1.2.3
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit:en-US            v1.2.2 fix when youtube title has | cause error scripts update remind
+// @commit                  v1.2.3 修改 imomoe 域名
+// @commit:en-US            v1.2.3 modify imomoe domain
 // @description             通过MPV播放网页上的视频（支持：youtube，bilibili，ddrk；部分支持：imomoe，yhdmp(一小部分，m3u8返回jpg后缀，mpv播放报错)），需要安装powershell脚本以支持浏览器打开mpv，详细说明见github
 // @description:en-US       play website video using MPV(support:youtube,bilibili,ddrk; partial support: imomoe,yhdmp(a little part, m3u8 return .jpg, mpv play error)), need powershell ps1 to support browser run mpv, details see github
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
@@ -20,7 +22,7 @@
 // @include                 https://www.bilibili.com/bangumi/play/*
 // @include                 https://www.bilibili.com/video/*
 // @connect                 api.bilibili.com
-// @include                 http://www.imomoe.live/player/*
+// @include                 http://www.dmh8.com/player/*
 // @include                 https://www.yhdmp.net/vp/*
 // @include                 https://ddrk.me/*
 // @run-at                  document-end
@@ -36,7 +38,7 @@ function debug(data) {
     // alert(data);
 }
 
-const CURRENT_VERSION = "v1.2.2";
+const CURRENT_VERSION = "v1.2.3";
 
 // Play With MPV CSS
 const PWM_CSS = `
@@ -69,7 +71,7 @@ const STYLE_INVISIABLE = "display: none";
 // support domain
 const YOUTUBE = "www.youtube.com";
 const BILIBILI = "www.bilibili.com";
-const IMOMOE = "www.imomoe.live";
+const IMOMOE = "www.dmh8.com";
 const YHDMP = "www.yhdmp.net";
 const DDRK = "ddrk.me";
 
