@@ -159,7 +159,7 @@ function playCurrentVideoWithMPV() {
     let protocolLink = PWM_PROTOCOL + Base64.encode(
         currentDomain + PWM_PT_SPLIT_CHAR +
         currentVideoUrl + PWM_PT_SPLIT_CHAR +
-        document.title.replace("|", " ") + PWM_PT_SPLIT_CHAR +
+        document.title.replaceAll("|", " ") + PWM_PT_SPLIT_CHAR +
         CURRENT_VERSION
     );
 
