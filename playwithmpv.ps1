@@ -1,7 +1,8 @@
 param($data)
 
-$CURRENT_VERSION = "v1.2.1"
+$CURRENT_VERSION = "v1.2.2"
 # v1.2.1 add update remind
+# v1.2.2 fix title has | error
 
 # delete PlayWithMPV://
 $data=$data.subString(14)
