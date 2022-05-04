@@ -1,5 +1,9 @@
 // ==UserScript==
 // @name                    Play-With-MPV
+// @name:en                 Play-With-MPV
+// @name:en-US              Play-With-MPV
+// @name:zh                 使用 MPV 播放
+// @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
 // @version                 1.3.0
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
@@ -12,7 +16,7 @@
 // @commit                  v1.3.0 新增域名：www.dm233.me（线路III：大部分支持，其他线路：大部分不支持）
 // @commit                  v1.3.0 代码重构，使用继承方便后续添加网站支持
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
-// @description:en-US       play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
+// @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
 // @support-list            支持列表 - support list
 // @support-list            大部分支持 - most        ：www.youtube.com, www.bilibili.com, ddrk.me
