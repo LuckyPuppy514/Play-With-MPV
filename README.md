@@ -90,6 +90,8 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 
 ## 安装
 
+[B站视频教程](https://www.bilibili.com/video/BV1zZ4y1C7kx/)  
+
 这个项目使用 [mpv](https://github.com/mpv-player/mpv) 或 [mpv-lazy](https://github.com/hooke007/MPV_lazy)。请确保你本地安装了它们。  
 其中 [mpv](https://github.com/mpv-player/mpv) 需要单独安装 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 以支持 youtube
 
