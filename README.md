@@ -14,10 +14,13 @@ https://www.bilibili.com/video/*
 https://www.bilibili.com/bangumi/*
 https://ddrk.me/*
 
-部分支持
-http://www.imomoe.live/player/*
+部分支持（番剧推荐：https://www.6dm.cc 第一线路, 支持1080p）
+https://www.6dm.cc （第一线路：大部分支持，其他线路：小部分支持）
+http://www.dmla.cc （第一线路：大部分支持，其他线路：小部分支持）
+https://www.dm233.me （线路III：大部分支持，其他线路：大部分不支持）
 
-小部分支持（很多.m3u8返回.jpg，mpv解析失败）
+不推荐以下网址, 极少部分支持（大部分解析出来都是yun.66dm.net, 返回.jpg）
+http://www.imomoe.live/player/*
 https://www.yhdmp.net/vp/*
 ```
 
