@@ -5,7 +5,7 @@
 // @name:zh                 使用 MPV 播放
 // @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.3.0
+// @version                 1.4.0
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
@@ -15,6 +15,8 @@
 // @commit                  v1.3.0 新增域名：www.6dm.cc, www.dmla.cc（第一线路：大部分支持，其他线路：小部分支持）
 // @commit                  v1.3.0 新增域名：www.dm233.me（线路III：大部分支持，其他线路：大部分不支持）
 // @commit                  v1.3.0 代码重构，使用继承方便后续添加网站支持
+// @commit                  v1.4.0 b站bug修复：标题带数字，解析出错，修复并优化了获取视频链接的速度
+// @commit                  v1.4.0 新增对plex支持（本地：*://*/web/index.html*，远程：https://app.plex.tv/desktop/*）
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
 // @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
@@ -46,6 +48,8 @@
 // @include                 https://www.dm233.me/play/*
 // @include                 http://www.dmh8.com/player/*
 // @include                 https://www.yhdmp.net/vp/*
+// @match                   *://*/web/index.html*
+// @include                 https://app.plex.tv/desktop/*
 // @run-at                  document-end
 // @require                 https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js
 // @require                 https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
@@ -98,6 +102,7 @@ function addPlayWithMPVDiv() {
 
     let pwmButton = document.createElement("button");
     pwmButton.id = PWM_BUTTON_ID;
+    pwmButton.style = STYLE_INVISIABLE;
     // add event listener
     pwmButton.onclick = function () {
         debug("pwm button click");
@@ -132,6 +137,8 @@ const YHDMJX = "danmu.yhdmjx.com";
 const DM233 = "www.dm233.me";
 const DMH8 = "www.dmh8.com";
 const YHDMP = "www.yhdmp.net";
+const PLEX_LOCAL = "/web/index.html";
+const PLEX = "app.plex.tv";
 
 // api
 const BILIBILI_API = 'https://api.bilibili.com'
@@ -155,14 +162,41 @@ class Handler {
         return PWM_PROTOCOL + Base64.encode(
             currentDomain + PWM_PT_SPLIT_CHAR +
             currentVideoUrl + PWM_PT_SPLIT_CHAR +
-            document.title.replaceAll("|", " ") + PWM_PT_SPLIT_CHAR +
+            document.title.replaceAll(PWM_PT_SPLIT_CHAR, " ") + PWM_PT_SPLIT_CHAR +
             CURRENT_VERSION
         );
     }
 
-    getCurrentVideoUrl() {}
-    playCurrentVideoWithMPV() {}
-    pauseCurrentVideo() {}
+    getCurrentVideoUrl() { }
+    playCurrentVideoWithMPV() { }
+    pauseCurrentVideo() { }
+
+    addPlayWithMPVButton() {
+        addPlayWithMPVDiv();
+    }
+    addTimer() {
+        // first try to get video url after 600ms(wait page load)
+        setTimeout(refreshCurrentVideoUrl, 600);
+        // try to refresh video url every 2s(avoid get video url fail)
+        setInterval(refreshCurrentVideoUrl, 2000);
+        // page change listener
+        setInterval(pageChangeListener, 500);
+
+        function refreshCurrentVideoUrl() {
+            debug("refresh current video url: " + currentVideoUrl);
+            debug("current url: " + currentUrl);
+            if (!checkVideoUrl(currentVideoUrl)) {
+                handler.getCurrentVideoUrl();
+            }
+        }
+        function pageChangeListener() {
+            let newCurrentUrl = window.location.href;
+            if (currentUrl != newCurrentUrl) {
+                setInvisiable();
+                init();
+            }
+        }
+    }
 }
 
 class YoutubeHandler extends Handler {
@@ -192,11 +226,15 @@ class BilibiliHandler extends Handler {
         // bangumi
         // get bilibili video epid
         let aElement = document.getElementsByClassName('ep-item cursor visited')[0];
+        if (!aElement) {
+            aElement = document.getElementsByClassName('ep-item cursor')[0];
+        }
         let epid = aElement.getElementsByTagName('a')[0].href;
+        let eno = aElement.getElementsByTagName('span')[0].title;
         epid = epid.substring(epid.indexOf('/ep') + 3);
         epid = epid.substring(0, epid.indexOf('/'));
         debug('epid: ' + epid);
-        this.getBilibiliVideoUrlByEpid(epid);
+        this.getBilibiliVideoUrlByEpid(epid, eno);
     }
 
     playCurrentVideoWithMPV() {
@@ -213,7 +251,7 @@ class BilibiliHandler extends Handler {
         } else {
             document.getElementsByTagName("video")[0].pause();
         }
-        
+
     }
 
     getBilibiliVideoUrlByBvid(bvid) {
@@ -238,10 +276,10 @@ class BilibiliHandler extends Handler {
                     }
                     cid = res.data.pages[p - 1].cid;
                 }
-    
+
                 debug("avid: " + avid);
                 debug("cid: " + cid);
-    
+
                 let queryBilibiliVideoUrl = "/x/player/playurl?"
                     + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
                     + "&avid=" + avid
@@ -263,7 +301,12 @@ class BilibiliHandler extends Handler {
             }
         })
     }
-    getBilibiliVideoUrlByEpid(epid) {
+    getBilibiliVideoUrlByEpid(epid, eno) {
+        debug("eno: " + eno);
+        if (!eno) {
+            return;
+        }
+
         $.ajax({
             type: "GET",
             url: BILIBILI_API + "/pgc/view/web/season?ep_id=" + epid,
@@ -275,33 +318,17 @@ class BilibiliHandler extends Handler {
                 debug("get acid and cid by epid result: ");
                 debug(res);
                 var episodes = res.result.episodes;
-                var num;
-                // get episode num from title
-                var playerTitle = document.getElementById('player-title');
-                num = playerTitle.innerHTML;
-                debug("bilibili player title: " + num);
-                if (num.indexOf('PV') != -1 || num.indexOf('OP') != -1 || num.indexOf('ED') != -1) {
+                if (eno.indexOf('PV') != -1 || eno.indexOf('OP') != -1 || eno.indexOf('ED') != -1) {
                     return;
                 }
-    
-                // only single episode
-                if (episodes.length == 1) {
-                    num = 1;
-    
-                } else {
-                    num = num.replace(/[^0-9]/ig, "");
-                }
-                if (num.length < 1) {
-                    return;
-                }
-    
+
                 // get avid and cid
-                var episode = episodes[num - 1];
+                var episode = episodes[eno - 1];
                 var avid = episode.aid;
                 var cid = episode.cid;
                 debug("avid: " + avid);
                 debug("cid: " + cid);
-    
+
                 let queryBilibiliVideoUrl = "/pgc/player/web/playurl?"
                     + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
                     + "&avid=" + avid
@@ -351,15 +378,15 @@ class DdrkHandler extends Handler {
 }
 
 class Dm6ccHandler extends Handler {
-    constructor(){
+    constructor() {
         super();
         window.addEventListener('message', function (event) {
             currentVideoUrl = event.data;
             setVisiable();
-            window.removeEventListener("message",()=>{});
+            window.removeEventListener("message", () => { });
         }, false);
     }
-    getCurrentVideoUrl() {}
+    getCurrentVideoUrl() { }
     playCurrentVideoWithMPV() {
         window.open(this.getProtocolLink(), "_self");
     }
@@ -369,15 +396,15 @@ class Dm6ccHandler extends Handler {
 }
 
 class DmlaccHandler extends Handler {
-    constructor(){
+    constructor() {
         super();
         window.addEventListener('message', function (event) {
             currentVideoUrl = event.data;
             setVisiable();
-            window.removeEventListener("message",()=>{});
+            window.removeEventListener("message", () => { });
         }, false);
     }
-    getCurrentVideoUrl() {}
+    getCurrentVideoUrl() { }
     playCurrentVideoWithMPV() {
         window.open(this.getProtocolLink(), "_self");
     }
@@ -387,30 +414,30 @@ class DmlaccHandler extends Handler {
 }
 
 class YhdmjxHandler extends Handler {
-    constructor(){
+    constructor() {
         super();
         // listen to pause
-        window.addEventListener("message",function(event){
-            if(event.data == "pause"){
+        window.addEventListener("message", function (event) {
+            if (event.data == "pause") {
                 document.getElementsByTagName('video')[0].pause();
             }
-        },false);
+        }, false);
     }
     getCurrentVideoUrl() {
         // send current video url to parent iframe
         currentVideoUrl = document.getElementsByTagName('video')[0].src;
-        if(checkVideoUrl(currentVideoUrl)){
+        if (checkVideoUrl(currentVideoUrl)) {
             window.parent.postMessage(currentVideoUrl, "*");
         }
     }
     playCurrentVideoWithMPV() {
         window.open(this.getProtocolLink(), "_self");
     }
-    pauseCurrentVideo() {}
+    pauseCurrentVideo() { }
 }
 
 class Dm233Handler extends Handler {
-    constructor(){
+    constructor() {
         super();
         this.videoElement = null;
     }
@@ -438,12 +465,12 @@ class Dm233Handler extends Handler {
 }
 
 class Dmh8Handler extends Handler {
-    constructor(){
+    constructor() {
         super();
         window.addEventListener('message', function (event) {
             currentVideoUrl = event.data;
             setVisiable();
-            window.removeEventListener("message",()=>{});
+            window.removeEventListener("message", () => { });
         }, false);
     }
     getCurrentVideoUrl() {
@@ -457,11 +484,11 @@ class Dmh8Handler extends Handler {
     playCurrentVideoWithMPV() {
         window.open(this.getProtocolLink(), "_self");
     }
-    pauseCurrentVideo() {}
+    pauseCurrentVideo() { }
 }
 
 class YhdmpHandler extends Handler {
-    constructor(){
+    constructor() {
         super();
         this.videoElement = null;
     }
@@ -480,6 +507,45 @@ class YhdmpHandler extends Handler {
     }
     pauseCurrentVideo() {
         this.videoElement.pause();
+    }
+}
+
+class PlexHandler extends Handler {
+    constructor() {
+        super();
+    }
+    getCurrentVideoUrl() {
+        let as = document.getElementsByTagName('a');
+        let pwmButton = document.getElementById(PWM_BUTTON_ID);
+        if (pwmButton) {
+            return;
+        }
+        for (let a of as) {
+            if (a) {
+                if (a.target == "downloadFileFrame") {
+                    pwmButton = document.createElement("button");
+                    pwmButton.id = PWM_BUTTON_ID;
+                    // add event listener
+                    pwmButton.onclick = function () {
+                        debug("pwm button click");
+                        handler.playCurrentVideoWithMPV();
+                    }
+                    pwmButton.innerText = "Play With MPV";
+                    pwmButton.className = a.className;
+                    a.before(pwmButton);
+                    currentVideoUrl = a.href;
+                    break;
+                }
+            }
+        }
+    }
+    playCurrentVideoWithMPV() {
+        window.open(this.getProtocolLink(), "_self");
+    }
+    addPlayWithMPVButton() {
+    }
+    addTimer() {
+        setInterval(this.getCurrentVideoUrl, 500);
     }
 }
 
@@ -503,12 +569,12 @@ function checkVideoUrl(videoUrl) {
 // init
 function init() {
     debug("init ......");
-    setInvisiable();
     currentUrl = window.location.href;
     currentDomain = window.location.host;
     currentVideoUrl = "";
     ddrkPlayStatus = 0;
 
+    debug("start create handler");
     switch (currentDomain) {
         case YOUTUBE:
             handler = new YoutubeHandler();
@@ -537,32 +603,18 @@ function init() {
         case YHDMP:
             handler = new YhdmpHandler();
             break;
+        default:
+            if (currentUrl.indexOf(PLEX_LOCAL) != -1 || currentDomain == PLEX) {
+                handler = new PlexHandler();
+            }
     }
+
+    debug("start add button");
+    handler.addPlayWithMPVButton();
+    debug("start add timer");
+    handler.addTimer();
 }
 
-function addTimer(){
-    // first try to get video url after 600ms(wait page load)
-    setTimeout(refreshCurrentVideoUrl, 600);
-    // try to refresh video url every 2s(avoid get video url fail)
-    setInterval(refreshCurrentVideoUrl, 2000);
-    // page change listener
-    setInterval(pageChangeListener, 500);
-}
-function refreshCurrentVideoUrl() {
-    debug("refresh current video url: " + currentVideoUrl);
-    debug("current url: " + currentUrl);
-    if (!checkVideoUrl(currentVideoUrl)) {
-        handler.getCurrentVideoUrl();
-    }
-}
-function pageChangeListener() {
-    let newCurrentUrl = window.location.href;
-    if (currentUrl != newCurrentUrl) {
-        init();
-    }
-}
 
 debug("Play With MPV");
-addPlayWithMPVDiv();
 init();
-addTimer();

@@ -13,6 +13,9 @@ https://www.youtube.com/watch/*
 https://www.bilibili.com/video/*
 https://www.bilibili.com/bangumi/*
 https://ddrk.me/*
+v1.4.0 新增 PLEX 支持
+*://*/web/index.html*
+https://app.plex.tv/desktop/*
 
 部分支持（番剧推荐：https://www.6dm.cc 第一线路, 支持1080p）
 https://www.6dm.cc （第一线路：大部分支持，其他线路：小部分支持）
@@ -156,14 +159,17 @@ script-opts=ytdl_hook-ytdl_path=yt-dlp
 
 
 ## 使用说明
-打开支持网址，选择视频，点击左下角播放按钮，稍等片刻即可
-附运行效果图：  
+PLEX: 点击页面三个点菜单 "...", 在弹出菜单, 点击 "下载视频" 上方的: Play With MPV  
+其他: 点击视频左下角的 MPV 按钮  
+  
+部分网站效果展示：  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_youtube.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_bilibili_bangumi.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_bilibili_video.jpg" />  
 <img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_ddrk.jpg" />  
-<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_imomoe.jpg">  
-<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_yhdmp.jpg">  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_plex.jpg" />  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_6dmcc.jpg" />  
+<img src="https://github.com/LuckyPuppy514/Play-With-MPV/blob/main/work_picture/work_on_dm233.jpg" />  
 
 
 ## 徽章
