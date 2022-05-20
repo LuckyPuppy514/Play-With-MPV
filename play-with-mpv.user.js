@@ -5,7 +5,7 @@
 // @name:zh                 使用 MPV 播放
 // @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.4.0
+// @version                 1.4.1
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
@@ -17,6 +17,7 @@
 // @commit                  v1.3.0 代码重构，使用继承方便后续添加网站支持
 // @commit                  v1.4.0 b站bug修复：标题带数字，解析出错，修复并优化了获取视频链接的速度
 // @commit                  v1.4.0 新增对plex支持（本地：*://*/web/index.html*，远程：https://app.plex.tv/desktop/*）
+// @commit                  v1.4.1 修复b站番剧播放目录为列表时，无法获取正确集数的bug
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
 // @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
