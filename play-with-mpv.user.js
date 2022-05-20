@@ -231,6 +231,7 @@ class BilibiliHandler extends Handler {
         }
         let epid = aElement.getElementsByTagName('a')[0].href;
         let eno = aElement.getElementsByTagName('span')[0].title;
+        eno = eno.replace(/[^0-9]/ig, "");
         epid = epid.substring(epid.indexOf('/ep') + 3);
         epid = epid.substring(0, epid.indexOf('/'));
         debug('epid: ' + epid);
