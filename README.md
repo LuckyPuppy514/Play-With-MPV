@@ -106,9 +106,9 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 1. 浏览器安装油猴插件  
 [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)  
 [Google Chrome](https://chrome.google.com/extensions/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
-[Firefox](https://www.tampermonkey.net/?ext=dhdg&browser=firefox)  
-[360极速浏览器X](https://www.tampermonkey.net/?ext=dhdg&browser=chrome)  
-[其他 Chromium 内核浏览器](https://www.tampermonkey.net/?ext=dhdg&browser=chrome)
+[Firefox](https://addons.mozilla.org/en-US/firefox/addon/tampermonkey/)  
+[360极速浏览器X](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
+[其他 Chromium 内核浏览器](https://chrome.google.com/webstore/detail/tampermonkey/dhdgffkkebhmkfjojejmpbldmpobfkfo)
 
 2. 安装油猴脚本  
 [Play-With-MPV](https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv)
