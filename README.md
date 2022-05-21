@@ -1,7 +1,8 @@
 # 使用 MPV 播放
 
-
-适用于 windows10/11 Edge/Chrome
+适用系统：windows10/11  
+适用浏览器：Edge/Chrome  
+理论上支持所有可以安装油猴插件的浏览器，例如：Firefox，360极速浏览器X
 
 本项目包含以下功能：
 
@@ -103,8 +104,11 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 推荐插件：[Glsl_Running_Mode_Cache](https://github.com/LuckyPuppy514/MPV_Glsl_Running_Mode_Cache) 集成 [Anime4K](https://github.com/bloc97/Anime4K) 着色器，可自动缓存上次使用的着色器配置，下次播放自动打开
 
 1. 浏览器安装油猴插件  
-[Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)
-[Google Chrome](https://chrome.google.com/extensions/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)
+[Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)  
+[Google Chrome](https://chrome.google.com/extensions/detail/dhdgffkkebhmkfjojejmpbldmpobfkfo)  
+[Firefox](https://www.tampermonkey.net/?ext=dhdg&browser=firefox)  
+[360极速浏览器X](https://www.tampermonkey.net/?ext=dhdg&browser=chrome)  
+[其他 Chromium 内核浏览器](https://www.tampermonkey.net/?ext=dhdg&browser=chrome)
 
 2. 安装油猴脚本  
 [Play-With-MPV](https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv)
