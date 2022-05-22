@@ -97,11 +97,9 @@ c. ddrk.me，immoe.live，yhdmp.net 抓取网页中的视频链接
 
 欢迎观看：[B站视频教程](https://www.bilibili.com/video/BV1zZ4y1C7kx/)  
 
-这个项目使用 [mpv](https://github.com/mpv-player/mpv) 或 [mpv-lazy](https://github.com/hooke007/MPV_lazy)。请确保你本地安装了它们。  
-其中 [mpv](https://github.com/mpv-player/mpv) 需要单独安装 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 以支持 youtube
+这个项目使用 [mpv](https://github.com/mpv-player/mpv) 或 [mpv-lazy](https://github.com/hooke007/MPV_lazy)。请确保你本地安装了它们。其中 [mpv](https://github.com/mpv-player/mpv) 需要单独安装 [yt-dlp](https://github.com/yt-dlp/yt-dlp) 以支持 youtube  
 
-推荐使用：[mpv-lazy](https://github.com/hooke007/MPV_lazy) 集成图形化OSD，多种着色器，插件以及常用配置  
-推荐插件：[Glsl_Running_Mode_Cache](https://github.com/LuckyPuppy514/MPV_Glsl_Running_Mode_Cache) 集成 [Anime4K](https://github.com/bloc97/Anime4K) 着色器，可自动缓存上次使用的着色器配置，下次播放自动打开
+> 推荐使用：[mpv-lazy 安装教程](https://www.bilibili.com/read/cv16736410) 集成图形化操作菜单，多种着色器，补帧插件
 
 1. 浏览器安装油猴插件  
 [Microsoft Edge](https://microsoftedge.microsoft.com/addons/detail/tampermonkey/iikmkjmpaadaobahmlepeloendndfphd)  
