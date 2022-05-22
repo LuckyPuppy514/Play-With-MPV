@@ -5,7 +5,7 @@
 // @name:zh                 使用 MPV 播放
 // @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.4.1
+// @version                 1.4.2
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
@@ -18,6 +18,7 @@
 // @commit                  v1.4.0 b站bug修复：标题带数字，解析出错，修复并优化了获取视频链接的速度
 // @commit                  v1.4.0 新增对plex支持（本地：*://*/web/index.html*，远程：https://app.plex.tv/desktop/*）
 // @commit                  v1.4.1 修复b站番剧播放目录为列表时，无法获取正确集数的bug
+// @commit                  v1.4.2 修复b站番剧播放的bug
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
 // @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
@@ -231,11 +232,17 @@ class BilibiliHandler extends Handler {
             aElement = document.getElementsByClassName('ep-item cursor')[0];
         }
         let epid = aElement.getElementsByTagName('a')[0].href;
-        let eno = aElement.getElementsByTagName('span')[0].title;
-        eno = eno.replace(/[^0-9]/ig, "");
         epid = epid.substring(epid.indexOf('/ep') + 3);
         epid = epid.substring(0, epid.indexOf('/'));
         debug('epid: ' + epid);
+
+        let eno = document.getElementsByClassName("ep-list-progress")[0];
+        if(!eno){
+            return;
+        }
+        eno = eno.innerHTML;
+        eno = eno.substring(0, eno.indexOf('/'));
+        debug('eno: ' + eno);
         this.getBilibiliVideoUrlByEpid(epid, eno);
     }
 
@@ -304,8 +311,7 @@ class BilibiliHandler extends Handler {
         })
     }
     getBilibiliVideoUrlByEpid(epid, eno) {
-        debug("eno: " + eno);
-        if (!eno) {
+        if (!epid || !eno) {
             return;
         }
 
