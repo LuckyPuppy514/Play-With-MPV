@@ -5,7 +5,7 @@
 // @name:zh                 使用 MPV 播放
 // @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.4.2
+// @version                 1.4.3
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
@@ -19,6 +19,7 @@
 // @commit                  v1.4.0 新增对plex支持（本地：*://*/web/index.html*，远程：https://app.plex.tv/desktop/*）
 // @commit                  v1.4.1 修复b站番剧播放目录为列表时，无法获取正确集数的bug
 // @commit                  v1.4.2 修复b站番剧播放的bug
+// @commit                  v1.4.3 修改cdn为unpkg，某些网络无法访问cdn，导致js加载失败（有问题，请自行修改：unpkg.com => cdn.jsdelivr.net/npm）
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
 // @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
@@ -53,8 +54,8 @@
 // @match                   *://*/web/index.html*
 // @include                 https://app.plex.tv/desktop/*
 // @run-at                  document-end
-// @require                 https://cdn.jsdelivr.net/npm/js-base64@3.6.1/base64.min.js
-// @require                 https://cdn.jsdelivr.net/npm/jquery@3.2.1/dist/jquery.min.js
+// @require                 https://unpkg.com/js-base64@3.6.1/base64.js
+// @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // ==/UserScript==
 
 'use strict';
