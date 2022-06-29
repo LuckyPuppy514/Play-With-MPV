@@ -5,7 +5,7 @@
 // @name:zh                 使用 MPV 播放
 // @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.4.3
+// @version                 1.4.4
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
@@ -20,6 +20,7 @@
 // @commit                  v1.4.1 修复b站番剧播放目录为列表时，无法获取正确集数的bug
 // @commit                  v1.4.2 修复b站番剧播放的bug
 // @commit                  v1.4.3 修改cdn为unpkg，某些网络无法访问cdn，导致js加载失败（有问题，请自行修改：unpkg.com => cdn.jsdelivr.net/npm）
+// @commit                  v1.4.4 www.dmla.cc 域名变更为：www.dmlaa.com
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
 // @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
@@ -46,7 +47,7 @@
 // @connect                 api.bilibili.com
 // @include                 https://ddrk.me/*
 // @include                 https://www.6dm.cc/play/*
-// @include                 http://www.dmla.cc/play/*
+// @include                 http://www.dmlaa.com/play/*
 // @include                 https://danmu.yhdmjx.com/*
 // @include                 https://www.dm233.me/play/*
 // @include                 http://www.dmh8.com/player/*
@@ -136,7 +137,7 @@ const YOUTUBE = "www.youtube.com";
 const BILIBILI = "www.bilibili.com";
 const DDRK = "ddrk.me";
 const DM6CC = "www.6dm.cc";
-const DMLACC = "www.dmla.cc";
+const DMLACC = "www.dmlaa.com";
 const YHDMJX = "danmu.yhdmjx.com";
 const DM233 = "www.dm233.me";
 const DMH8 = "www.dmh8.com";
