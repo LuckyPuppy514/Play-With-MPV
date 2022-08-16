@@ -5,7 +5,7 @@
 // @name:zh                 使用 MPV 播放
 // @name:zh-CN              使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.4.4
+// @version                 1.4.5
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit:en-US            v1.2.1 add powershell scripts update remind
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
@@ -21,11 +21,12 @@
 // @commit                  v1.4.2 修复b站番剧播放的bug
 // @commit                  v1.4.3 修改cdn为unpkg，某些网络无法访问cdn，导致js加载失败（有问题，请自行修改：unpkg.com => cdn.jsdelivr.net/npm）
 // @commit                  v1.4.4 www.dmla.cc 域名变更为：www.dmlaa.com
+// @commit                  v1.4.5 ddrk.me 域名变更为：ddys.tv
 // @description             通过MPV播放网页上的视频（详细安装过程见：https://github.com/LuckyPuppy514/Play-With-MPV）
 // @description:en          play website video using MPV (setup: https://github.com/LuckyPuppy514/Play-With-MPV)
 //
 // @support-list            支持列表 - support list
-// @support-list            大部分支持 - most        ：www.youtube.com, www.bilibili.com, ddrk.me
+// @support-list            大部分支持 - most        ：www.youtube.com, www.bilibili.com, ddys.tv
 //
 // @support-list            番剧推荐：https://www.6dm.cc 第一线路, 支持1080p
 // @support-list            部分  支持 - part        ：www.6dm.cc, www.dmla.cc（第一线路：大部分支持，其他线路：小部分支持）, www.dm233.me（线路III：大部分支持，其他线路：大部分不支持）
@@ -45,7 +46,7 @@
 // @include                 https://www.bilibili.com/bangumi/play/*
 // @include                 https://www.bilibili.com/video/*
 // @connect                 api.bilibili.com
-// @include                 https://ddrk.me/*
+// @include                 https://ddys.tv/*
 // @include                 https://www.6dm.cc/play/*
 // @include                 http://www.dmlaa.com/play/*
 // @include                 https://danmu.yhdmjx.com/*
@@ -135,7 +136,7 @@ function setInvisiable() {
 // support domain
 const YOUTUBE = "www.youtube.com";
 const BILIBILI = "www.bilibili.com";
-const DDRK = "ddrk.me";
+const DDRK = "ddys.tv";
 const DM6CC = "www.6dm.cc";
 const DMLACC = "www.dmlaa.com";
 const YHDMJX = "danmu.yhdmjx.com";
