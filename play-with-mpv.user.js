@@ -151,11 +151,15 @@ const BILIBILI_API = 'https://api.bilibili.com'
 
 // playwithmpv protocol
 const PWM_PROTOCOL = "PlayWithMPV://";
+//play with mpv(for bilibili.com only)
+const MPV_PROTOCOL = "mpv://";
 // split char
 const PWM_PT_SPLIT_CHAR = "|";
 
 // video url need play
 var currentVideoUrl;
+//audio url need play (for bilibili.com only)
+var currentAudioUrl;
 // currentPage info
 var currentUrl;
 var currentDomain;
@@ -165,12 +169,21 @@ var ddrkPlayStatus;
 
 class Handler {
     getProtocolLink() {
-        return PWM_PROTOCOL + Base64.encode(
-            currentDomain + PWM_PT_SPLIT_CHAR +
-            currentVideoUrl + PWM_PT_SPLIT_CHAR +
-            document.title.replaceAll(PWM_PT_SPLIT_CHAR, " ") + PWM_PT_SPLIT_CHAR +
-            CURRENT_VERSION
+        if (currentDomain.indexOf("bilibili") != -1 ){
+            return "mpv://--http-header-fields='referer:https://"
+            + currentDomain+"/','user-agent:" 
+            + navigator.userAgent+ "' '"
+            + currentVideoUrl 
+            +"' --audio-file='"+currentAudioUrl + "'";
+        }
+        else{
+            return PWM_PROTOCOL + Base64.encode(
+                currentDomain + PWM_PT_SPLIT_CHAR +
+                currentVideoUrl + PWM_PT_SPLIT_CHAR +
+                document.title.replaceAll(PWM_PT_SPLIT_CHAR, " ") + PWM_PT_SPLIT_CHAR +
+                CURRENT_VERSION
         );
+    }
     }
 
     getCurrentVideoUrl() { }
@@ -294,7 +307,7 @@ class BilibiliHandler extends Handler {
                 debug("cid: " + cid);
 
                 let queryBilibiliVideoUrl = "/x/player/playurl?"
-                    + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
+                    + "qn=120&otype=json&fourk=1&fnver=0&fnval=16"
                     + "&avid=" + avid
                     + "&cid=" + cid;
                 $.ajax({
@@ -307,7 +320,11 @@ class BilibiliHandler extends Handler {
                     success: function (res) {
                         debug("get video url by bvid result: ");
                         debug(res);
-                        currentVideoUrl = res.data.durl[0].url;
+                        //0 for h264 video stream 
+                        //1 for hevc video stream
+                        //2 for av1 video stream
+                        currentVideoUrl = res.data.dash.video[1].baseUrl;
+                        currentAudioUrl = res.data.dash.audio[0].baseUrl
                         setVisiable();
                     }
                 })
@@ -341,8 +358,8 @@ class BilibiliHandler extends Handler {
                 debug("avid: " + avid);
                 debug("cid: " + cid);
 
-                let queryBilibiliVideoUrl = "/pgc/player/web/playurl?"
-                    + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
+                let queryBilibiliVideoUrl = "/x/player/playurl?"
+                    + "qn=120&otype=json&fourk=1&fnver=0&fnval=16"
                     + "&avid=" + avid
                     + "&cid=" + cid;
                 $.ajax({
@@ -355,7 +372,11 @@ class BilibiliHandler extends Handler {
                     success: function (res) {
                         debug("get video url by epid result: ");
                         debug(res);
-                        currentVideoUrl = res.result.durl[0].url;
+                        //0 for h264 video stream 
+                        //1 for hevc video stream
+                        //2 for av1 video stream
+                        currentVideoUrl = res.data.dash.video[1].baseUrl;
+                        currentAudioUrl = res.data.dash.audio[0].baseUrl
                         setVisiable();
                     }
                 });
@@ -629,4 +650,4 @@ function init() {
 
 
 debug("Play With MPV");
-init();
+windows.addEventListener('load', ()=>{init();})
