@@ -285,7 +285,7 @@ class BilibiliHandler extends Handler {
                 let avid = res.data.aid;
                 let cid = res.data.cid;
                 let index = currentUrl.indexOf("?p=");
-                if (index != -1) {
+                if (index != -1 && res.data.pages.length > 1) {
                     let p = currentUrl.substring(index + 3);
                     let endIndex = p.indexOf("&");
                     if (endIndex != -1) {
