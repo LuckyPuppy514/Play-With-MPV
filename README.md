@@ -92,7 +92,7 @@ Bilibili-Evolved + playwithmpv
 ### 1. 安装 mpv 或 mpv-lazy
 
 - 选项一：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- 选项二：[🌟🌟 mpv-lazy](https://www.bilibili.com/read/cv16736410)
+- 选项二（推荐）：[🌟🌟mpv-lazy](https://www.lckp.top/archives/mpv-lazy)
 
 ### 2. 安装油猴插件
 
