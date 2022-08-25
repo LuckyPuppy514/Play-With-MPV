@@ -141,6 +141,12 @@ D:\\daily\\mpv-lazy\\mpv.com
 
 为你的 mpv 路径，保存为 playwithmpv.reg，双击 playwithmpv.reg 添加到注册表即可
 
+> 🔥 注意：如果你是用 v2rayn 或者 clash 客户端科学上网，则需要把代理加上才可以，例如
+
+```text
+D:\\daily\\mpv-lazy\\mpv.com --http-proxy=http://127.0.0.1:10809 --ytdl-raw-options=proxy=[http://127.0.0.1:10809]
+```
+
 ## 效果展示
 
 ![work_on_bilibili_video_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/work_on_bilibili_video_tuya.jpg)
