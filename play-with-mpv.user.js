@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             通过 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.5.0
+// @version                 1.5.1
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -18,6 +18,7 @@
 // @commit                  v1.4.4 www.dmla.cc 域名变更为：www.dmlaa.com
 // @commit                  v1.4.5 ddrk.me 域名变更为：ddys.tv
 // @commit                  v1.5.0 代码优化，去除 powershell 脚本，只需添加注册表信息即可
+// @commit                  v1.5.1 B站添加 cid 参数，配合 https://github.com/itKelis/MPV-Play-BiliBili-Comments 可实现弹幕功能
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -146,6 +147,7 @@ var currentDomain;
 
 var handler;
 var ddrkPlayStatus;
+var bilibiliCid;
 
 class Handler {
     getProtocolLink() {
@@ -169,6 +171,7 @@ class Handler {
                 GM_setValue("REGEDIT_VERSION", REGEDIT_VERSION);
             } else {
                 window.open("https://github.com/LuckyPuppy514/Play-With-MPV#4-%E6%B7%BB%E5%8A%A0%E6%B3%A8%E5%86%8C%E8%A1%A8%E4%BF%A1%E6%81%AF");
+                return;
             }
         }
 
@@ -176,7 +179,7 @@ class Handler {
             + '"' + currentVideoUrl + '" '
             + '--force-media-title="' + currentDomain + '" ';
         if (currentDomain.indexOf("bilibili") != -1) {
-            protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" ';
+            protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" --script-opts="cid=' + bilibiliCid + '" ';
         }
         debug(protocolLink);
         return protocolLink;
@@ -190,12 +193,12 @@ class Handler {
         addPlayWithMPVDiv();
     }
     addTimer() {
-        // first try to get video url after 600ms(wait page load)
+        // first try to get video url (wait page load)
         setTimeout(refreshCurrentVideoUrl, 600);
-        // try to refresh video url every 2s(avoid get video url fail)
-        setInterval(refreshCurrentVideoUrl, 2000);
+        // try to refresh video url (avoid get video url fail)
+        setInterval(refreshCurrentVideoUrl, 3000);
         // page change listener
-        setInterval(pageChangeListener, 500);
+        setInterval(pageChangeListener, 1000);
 
         function refreshCurrentVideoUrl() {
             debug("refresh current video url: " + currentVideoUrl);
@@ -296,6 +299,7 @@ class BilibiliHandler extends Handler {
 
                 debug("avid: " + avid);
                 debug("cid: " + cid);
+                bilibiliCid = cid;
 
                 let queryBilibiliVideoUrl = "/x/player/playurl?"
                     + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
@@ -344,6 +348,7 @@ class BilibiliHandler extends Handler {
                 var cid = episode.cid;
                 debug("avid: " + avid);
                 debug("cid: " + cid);
+                bilibiliCid = cid;
 
                 let queryBilibiliVideoUrl = "/pgc/player/web/playurl?"
                     + "qn=120&otype=json&fourk=1&fnver=0&fnval=0"
