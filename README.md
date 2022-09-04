@@ -7,7 +7,7 @@
 | :---: | :---: | :---: |
 | [www.bilibili.com/video](https://www.bilibili.com) | 🤗 绝大部分 🤗 | B站普通视频 |
 | [www.bilibili.com/bangumi](https://www.bilibili.com) | 🤗 绝大部分 🤗 | B站番剧 |
-| [ddys.tv](https://ddys.tv) | 🤗 绝大部分 🤗 | 低端影视 |
+| [ddys.tv](https://ddys.tv) | 😭 网站升级，无法使用 😭 | 低端影视 |
 | [www.youtube.com](https://www.youtube.com) | 🤗 绝大部分 🤗 | 油管非会员视频 |
 | [app.plex.tv](https://app.plex.tv) | 🤗 绝大部分 🤗 | PLEX |
 | [www.dmla.cc](http://www.dmla.cc) | 🙂 大部分 🙂 | 风车动漫 |
