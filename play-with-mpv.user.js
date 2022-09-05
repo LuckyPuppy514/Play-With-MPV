@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             通过 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.5.2
+// @version                 1.5.3
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -20,6 +20,7 @@
 // @commit                  v1.5.0 代码优化，去除 powershell 脚本，只需添加注册表信息即可
 // @commit                  v1.5.1 B站添加 cid 参数，配合 https://github.com/itKelis/MPV-Play-BiliBili-Comments 可实现弹幕功能
 // @commit                  v1.5.2 注册表代码升级，支持中文标题
+// @commit                  v1.5.3 添加低端影视备用域名
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -33,6 +34,7 @@
 // @include                 https://www.bilibili.com/video/*
 // @connect                 api.bilibili.com
 // @include                 https://ddys.tv/*
+// @include                 https://ddys2.me/*
 // @include                 https://www.6dm.cc/play/*
 // @include                 http://www.dmlaa.com/play/*
 // @include                 https://danmu.yhdmjx.com/*
@@ -125,6 +127,7 @@ function setInvisiable() {
 const YOUTUBE = "www.youtube.com";
 const BILIBILI = "www.bilibili.com";
 const DDRK = "ddys.tv";
+const DDRK_BACKUP = "ddys2.me";
 const DM6CC = "www.6dm.cc";
 const DMLACC = "www.dmlaa.com";
 const YHDMJX = "danmu.yhdmjx.com";
@@ -605,6 +608,7 @@ function init() {
             handler = new BilibiliHandler();
             break;
         case DDRK:
+        case DDRK_BACKUP:
             handler = new DdrkHandler();
             break;
         case DM6CC:
