@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             通过 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 1.5.1
+// @version                 1.5.2
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -19,6 +19,7 @@
 // @commit                  v1.4.5 ddrk.me 域名变更为：ddys.tv
 // @commit                  v1.5.0 代码优化，去除 powershell 脚本，只需添加注册表信息即可
 // @commit                  v1.5.1 B站添加 cid 参数，配合 https://github.com/itKelis/MPV-Play-BiliBili-Comments 可实现弹幕功能
+// @commit                  v1.5.2 注册表代码升级，支持中文标题
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -50,7 +51,7 @@
 'use strict';
 
 // playwithmpv.reg version
-const REGEDIT_VERSION = "v1.5.0";
+const REGEDIT_VERSION = "v1.5.2";
 
 // using for dev
 function debug(data) {
@@ -177,7 +178,7 @@ class Handler {
 
         let protocolLink = PWM_PROTOCOL
             + '"' + currentVideoUrl + '" '
-            + '--force-media-title="' + currentDomain + '" ';
+            + '--force-media-title="' + document.title + '" ';
         if (currentDomain.indexOf("bilibili") != -1) {
             protocolLink = protocolLink + '--http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '" --script-opts="cid=' + bilibiliCid + '" ';
         }

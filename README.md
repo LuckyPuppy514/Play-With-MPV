@@ -130,7 +130,7 @@ Windows Registry Editor Version 5.00
 @=""
 
 [HKEY_CLASSES_ROOT\PlayWithMPV\shell\open\command]
-@="cmd /min /V:ON /C \"SET param=\"%1\" & SET param=!param:%%20= ! & SET param=!param:%%22=^\"! & SET param=!param:^\"playwithmpv://=! & D:\\daily\\mpv-lazy\\mpv.com !param:^\"^\"=^\"!\""
+@="cmd /min /V:ON /C \"FOR /F \"tokens=* USEBACKQ\" %%F IN (`powershell -command \"Add-Type -AssemblyName System.Web;[System.Web.HTTPUtility]::UrlDecode('%1')\"`) DO (SET param=%%F) & SET param=!param:playwithmpv://=! & D:\\daily\\mpv-lazy\\mpv.com !param!\""
 ```
 
 复制上面的注册表信息，粘贴到记事本，修改最后一行中的
