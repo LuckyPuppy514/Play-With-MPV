@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name                    Play-With-MPV-NEW
+// @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.0
+// @version                 2.0.1
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -22,6 +22,7 @@
 // @commit                  v1.5.2 注册表代码升级，支持中文标题
 // @commit                  v1.5.3 添加低端影视备用域名
 // @commit                  v2.0.0 代码重构：1. 新增对B站av号视频支持；2. B站，油管，低端影视同步网页播放时间；3. 新增MPV路径设置，方便生成注册表；4. 新增Youtube代理设置；5. 减少暂停失败情况；
+// @commit                  v2.0.1 更新 mpv.net_CM 安装教程链接
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -88,9 +89,9 @@ const DIV =
             </td>
         </tr>
         <tr>
-            <td><a href="https://www.lckp.top/archives/mpv.net_CM">🤖 软件安装 🤖</a></td>
+            <td><a href="https://www.lckp.top/archives/mpvnetcm">🤖 软件安装 🤖</a></td>
             <td>
-                <a href="https://www.lckp.top/archives/mpv.net_CM"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
+                <a href="https://www.lckp.top/archives/mpvnetcm"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
             </td>
             <td>
                 <a href="https://www.lckp.top/archives/mpv-lazy"><img class="pwmpv-support-url-icon-large" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpv.png" /></a>
