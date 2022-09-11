@@ -24,6 +24,7 @@
 | [www.bilibili.com/bangumi](https://www.bilibili.com) | 🤗 绝大部分 🤗 | B站番剧 |
 | [ddys.tv](https://ddys.tv) | 🤗 绝大部分 🤗 | 低端影视 |
 | [www.youtube.com](https://www.youtube.com) | 🤗 绝大部分 🤗 | 油管非会员视频 |
+| [www.6dm.cc](https://www.996dm.com/) | 🤗 绝大部分 🤗 | 樱花动漫 |
 | [www.dmla.cc](http://www.dmla.cc) | 🙂 第一线路 🙂 | 风车动漫 |
 | [www.dm233.me](https://www.dm233.me) | 🙂 线路Ⅲ 🙂 | 233动漫网 |
 | [www.dmh8.com](http://www.dmh8.com) | 😢 小部分 😢 | 樱花动漫 |

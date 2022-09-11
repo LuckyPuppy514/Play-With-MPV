@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.1
+// @version                 2.0.2
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -23,6 +23,7 @@
 // @commit                  v1.5.3 添加低端影视备用域名
 // @commit                  v2.0.0 代码重构：1. 新增对B站av号视频支持；2. B站，油管，低端影视同步网页播放时间；3. 新增MPV路径设置，方便生成注册表；4. 新增Youtube代理设置；5. 减少暂停失败情况；
 // @commit                  v2.0.1 更新 mpv.net_CM 安装教程链接
+// @commit                  v2.0.2 更新 www.6dm.cc 域名为 www.996dm.com
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -37,7 +38,8 @@
 // @connect                 api.bilibili.com
 // @include                 https://ddys.tv/*
 // @include                 https://ddys2.me/*
-// @include                 https://www.6dm.cc/play/*
+// @include                 https://www.996dm.com/play/*
+// @include                 http://www.996dm.com/play/*
 // @include                 http://www.dmlaa.com/play/*
 // @include                 https://danmu.yhdmjx.com/*
 // @include                 https://www.dm233.me/play/*
@@ -83,6 +85,7 @@ const DIV =
                 <a href="https://www.bilibili.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/bilibili.ico"/></a>
                 <a href="https://ddys.tv/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/ddrk.webp"/></a>
                 <a href="https://www.youtube.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/youtube.png"/></a>
+                <a href="https://www.996dm.com/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 80px;" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/logo_f.png"/></a>
                 <a href="http://www.dmlaa.com/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg"/></a>
                 <a href="https://www.dm233.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/dm233.ico"/></a>
                 <a href="https://github.com/LuckyPuppy514/Play-With-MPV#%E4%BD%BF%E7%94%A8-mpv-%E6%92%AD%E6%94%BE%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%A7%86%E9%A2%91" target="_blank">......</a>
@@ -562,7 +565,7 @@ function Toast(msg, duration) {
 const YOUTUBE = "www.youtube.com";
 const BILIBILI = "www.bilibili.com";
 const DDRK = "ddys.tv, ddys2.me";
-const DM6CC = "www.6dm.cc";
+const DM6CC = "www.6dm.cc, www.996dm.com";
 const DMLACC = "www.dmlaa.com";
 const YHDMJX = "danmu.yhdmjx.com";
 const DM233 = "www.dm233.me";
