@@ -51,7 +51,7 @@
 
 ### 4. ⚙️ 设置
 
-1. 打开一个支持的网页，比如：[打工吧！魔王大人 第二季](https://www.bilibili.com/bangumi/play/ep674716?p=9&totalPage=9)
+1. 打开一个支持的网页，比如：[打工吧！魔王大人 第二季](https://www.bilibili.com/bangumi/play/ep674715?p=8&totalPage=9)
 2. 点击设置按钮，输入你的MPV路径，并点击保存设置
 3. 保存注册表信息到本地，鼠标双击添加到注册表
 
