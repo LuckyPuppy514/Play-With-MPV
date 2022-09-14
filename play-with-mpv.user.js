@@ -616,7 +616,7 @@ const GAMER = "ani.gamer.com.tw";
 
 // api
 const BILIBILI_API = 'https://api.bilibili.com';
-GAMER_API="https://ani.gamer.com.tw/ajax/m3u8.php";
+const GAMER_API="https://ani.gamer.com.tw/ajax/m3u8.php";
 
 // mpv urlprotocol
 const MPV_URLPROTOCOL = "mpv://";
