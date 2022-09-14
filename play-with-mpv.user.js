@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.3
+// @version                 2.0.4
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -25,6 +25,7 @@
 // @commit                  v2.0.1 更新 mpv.net_CM 安装教程链接
 // @commit                  v2.0.2 更新 www.6dm.cc 域名为 www.996dm.com
 // @commit                  v2.0.3 B站接口变更，画质上限：4K => 8K HDR，音质上限：192K => Dolby Hi-Res
+// @commit                  v2.0.4 修复B站 Hi-Res 音频链接抓取错误的问题
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -847,8 +848,12 @@ function getBilibiliPlayUrl(avid, cid) {
         success: function (res) {
             // debug(res);
             let dash = res.data.dash;
+            let hiRes = dash.flac;
             let dolby = dash.dolby;
-            if (dolby) {
+            if (hiRes && hiRes.audio) {
+                // debug("hi-res: on");
+                currentAudioUrl = hiRes.audio.baseUrl;
+            } else if (dolby && dolby.audio) {
                 // debug("dolby: on");
                 currentAudioUrl = dolby.audio[0].base_url;
             } else {
