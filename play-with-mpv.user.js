@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.4
+// @version                 2.0.5
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -26,6 +26,7 @@
 // @commit                  v2.0.2 更新 www.6dm.cc 域名为 www.996dm.com
 // @commit                  v2.0.3 B站接口变更，画质上限：4K => 8K HDR，音质上限：192K => Dolby Hi-Res
 // @commit                  v2.0.4 修复B站 Hi-Res 音频链接抓取错误的问题
+// @commit                  v2.0.5 新增巴哈姆特（https://ani.gamer.com.tw）支持
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -47,6 +48,7 @@
 // @include                 https://www.dm233.me/play/*
 // @include                 http://www.dmh8.com/player/*
 // @include                 https://www.yhdmp.net/vp/*
+// @include                 https://ani.gamer.com.tw/animeVideo.php?*
 // @run-at                  document-end
 // @require                 https://unpkg.com/js-base64@3.6.1/base64.js
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -58,13 +60,13 @@
 
 const REG_VERSION = "20220907";
 
-// const IS_DEBUG = false;
 const NO_TERMINAL = false;
-// function debug(data) {
-//     if (IS_DEBUG) {
-//         console.log(data);
-//     }
-// }
+const IS_DEBUG = true;
+function debug(data) {
+    if (IS_DEBUG) {
+        console.log(data);
+    }
+}
 
 const DIV =
     `
@@ -610,9 +612,11 @@ const YHDMJX = "danmu.yhdmjx.com";
 const DM233 = "www.dm233.me";
 const DMH8 = "www.dmh8.com";
 const YHDMP = "www.yhdmp.net";
+const GAMER = "ani.gamer.com.tw";
 
 // api
-const BILIBILI_API = 'https://api.bilibili.com'
+const BILIBILI_API = 'https://api.bilibili.com';
+GAMER_API="https://ani.gamer.com.tw/ajax/m3u8.php";
 
 // mpv urlprotocol
 const MPV_URLPROTOCOL = "mpv://";
@@ -627,6 +631,7 @@ var currentUrl;
 var currentDomain;
 var currentVideoUrl;
 var currentAudioUrl;
+var gamerDurationTime;
 
 // video url handler
 var handler;
@@ -679,9 +684,14 @@ class Handler {
             // 音频链接
             protocolLink = protocolLink + ' --audio-file="' + currentAudioUrl + '"';
             // 请求头
-            protocolLink = protocolLink + ' --http-header-fields=referer:"' + currentUrl + ',user-agent:' + navigator.userAgent + '"';
+            protocolLink = protocolLink + ' --http-header-fields="referer: ' + currentUrl + ',user-agent: ' + navigator.userAgent + '"';
             // cid（支持弹幕）
             protocolLink = protocolLink + ' --script-opts="cid=' + bilibiliCid + '"';
+        }
+        // 巴哈姆特
+        if(GAMER.indexOf(currentDomain) != -1){
+            // 请求头
+            protocolLink = protocolLink + ' --http-header-fields="origin: https://ani.gamer.com.tw"';
         }
         if (YOUTUBE.indexOf(currentDomain) != -1) {
             // 油管代理
@@ -892,14 +902,14 @@ class DdrkHandler extends Handler {
     }
     getCurrentVideoUrl() {
         // 点击播放按钮加载 video 元素
-        if (ddrkPlayStatus == 0) {
+        if (!ddrkPlayStatus) {
             let ddrkPlayButton = document.getElementsByClassName('vjs-big-play-button')[0];
             if (!ddrkPlayButton) {
                 // debug("ddrk get play button fail");
                 return;
             }
             ddrkPlayButton.click();
-            ddrkPlayStatus = 1;
+            ddrkPlayStatus = true;
         }
         currentVideoUrl = document.getElementById('vjsp_html5_api').src;
         checkCurrentVideoUrl();
@@ -1006,9 +1016,45 @@ class YhdmpHandler extends Handler {
         this.videoElement.pause();
     }
 }
+// 巴哈姆特
+class GamerHandler extends Handler {
+    getStartTime() {
+        let startTimeElement = document.getElementsByClassName("vjs-current-time-display")[0];
+        if (startTimeElement) {
+            return startTimeElement.innerHTML;
+        }
+        return null;
+    }
+    getCurrentVideoUrl() {
+        let index = currentUrl.indexOf("sn=") + 3;
+        if(index == -1) {
+            return;
+        }
+        let sn = currentUrl.substring(index);
+        index = sn.indexOf("&");
+        if (index != -1){
+            sn = sn.substring(0, index);
+        }
+        let device = localStorage.ANIME_deviceid;
+        // debug("sn: " + sn + ", device: " + device);
+        $.ajax({
+            type: "GET",
+            url: GAMER_API + "?sn=" + sn + "&device=" + device,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (res) {
+                // debug(res);
+                currentVideoUrl = JSON.parse(res).src;
+                checkCurrentVideoUrl();
+            }
+        })
+    }
+}
 
 // 校验视频链接是否有效
 function checkCurrentVideoUrl() {
+    // debug("current video url: " + currentVideoUrl);
     if (!currentVideoUrl || !currentVideoUrl.startsWith("http")) {
         // debug("current video url is invalid: " + currentVideoUrl);
         return false;
@@ -1024,7 +1070,6 @@ function checkCurrentVideoUrl() {
         // debug("yun.66dm.net: " + currentVideoUrl);
         return false;
     }
-    // debug("current video url: " + currentVideoUrl);
     if (YHDMJX.indexOf(currentDomain) == -1) {
         document.getElementById(BUTTON_DIV).style.display = DISPLAY_FLEX;
     }
@@ -1043,7 +1088,7 @@ function initCurrentPageInfo() {
     currentUrl = window.location.href;
     currentDomain = window.location.host;
     currentVideoUrl = "";
-    ddrkPlayStatus = 0;
+    ddrkPlayStatus = false;
     tryTime = 0;
 }
 // 创建处理器
@@ -1067,12 +1112,33 @@ function createHandler() {
         handler = new Dmh8Handler();
     } else if (YHDMP.indexOf(currentDomain) != -1) {
         handler = new YhdmpHandler();
+    } else if (GAMER.indexOf(currentDomain) != -1) {
+        handler = new GamerHandler();
     }
 }
 // 页面变更监听器
 function pageChangeListener() {
+    // debug("page change listener");
+    let needRefresh = false;
     let newCurrentUrl = window.location.href;
     if (currentUrl != newCurrentUrl) {
+        needRefresh = true;   
+    }
+
+    // 巴哈姆特
+    if(!needRefresh && GAMER.indexOf(currentDomain) != -1) {
+        let oldGamerDurationTime = gamerDurationTime;
+        let durationDiv = document.getElementsByClassName("vjs-duration-display")[0];
+        if(durationDiv) {
+            gamerDurationTime = durationDiv.innerHTML;
+            if (oldGamerDurationTime && oldGamerDurationTime != gamerDurationTime) {
+                needRefresh = true;
+            }
+        }
+    }
+    
+    if(needRefresh) {
+        // debug("page change");
         initCurrentPageInfo();
         refreshCurrentVideoUrl();
     }

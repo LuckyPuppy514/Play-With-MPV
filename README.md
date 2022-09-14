@@ -24,6 +24,7 @@
 | [www.bilibili.com/anime](https://www.bilibili.com/anime) | 🤗 绝大部分 🤗 | B站番剧 |
 | [ddys.tv](https://ddys2.me) | 🤗 绝大部分 🤗 | 低端影视 |
 | [www.youtube.com](https://www.youtube.com) | 🤗 绝大部分 🤗 | 油管非会员视频 |
+| [ani.gamer.com.tw](https://ani.gamer.com.tw) | 🤗 绝大部分 🤗 | 巴哈姆特 |
 | [www.6dm.cc](https://www.996dm.com/) | 🤗 绝大部分 🤗 | 樱花动漫 |
 | [www.dmla.cc](http://www.dmla.cc) | 🙂 第一线路 🙂 | 风车动漫 |
 | [www.dm233.me](https://www.dm233.me) | 🙂 线路Ⅲ 🙂 | 233动漫网 |
@@ -71,6 +72,8 @@
 ![ddrk_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/ddrk_tuya.jpg)
 
 ![youtube_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/youtube_tuya.jpg)
+
+![gamer_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/gamer_tuya.jpg)
 
 ## 👏 相关仓库
 
