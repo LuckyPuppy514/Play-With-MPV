@@ -15,14 +15,14 @@
 
 ## 🌟 简介
 
-支持的系统：Windows
-支持浏览器：Edge, Chrome, Firefox, 360极速浏览器X 等
+支持的系统：Windows  
+支持浏览器：Edge, Chrome, Firefox, 360极速浏览器X 等  
 
 | 支持网址 | 支持率 | 说明 |
 | :---: | :---: | :---: |
 | [www.bilibili.com/video](https://www.bilibili.com) | 🤗 绝大部分 🤗 | B站投稿 |
-| [www.bilibili.com/bangumi](https://www.bilibili.com) | 🤗 绝大部分 🤗 | B站番剧 |
-| [ddys.tv](https://ddys.tv) | 🤗 绝大部分 🤗 | 低端影视 |
+| [www.bilibili.com/anime](https://www.bilibili.com/anime) | 🤗 绝大部分 🤗 | B站番剧 |
+| [ddys.tv](https://ddys2.me) | 🤗 绝大部分 🤗 | 低端影视 |
 | [www.youtube.com](https://www.youtube.com) | 🤗 绝大部分 🤗 | 油管非会员视频 |
 | [www.6dm.cc](https://www.996dm.com/) | 🤗 绝大部分 🤗 | 樱花动漫 |
 | [www.dmla.cc](http://www.dmla.cc) | 🙂 第一线路 🙂 | 风车动漫 |
@@ -60,6 +60,10 @@
 
 ![1662712482336_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/1662712482336_tuya.jpg)
 
+⚠️ 注意：如果使用 v2rayN 或 Clash 客户端科学上网，要看油管请手动添加代理设置
+
+![proxy_setting_01_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/proxy_setting_01_tuya.jpg)
+
 ## ✅ 效果展示
 
 ![bilibili_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/bilibili_tuya.jpg)
@@ -74,10 +78,10 @@
 - [mpv-lazy](https://github.com/hooke007/MPV_lazy) — mpv 播放器懒人版
 - [mpv.net_CM](https://github.com/hooke007/mpv.net_CM) — `mpv.net` 汉化版
 - [yt-dlp](https://github.com/yt-dlp/yt-dlp) — 视频下载
-- [ff2mpv](https://github.com/woodruffw/ff2mpv) — 谷歌 mpv 插件
 - [Bilibili-Evolved](https://github.com/the1812/Bilibili-Evolved) - B站增强脚本
-- [playwithmpv](https://github.com/videoanywhere/playwithmpv) — B站增强脚本 mpv 播放插件
 - [Anime4K](https://github.com/bloc97/Anime4K) — 动漫画质增强
+- [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) — B站接口整理
+- [MPV-Play-BiliBili-Comments](https://github.com/itKelis/MPV-Play-BiliBili-Comments) — mpv B站弹幕脚本
 
 ## 👏 特别感谢
 
