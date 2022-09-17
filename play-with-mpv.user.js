@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.7
+// @version                 2.0.8
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -28,7 +28,7 @@
 // @commit                  v2.0.4 修复B站 Hi-Res 音频链接抓取错误的问题
 // @commit                  v2.0.5 新增巴哈姆特（https://ani.gamer.com.tw）支持
 // @commit                  v2.0.6 代码优化；设置代理时，对巴哈姆特也生效；
-// @commit                  v2.0.7 修复油管全屏图标仍然显示的问题；
+// @commit                  v2.0.8 修复油管全屏图标仍然显示的问题；
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -484,6 +484,7 @@ function appendCSS() {
     document.head.appendChild(css);
 }
 var bilibiliCodecs;
+var isFullScreen = false;
 function addListener() {
     // 关于
     var aboutButton = document.getElementById(ABOUT_BUTTON_ID);
@@ -582,8 +583,10 @@ function addListener() {
     // 全屏
     document.addEventListener("fullscreenchange", () => {
         if (document.fullscreenElement) {
+            isFullScreen = true;
             document.getElementById(BUTTON_DIV).style.display = DISPLAY_NONE;
         } else {
+            isFullScreen = false;
             handler.checkCurrentVideoUrl();
         }
     });
@@ -695,7 +698,9 @@ class Handler {
     // 校验视频链接是否有效
     checkCurrentVideoUrl() {
         if (this.baseCheckCurrentVideoUrl()){
-            document.getElementById(BUTTON_DIV).style.display = DISPLAY_FLEX;
+            if(!isFullScreen){
+                document.getElementById(BUTTON_DIV).style.display = DISPLAY_FLEX;
+            }
             return true;
         }
         return false;
