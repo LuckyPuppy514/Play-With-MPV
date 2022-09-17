@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.6
+// @version                 2.0.7
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -28,13 +28,14 @@
 // @commit                  v2.0.4 修复B站 Hi-Res 音频链接抓取错误的问题
 // @commit                  v2.0.5 新增巴哈姆特（https://ani.gamer.com.tw）支持
 // @commit                  v2.0.6 代码优化；设置代理时，对巴哈姆特也生效；
+// @commit                  v2.0.7 修复油管全屏图标仍然显示的问题；
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
-// @icon                    https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpv.png
+// @icon                    https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png
 // @match                   *://www.youtube.com/*
 // @include                 https://www.youtube.com/watch/*
 // @include                 https://www.bilibili.com/bangumi/play/*
@@ -87,23 +88,23 @@ const DIV =
         <tr>
             <td><a href="https://github.com/LuckyPuppy514/Play-With-MPV#%E4%BD%BF%E7%94%A8-mpv-%E6%92%AD%E6%94%BE%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%A7%86%E9%A2%91" target="_blank">🔗 支持网址 🔗</a></td>
             <td colspan="2">
-                <a href="https://www.bilibili.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/bilibili.ico"/></a>
-                <a href="https://ddys2.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/ddrk.webp"/></a>
-                <a href="https://www.youtube.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/youtube.png"/></a>
-                <a href="https://ani.gamer.com.tw/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 57px;" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/bahaLOGO_1200x630.jpg"\></a>
-                <a href="https://www.996dm.com/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 95px;" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/logo_f.png"/></a>
-                <a href="http://www.dmlaa.com/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg"/></a>
-                <a href="https://www.dm233.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/dm233.ico"/></a>
+                <a href="https://www.bilibili.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bilibili.ico"/></a>
+                <a href="https://ddys2.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp"/></a>
+                <a href="https://www.youtube.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/youtube.png"/></a>
+                <a href="https://ani.gamer.com.tw/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 57px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bahaLOGO_1200x630.jpg"\></a>
+                <a href="https://www.996dm.com/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 95px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/logo_f.png"/></a>
+                <a href="http://www.dmlaa.com/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg"/></a>
+                <a href="https://www.dm233.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/dm233.ico"/></a>
                 <a href="https://github.com/LuckyPuppy514/Play-With-MPV#%E4%BD%BF%E7%94%A8-mpv-%E6%92%AD%E6%94%BE%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%A7%86%E9%A2%91" target="_blank">......</a>
             </td>
         </tr>
         <tr>
             <td><a href="https://www.lckp.top/archives/mpvnetcm">🤖 软件安装 🤖</a></td>
             <td>
-                <a href="https://www.lckp.top/archives/mpvnetcm"><img class="pwmpv-support-url-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
+                <a href="https://www.lckp.top/archives/mpvnetcm"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
             </td>
             <td>
-                <a href="https://www.lckp.top/archives/mpv-lazy"><img class="pwmpv-support-url-icon-large" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpv.png" /></a>
+                <a href="https://www.lckp.top/archives/mpv-lazy"><img class="pwmpv-support-url-icon-large" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png" /></a>
             </td>
         </tr>
         <tr>
@@ -113,9 +114,9 @@ const DIV =
         </tr>
     </table>
     <span class="pwmpv-footer-span">
-        <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank"><img class="pwmpv-footer-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/tampermonkey.png"/></a>
+        <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank"><img class="pwmpv-footer-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/tampermonkey.png"/></a>
         <a href="https://www.lckp.top" target="_blank">2022 © LuckyPuppy514</a>
-        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank"><img class="pwmpv-footer-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/github.png"/></a>
+        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank"><img class="pwmpv-footer-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/github.png"/></a>
     </span>
 </div>
 
@@ -151,9 +152,9 @@ const DIV =
         </tr>
     </table>
     <span class="pwmpv-footer-span">
-        <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank"><img class="pwmpv-footer-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/tampermonkey.png"/></a>
+        <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank"><img class="pwmpv-footer-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/tampermonkey.png"/></a>
         <a href="https://www.lckp.top" target="_blank">2022 © LuckyPuppy514</a>
-        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank"><img class="pwmpv-footer-icon" src="https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/github.png"/></a>
+        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank"><img class="pwmpv-footer-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/github.png"/></a>
     </span>
 </div>
 
@@ -194,7 +195,7 @@ const CSS =
     border-radius: 50%;
     background-size: cover;
     background-color: rgba(255, 255, 255, 0);
-    background-image: url(https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/about-pink.png);
+    background-image: url(https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/about-pink.png);
 }
 #pwmpv-about-button:hover {
     bottom: 56px;
@@ -250,7 +251,7 @@ const CSS =
     border: none;
     border-radius: 50%;
     background-size: cover;
-    background-image: url(https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/mpvnet.png);
+    background-image: url(https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpvnet.png);
     cursor: pointer;
 }
 #pwmpv-play-button:hover {
@@ -274,7 +275,7 @@ const CSS =
     border-radius: 50%;
     background-size: cover;
     background-color: rgba(255, 255, 255, 0);
-    background-image: url(https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/lx-setting.png);    
+    background-image: url(https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/lx-setting.png);    
 }
 #pwmpv-setting-button:hover {
     bottom: 54px;
@@ -578,6 +579,14 @@ function addListener() {
             settingDiv.style.display = DISPLAY_NONE;
         }
     }
+    // 全屏
+    document.addEventListener("fullscreenchange", () => {
+        if (document.fullscreenElement) {
+            document.getElementById(BUTTON_DIV).style.display = DISPLAY_NONE;
+        } else {
+            handler.checkCurrentVideoUrl();
+        }
+    });
 }
 // 显示设置窗口
 function showSettingDiv() {
