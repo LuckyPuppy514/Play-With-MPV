@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.8
+// @version                 2.0.9
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -21,14 +21,15 @@
 // @commit                  v1.5.1 B站添加 cid 参数，配合 https://github.com/itKelis/MPV-Play-BiliBili-Comments 可实现弹幕功能
 // @commit                  v1.5.2 注册表代码升级，支持中文标题
 // @commit                  v1.5.3 添加低端影视备用域名
-// @commit                  v2.0.0 代码重构：1. 新增对B站av号视频支持；2. B站，油管，低端影视同步网页播放时间；3. 新增MPV路径设置，方便生成注册表；4. 新增Youtube代理设置；5. 减少暂停失败情况；
+// @commit                  v2.0.0 代码重构：1. 新增对B站av号视频支持；2. B站，油管，低端影视同步网页播放时间；3. 新增MPV路径设置，方便生成注册表；4. 新增Youtube代理设置；5. 减少暂停失败情况
 // @commit                  v2.0.1 更新 mpv.net_CM 安装教程链接
 // @commit                  v2.0.2 更新 www.6dm.cc 域名为 www.996dm.com
 // @commit                  v2.0.3 B站接口变更，画质上限：4K => 8K HDR，音质上限：192K => Dolby Hi-Res
 // @commit                  v2.0.4 修复B站 Hi-Res 音频链接抓取错误的问题
 // @commit                  v2.0.5 新增巴哈姆特（https://ani.gamer.com.tw）支持
-// @commit                  v2.0.6 代码优化；设置代理时，对巴哈姆特也生效；
-// @commit                  v2.0.8 修复油管全屏图标仍然显示的问题；
+// @commit                  v2.0.6 代码优化；设置代理时，对巴哈姆特也生效
+// @commit                  v2.0.8 修复油管全屏图标仍然显示的问题
+// @commit                  v2.0.9 界面细节优化
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -83,11 +84,11 @@ const DIV =
     <span class="pwmpv-title-span">✨ 关于 Play-With-MPV ✨ <button class="pwmpv-close-button">❌</button></span>
     <table id="pwmpv-about-table">
         <tr>
-            <td colspan="3" class="pwmpv-title-td">使用 MPV 播放网页中的视频（解码 ⬆️ 补帧 ✅ 着色器 ✅ 更多💡）</td>
+            <td colspan="6" class="pwmpv-title-td">使用 MPV 播放网页中的视频（解码 ⬆️ 补帧 ✅ 着色器 ✅ 更多💡）</td>
         </tr>
         <tr>
-            <td><a href="https://github.com/LuckyPuppy514/Play-With-MPV#%E4%BD%BF%E7%94%A8-mpv-%E6%92%AD%E6%94%BE%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%A7%86%E9%A2%91" target="_blank">🔗 支持网址 🔗</a></td>
-            <td colspan="2">
+            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV#-%E7%AE%80%E4%BB%8B" target="_blank">🔗 支持网站 🔗</a></td>
+            <td colspan="4">
                 <a href="https://www.bilibili.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bilibili.ico"/></a>
                 <a href="https://ddys2.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp"/></a>
                 <a href="https://www.youtube.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/youtube.png"/></a>
@@ -95,22 +96,21 @@ const DIV =
                 <a href="https://www.996dm.com/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 95px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/logo_f.png"/></a>
                 <a href="http://www.dmlaa.com/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg"/></a>
                 <a href="https://www.dm233.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/dm233.ico"/></a>
-                <a href="https://github.com/LuckyPuppy514/Play-With-MPV#%E4%BD%BF%E7%94%A8-mpv-%E6%92%AD%E6%94%BE%E7%BD%91%E9%A1%B5%E4%B8%AD%E7%9A%84%E8%A7%86%E9%A2%91" target="_blank">......</a>
             </td>
         </tr>
         <tr>
-            <td><a href="https://www.lckp.top/archives/mpvnetcm">🤖 软件安装 🤖</a></td>
-            <td>
-                <a href="https://www.lckp.top/archives/mpvnetcm"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
+            <td colspan="2"><a href="https://www.lckp.top/archives/mpvnetcm">🤖 支持软件 🤖</a></td>
+            <td colspan="2">
+                <a href="https://www.lckp.top/archives/mpvnetcm" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
             </td>
-            <td>
-                <a href="https://www.lckp.top/archives/mpv-lazy"><img class="pwmpv-support-url-icon-large" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png" /></a>
+            <td colspan="2">
+                <a href="https://www.lckp.top/archives/mpv-lazy" target="_blank"><img class="pwmpv-support-url-icon-large" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png" /></a>
             </td>
         </tr>
         <tr>
-            <td><a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank">🆕 版本更新 🆕</a></td>
-            <td><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">🐳 项目源码 🐳</a></td>
-            <td><a href="https://github.com/LuckyPuppy514/Play-With-MPV/issues/new" target="_blank">👻 问题反馈 👻</a></td>
+            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">👆 项目源码 👆</a></td>
+            <td colspan="2"><a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank">🆕 版本更新 🆕</a></td>
+            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV/issues/new" target="_blank">👻 问题反馈 👻</a></td>
         </tr>
     </table>
     <span class="pwmpv-footer-span">
@@ -490,7 +490,7 @@ function addListener() {
     var aboutButton = document.getElementById(ABOUT_BUTTON_ID);
     var aboutDiv = document.getElementById(ABOUT_DIV_ID);
     aboutButton.onclick = function () {
-        if (aboutDiv.style.display == DISPLAY_NONE) {
+        if (aboutDiv.style.display != DISPLAY_FLEX) {
             aboutDiv.style.display = DISPLAY_FLEX;
             settingDiv.style.display = DISPLAY_NONE;
         } else {
@@ -519,7 +519,7 @@ function addListener() {
     var mpvPathInput = document.getElementById(MPV_PATH_INPUT_ID);
     var proxyInput = document.getElementById(PROXY_INPUT_ID);
     settingButton.onclick = function () {
-        if (settingDiv.style.display == DISPLAY_NONE) {
+        if (settingDiv.style.display != DISPLAY_FLEX) {
             showSettingDiv();
             aboutDiv.style.display = DISPLAY_NONE;
         } else {
