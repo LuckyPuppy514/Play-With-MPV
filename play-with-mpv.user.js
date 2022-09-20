@@ -3,7 +3,7 @@
 // @name:zh                 使用 MPV 播放
 // @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.0.9
+// @version                 2.1.0
 // @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
 // @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
 // @commit                  v1.2.3 修改 imomoe 域名
@@ -30,6 +30,7 @@
 // @commit                  v2.0.6 代码优化；设置代理时，对巴哈姆特也生效
 // @commit                  v2.0.8 修复油管全屏图标仍然显示的问题
 // @commit                  v2.0.9 界面细节优化
+// @commit                  v2.1.0 修复低端影视出现10s广告提醒时，无法抓取链接的问题
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
@@ -710,7 +711,7 @@ class Handler {
     playCurrentVideoWithMPV() {
         window.open(this.getUrlProtocolLink(), "_self");
         let i = 0;
-        while (i < MAX_TRY_TIME) {
+        while (i < 3) {
             i++;
             setTimeout(function () {
                 handler.pauseCurrentVideo();
@@ -1152,9 +1153,7 @@ class GamerHandler extends Handler {
 }
 
 // 最大尝试次数
-const MAX_TRY_TIME = 3;
-// 尝试次数
-var tryTime;
+const MAX_TRY_TIME = 8;
 // 定时器
 var timers;
 // 当前页面链接
@@ -1182,7 +1181,6 @@ function initCurrentPageInfo() {
     currentDomain = window.location.host;
     currentVideoUrl = "";
     ddrkPlayStatus = false;
-    tryTime = 0;
 }
 // 创建处理器
 function createHandler() {
@@ -1214,6 +1212,7 @@ function refreshCurrentVideoUrl() {
     // debug("refresh current video url: " + currentVideoUrl);
     // debug("current url: " + currentUrl);
     timers = new Array();
+    let tryTime = 0;
     while (tryTime < MAX_TRY_TIME) {
         timers[tryTime] = setTimeout(function () {
             if (!handler.checkCurrentVideoUrl()) {
