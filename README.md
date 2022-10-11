@@ -53,15 +53,22 @@
 
 ### 4. ⚙️ 设置
 
-1. 打开一个支持的网页，比如：[打工吧！魔王大人 第二季](https://www.bilibili.com/bangumi/play/ep674715?p=8&totalPage=9)
+1. 打开一个支持的网页，比如：[打工吧！魔王大人 第二季](https://www.bilibili.com/bangumi/play/ep674708)
 2. 点击设置按钮，输入你的MPV路径，并点击保存设置
 3. 保存注册表信息到本地，鼠标双击添加到注册表
 
-⚠️ 注意：MPV路径不要包含中文以及空格等特殊字符
+⚠️ **注意** ⚠️
+
+- **MPV路径不要包含中文以及空格等特殊字符**
+- **MPV路径不是目录，而是 `mpv.com` 或 `mpvnet.com` 的路径**
 
 ![1662712482336_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/1662712482336_tuya.jpg)
 
-⚠️ 注意：如果使用 v2rayN 或 Clash 客户端科学上网，要看油管请手动添加代理设置
+⚠️ **注意** ⚠️
+
+- **使用 v2rayN 或 clash 客户端科学上网，要看油管和巴哈请手动添加代理设置**
+- **v2rayN 默认：`http://127.0.0.1:10809`**
+- **clash 默认：`http://127.0.0.1:7890`**
 
 ![proxy_setting_01_tuya](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/proxy_setting_01_tuya.jpg)
 

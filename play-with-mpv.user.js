@@ -1,43 +1,16 @@
 // ==UserScript==
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
-// @description             使用 MPV 播放网页上的视频
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.0
-// @commit                  v1.2.1 新增 powershell 脚本升级提醒功能
-// @commit                  v1.2.2 修复 youtube 标题带 | 导致错误脚本升级提醒
-// @commit                  v1.2.3 修改 imomoe 域名
-// @commit                  v1.3.0 新增域名：www.6dm.cc, www.dmla.cc（第一线路：大部分支持，其他线路：小部分支持）
-// @commit                  v1.3.0 新增域名：www.dm233.me（线路III：大部分支持，其他线路：大部分不支持）
-// @commit                  v1.3.0 代码重构，使用继承方便后续添加网站支持
-// @commit                  v1.4.0 b站bug修复：标题带数字，解析出错，修复并优化了获取视频链接的速度
-// @commit                  v1.4.0 新增对plex支持（本地：*://*/web/index.html*，远程：https://app.plex.tv/desktop/*）
-// @commit                  v1.4.1 修复b站番剧播放目录为列表时，无法获取正确集数的bug
-// @commit                  v1.4.2 修复b站番剧播放的bug
-// @commit                  v1.4.3 修改cdn为unpkg，某些网络无法访问cdn，导致js加载失败（有问题，请自行修改：unpkg.com => cdn.jsdelivr.net/npm）
-// @commit                  v1.4.4 www.dmla.cc 域名变更为：www.dmlaa.com
-// @commit                  v1.4.5 ddrk.me 域名变更为：ddys.tv
-// @commit                  v1.5.0 代码优化，去除 powershell 脚本，只需添加注册表信息即可
-// @commit                  v1.5.1 B站添加 cid 参数，配合 https://github.com/itKelis/MPV-Play-BiliBili-Comments 可实现弹幕功能
-// @commit                  v1.5.2 注册表代码升级，支持中文标题
-// @commit                  v1.5.3 添加低端影视备用域名
-// @commit                  v2.0.0 代码重构：1. 新增对B站av号视频支持；2. B站，油管，低端影视同步网页播放时间；3. 新增MPV路径设置，方便生成注册表；4. 新增Youtube代理设置；5. 减少暂停失败情况
-// @commit                  v2.0.1 更新 mpv.net_CM 安装教程链接
-// @commit                  v2.0.2 更新 www.6dm.cc 域名为 www.996dm.com
-// @commit                  v2.0.3 B站接口变更，画质上限：4K => 8K HDR，音质上限：192K => Dolby Hi-Res
-// @commit                  v2.0.4 修复B站 Hi-Res 音频链接抓取错误的问题
-// @commit                  v2.0.5 新增巴哈姆特（https://ani.gamer.com.tw）支持
-// @commit                  v2.0.6 代码优化；设置代理时，对巴哈姆特也生效
-// @commit                  v2.0.8 修复油管全屏图标仍然显示的问题
-// @commit                  v2.0.9 界面细节优化
-// @commit                  v2.1.0 修复低端影视出现10s广告提醒时，无法抓取链接的问题
-// @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
-// @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
-// @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
+// @version                 2.1.1
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
+// @description             使用 MPV 播放网页上的视频
+// @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @icon                    https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png
+// @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
+// @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
 // @match                   *://www.youtube.com/*
 // @include                 https://www.youtube.com/watch/*
 // @include                 https://www.bilibili.com/bangumi/play/*
@@ -126,7 +99,7 @@ const DIV =
     <table id="pwmpv-setting-table">
         <tr>
             <td class="pwmpv-title-td">🔥 MPV路径 🔥</td>
-            <td><input id="pwmpv-mpv-path-input" type=text placeholder="请输入你的 mpv.com 路径，例如：D:\\daily\\mpv\\mpv.com"></td>
+            <td><input id="pwmpv-mpv-path-input" type=text placeholder="请输入你的 mpv.com 路径，例如：D://daily//mpvnet//mpvnet.com"></td>
         </tr>
         <tr>
             <td colspan="2" class="pwmpv-tips-td">🩸 如果使用 v2rayN 或 Clash 客户端科学上网，要看油管需要手动添加代理设置 🩸</td>
@@ -215,9 +188,9 @@ const CSS =
     z-index: 999999;
 
     width: 600px;
-    height: 300px;
+    height: 320px;
     border: 6px solid rgba(255, 255, 255, 0.5);
-    background-color: rgba(234, 122, 153, 0.9);
+    background-color: rgba(234, 122, 153, 1);
     display: none;
     flex-direction: column;
 	border-radius: 6px;
@@ -295,9 +268,9 @@ const CSS =
     z-index: 999999;
 
     width: 600px;
-    height: 300px;
+    height: 320px;
     border: 6px solid rgba(255, 255, 255, 0.5);
-    background-color: rgba(65, 146, 247, 0.9);
+    background-color: rgba(65, 146, 247, 1);
     display: none;
     flex-direction: column;
 	border-radius: 6px;
@@ -550,9 +523,7 @@ function addListener() {
             Toast("⚠️ MPV路径不能包含中文 ⚠️", 1500)
             return;
         }
-        mpvPath = mpvPath.replaceAll("/", "\\");
-        mpvPath = mpvPath.replaceAll("\\\\", "\\");
-        mpvPath = mpvPath.replaceAll("\\", "\\\\");
+        mpvPath = mpvPath.replace(/[\\|/]+/g, "//");
         GM_setValue(KEY_MPV_PATH, mpvPath);
         GM_setValue(KEY_PROXY, proxy);
         GM_setValue(KEY_BILIBILI_CODECS, bilibiliCodecs);
