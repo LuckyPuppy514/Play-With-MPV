@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.1
+// @version                 2.1.2
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -778,11 +778,13 @@ class BilibiliHandler extends Handler {
             // debug('epid: ' + epid);
 
             let eno = document.getElementsByClassName("ep-list-progress")[0];
-            if (!eno) {
-                return;
+            if (eno) {
+                eno = eno.innerHTML;
+                eno = eno.substring(0, eno.indexOf('/'));
+            } else {
+                eno = "1";
             }
-            eno = eno.innerHTML;
-            eno = eno.substring(0, eno.indexOf('/'));
+            
             // debug('eno: ' + eno);
             getBilibiliBangumiUrl(epid, eno);
         }
