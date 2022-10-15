@@ -778,8 +778,12 @@ class BilibiliHandler extends Handler {
             // debug('epid: ' + epid);
 
             let eno = document.getElementsByClassName("ep-list-progress")[0];
-            if (!eno) {
-                return;
+            if (eno) {
+                eno = eno.innerHTML;
+                eno = eno.substring(0, eno.indexOf('/'));
+            }
+            else {
+                eno = "1";
             }
             eno = eno.innerHTML;
             eno = eno.substring(0, eno.indexOf('/'));
