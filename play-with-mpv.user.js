@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.2
+// @version                 2.1.3
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -524,6 +524,20 @@ function addListener() {
             return;
         }
         mpvPath = mpvPath.replace(/[\\|/]+/g, "//");
+        if(!mpvPath.endsWith(".com")){
+            if(!mpvPath.endsWith("//")){
+                mpvPath = mpvPath + "//";
+            }
+            if(mpvPath.endsWith("mpvnet//")){
+                mpvPath = mpvPath + "mpvnet.com";
+            } else if(mpvPath.endsWith("mpv//") || mpvPath.endsWith("mpv-lazy//")) {
+                mpvPath = mpvPath + "mpv.com";
+            } else {
+                Toast("⚠️ MPV路径错误，正确示例：D:/daily/mpvnet/mpvnet.com ⚠️", 2000)
+                return;
+            }
+        }
+        mpvPathInput.value = mpvPath;
         GM_setValue(KEY_MPV_PATH, mpvPath);
         GM_setValue(KEY_PROXY, proxy);
         GM_setValue(KEY_BILIBILI_CODECS, bilibiliCodecs);
