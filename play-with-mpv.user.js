@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.3
+// @version                 2.1.4
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -27,7 +27,6 @@
 // @include                 https://www.yhdmp.net/vp/*
 // @include                 https://ani.gamer.com.tw/animeVideo.php?*
 // @run-at                  document-end
-// @require                 https://unpkg.com/js-base64@3.6.1/base64.js
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
@@ -61,7 +60,7 @@ const DIV =
             <td colspan="6" class="pwmpv-title-td">使用 MPV 播放网页中的视频（解码 ⬆️ 补帧 ✅ 着色器 ✅ 更多💡）</td>
         </tr>
         <tr>
-            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV#-%E7%AE%80%E4%BB%8B" target="_blank">🔗 支持网站 🔗</a></td>
+            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV#-%E7%AE%80%E4%BB%8B" target="_blank">支持网站</a></td>
             <td colspan="4">
                 <a href="https://www.bilibili.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bilibili.ico"/></a>
                 <a href="https://ddys2.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp"/></a>
@@ -73,7 +72,7 @@ const DIV =
             </td>
         </tr>
         <tr>
-            <td colspan="2"><a href="https://www.lckp.top/archives/mpvnetcm">🤖 支持软件 🤖</a></td>
+            <td colspan="2"><a href="https://www.lckp.top/archives/mpvnetcm">支持软件</a></td>
             <td colspan="2">
                 <a href="https://www.lckp.top/archives/mpvnetcm" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpvnet.png" /></a>
             </td>
@@ -82,7 +81,7 @@ const DIV =
             </td>
         </tr>
         <tr>
-            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">👆 项目源码 👆</a></td>
+            <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">脚本相关</a></td>
             <td colspan="2"><a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank">🆕 版本更新 🆕</a></td>
             <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV/issues/new" target="_blank">👻 问题反馈 👻</a></td>
         </tr>
@@ -98,28 +97,38 @@ const DIV =
     <span class="pwmpv-title-span">🌟 Play-With-MPV 设置 🌟 <button class="pwmpv-close-button">❌</button></span>
     <table id="pwmpv-setting-table">
         <tr>
-            <td class="pwmpv-title-td">🔥 MPV路径 🔥</td>
-            <td><input id="pwmpv-mpv-path-input" type=text placeholder="请输入你的 mpv.com 路径，例如：D://daily//mpvnet//mpvnet.com"></td>
+            <td class="pwmpv-title-td">软件路径</td>
+            <td colspan="3"><input id="pwmpv-mpv-path-input" type=text placeholder="请输入你的 mpv.com 路径，例如：D://daily//mpvnet//mpvnet.com"></td>
         </tr>
         <tr>
-            <td colspan="2" class="pwmpv-tips-td">🩸 如果使用 v2rayN 或 Clash 客户端科学上网，要看油管需要手动添加代理设置 🩸</td>
+            <td class="pwmpv-title-td">代理设置</td>
+            <td colspan="3"><input id="pwmpv-proxy-input" type=text placeholder="请输入你的 http 或 socks 代理，例如：http://127.0.0.1:10809"></td>
         </tr>
         <tr>
-            <td class="pwmpv-title-td">🌐 代理设置 🌐</td>
-            <td><input id="pwmpv-proxy-input" type=text placeholder="请输入你的 http 或 socks 代理，例如：http://127.0.0.1:10809"></td>
-        </tr>
-        <tr>
-            <td class="pwmpv-title-td">📺 B站编码 📺</td>
+            <td class="pwmpv-title-td">最高画质</td>
+            <td>
+                <select id="pwmpv-best-quality-select">
+                    <option value="unlimited" selected>无限制</option>
+                    <option value="2160p">2160p</option>
+                    <option value="1440p">1440p</option>
+                    <option value="1080p">1080p</option>
+                    <option value="720p">720p</option>
+                    <option value="480p">480p</option>
+                </select>
+                <span class="tip-span">限B站和油管</span>
+            </td>
+            <td class="pwmpv-title-td">视频编码</td>
             <td>
                 <select id="pwmpv-bilibili-codecs-select">
-                    <option value="12" selected>HEVC 体积中，硬件要求中，网络要求中</option>
-                    <option value="13">AV1 体积小，硬件要求高，网络要求低</option>
-                    <option value="7">AVC 体积大，硬件要求低，网络要求高</option>
+                    <option value="12" selected>HEVC</option>
+                    <option value="13">AV1</option>
+                    <option value="7">AVC</option>
                 </select>
+                <span class="tip-span">限B站</span>
             </td>
         </tr>
         <tr>
-            <td colspan="2">
+            <td colspan="4">
                 <button id="pwmpv-save-button">保存设置</button>
                 <button id="pwmpv-download-button" data-tip="请先输入 MPV 路径，并保存设置">下载注册表</button>
             </td>
@@ -145,6 +154,7 @@ const CSS =
     border: none;
     font-size: 18px;
     background-color: rgba(0, 0, 0, 0);
+    line-height: 0px;
 }
 .pwmpv-close-button:hover {
     background-color: rgba(0, 0, 0, 0.3);
@@ -154,7 +164,7 @@ const CSS =
     display: none;
 }
 .pwmpv-title-span {
-    padding-top: 10px;
+    padding-top: 15px;
     font-size: 15px;
 }
 #pwmpv-about-button {
@@ -207,6 +217,7 @@ const CSS =
 }
 #pwmpv-about-table td {
     border: 2px solid rgba(255, 255, 255, 0.5);
+    padding: 0px 15px 0px 15px;
 }
 #pwmpv-about-div a {
     color: rgba(255, 255, 255, 1);
@@ -283,41 +294,49 @@ const CSS =
     height: 240px;
     border-radius: 5px !important;
     border: 3px solid rgba(255, 255, 255, 1) !important;
-    text-align: center;
-    padding: 10px;
+    text-align: left;
 }
 #pwmpv-setting-table td {
     border: 0px solid rgba(255, 255, 255, 0.5);
-    padding-top: 10px;
+    padding-top: 18px;
 }
-.pwmpv-title-td{
-    width: 120px;
+.tip-span {
+    font-size: xx-small;
+    color: yellow;
+    position: fixed;
+    padding-left: 5px;
+    padding-top: 9px;
+}
+.pwmpv-title-td {
+    width: 70px;
     height: 30px;
     border: none;
     font-size: 14px;
+    padding-left: 25px;
 }
 #pwmpv-setting-table input {
-    width: 400px;
-    height: 30px;
+    width: 430px;
+    height: 25px;
     border: none;
     outline: none;
     padding-left: 6px;
-    border-radius: 3px;
+    border-radius: 2px;
     color: rgba(0, 0, 0, 1);
     background-color: rgba(255, 255, 255, 0.9);
 }
-#pwmpv-bilibili-codecs-select {
-    width: 406px;
-    height: 30px;
+#pwmpv-bilibili-codecs-select,
+#pwmpv-best-quality-select {
+    width: 90px;
+    height: 25px;
     border: none;
     outline: none;
     padding-left: 6px;
-    border-radius: 3px;
+    border-radius: 2px;
     color: rgba(0, 0, 0, 1);
     background-color: rgba(255, 255, 255, 0.9);
 }
 #pwmpv-save-button {
-    margin-left: 80px;
+    margin-left: 105px;
     width: 300px;
     height: 30px;
     border: none;
@@ -356,9 +375,8 @@ const CSS =
     background-color: rgba(0, 0, 0, 0.5);
 }
 .pwmpv-tips-td {
-    color: rgba(255, 0, 0, 1);
-    font-size: 14px;
-    font-weight: bold;
+    color: rgba(255, 255, 255, 1);
+    font-size: 12px;
 }
 .pwmpv-footer-span {
     margin-top: 10px;
@@ -435,6 +453,7 @@ const SETTING_DIV_ID = "pwmpv-setting-div";
 const MPV_PATH_INPUT_ID = "pwmpv-mpv-path-input";
 const PROXY_INPUT_ID = "pwmpv-proxy-input";
 const BILIBILI_CODECS_SELECT_ID = "pwmpv-bilibili-codecs-select";
+const BEST_QUALITY_SELECT_ID = "pwmpv-best-quality-select";
 const SAVE_BUTTON_ID = "pwmpv-save-button";
 const DOWNLOAD_BUTTON_ID = "pwmpv-download-button";
 // display
@@ -446,6 +465,8 @@ const KEY_PROXY = "PROXY";
 const KEY_REG_VERSION = "REG_VERSION";
 const KEY_BILIBILI_CODECS = "BILIBILI_CODECS";
 const BILIBILI_CODECS_HEVC = "12";
+const KEY_BEST_QUALITY = "BEST_QUALITY";
+const BEST_QUALITY_UNLIMITED = "unlimited";
 
 function appendHTML() {
     var div = document.createElement("div");
@@ -458,6 +479,7 @@ function appendCSS() {
     document.head.appendChild(css);
 }
 var bilibiliCodecs;
+var bestQuality;
 var isFullScreen = false;
 function addListener() {
     // 关于
@@ -487,6 +509,7 @@ function addListener() {
     // 设置
     var settingButton = document.getElementById(SETTING_BUTTON_ID);
     var bilibiliCodecsSelect = document.getElementById(BILIBILI_CODECS_SELECT_ID);
+    var bestQualitySelect = document.getElementById(BEST_QUALITY_SELECT_ID);
     var saveButton = document.getElementById(SAVE_BUTTON_ID);
     var downloadButton = document.getElementById(DOWNLOAD_BUTTON_ID);
     var settingDiv = document.getElementById(SETTING_DIV_ID);
@@ -507,7 +530,14 @@ function addListener() {
     }
     bilibiliCodecsSelect.onchange = function () {
         bilibiliCodecs = this.value;
-        Toast("💡 保存设置后，请刷新当前页面以更新编码 💡", 1500);
+    };
+    bestQuality = GM_getValue(KEY_BEST_QUALITY);
+    if (!bestQuality) {
+        bestQuality = BEST_QUALITY_UNLIMITED;
+        GM_setValue(KEY_BEST_QUALITY, bestQuality);
+    }
+    bestQualitySelect.onchange = function () {
+        bestQuality = this.value;
     };
     saveButton.onclick = function () {
         let oldMpvPath = GM_getValue(KEY_MPV_PATH);
@@ -515,39 +545,45 @@ function addListener() {
         let proxy = proxyInput.value;
         if (!mpvPath) {
             downloadButton.className = "pwmpv-download-disable";
-            Toast("⚠️ MPV路径不能为空 ⚠️", 1500);
+            Toast("⚠️ 软件路径不能为空 ⚠️", 2000);
             return;
         }
         if (/.*[\u4e00-\u9fa5]+.*$/.test(mpvPath)) {
             downloadButton.className = "pwmpv-download-disable";
-            Toast("⚠️ MPV路径不能包含中文 ⚠️", 1500)
+            Toast("⚠️ 软件路径不能包含中文 ⚠️", 2000);
             return;
         }
         mpvPath = mpvPath.replace(/[\\|/]+/g, "//");
-        if(!mpvPath.endsWith(".com")){
-            if(!mpvPath.endsWith("//")){
+        if (!mpvPath.endsWith(".com")) {
+            if (!mpvPath.endsWith("//")) {
                 mpvPath = mpvPath + "//";
             }
-            if(mpvPath.endsWith("mpvnet//")){
+            if (mpvPath.endsWith("mpvnet//")) {
                 mpvPath = mpvPath + "mpvnet.com";
-            } else if(mpvPath.endsWith("mpv//") || mpvPath.endsWith("mpv-lazy//")) {
+            } else if (mpvPath.endsWith("mpv//") || mpvPath.endsWith("mpv-lazy//")) {
                 mpvPath = mpvPath + "mpv.com";
             } else {
-                Toast("⚠️ MPV路径错误，正确示例：D:/daily/mpvnet/mpvnet.com ⚠️", 2000)
+                Toast("⚠️ 软件路径错误，正确示例：D:/daily/mpvnet/mpvnet.com ⚠️", 3000)
                 return;
             }
         }
         mpvPathInput.value = mpvPath;
         GM_setValue(KEY_MPV_PATH, mpvPath);
         GM_setValue(KEY_PROXY, proxy);
-        GM_setValue(KEY_BILIBILI_CODECS, bilibiliCodecs);
+        if (bilibiliCodecs != GM_getValue(KEY_BILIBILI_CODECS) || bestQuality != GM_getValue(KEY_BEST_QUALITY)) {
+            GM_setValue(KEY_BILIBILI_CODECS, bilibiliCodecs);
+            GM_setValue(KEY_BEST_QUALITY, bestQuality);
+            // 重新获取视频链接
+            initCurrentPageInfo();
+            refreshCurrentVideoUrl();
+        }
         // debug(proxy);
         downloadButton.className = "pwmpv-download-enable";
         if (oldMpvPath != mpvPath) {
-            Toast("🔥 请重新添加注册表信息 🔥", 2500);
+            Toast("🔥 请重新添加注册表信息 🔥", 3000);
             downloadButton.click();
         } else {
-            Toast("✅  保存成功  ✅", 1500);
+            Toast("✅  保存成功  ✅", 2000);
         }
     };
     downloadButton.onclick = function () {
@@ -582,11 +618,13 @@ function showSettingDiv() {
     var downloadButton = document.getElementById(DOWNLOAD_BUTTON_ID);
     var settingDiv = document.getElementById(SETTING_DIV_ID);
     var bilibiliCodecsSelect = document.getElementById(BILIBILI_CODECS_SELECT_ID);
+    var bestQualitySelect = document.getElementById(BEST_QUALITY_SELECT_ID);
     var mpvPathInput = document.getElementById(MPV_PATH_INPUT_ID);
     var proxyInput = document.getElementById(PROXY_INPUT_ID);
     let mpvPath = GM_getValue(KEY_MPV_PATH);
     let proxy = GM_getValue(KEY_PROXY);
     bilibiliCodecs = GM_getValue(KEY_BILIBILI_CODECS);
+    bestQuality = GM_getValue(KEY_BEST_QUALITY);
     if (mpvPath) {
         mpvPathInput.value = mpvPath;
         downloadButton.className = "pwmpv-download-enable";
@@ -597,6 +635,7 @@ function showSettingDiv() {
         proxyInput.value = proxy;
     }
     bilibiliCodecsSelect.value = bilibiliCodecs;
+    bestQualitySelect.value = bestQuality;
     settingDiv.style.display = DISPLAY_FLEX;
 }
 // 显示消息
@@ -604,7 +643,7 @@ function Toast(msg, duration) {
     duration = isNaN(duration) ? 3000 : duration;
     var m = document.createElement('div');
     m.innerHTML = msg;
-    m.style.cssText = "max-width:60%;min-width: 150px;padding:0 14px;height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 15%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 0, 0, 0.6);font-size: 14px;";
+    m.style.cssText = "max-width:60%;min-width: 150px;padding:0 14px;height: 40px;color: rgb(255, 255, 255);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 15%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(0, 0, 0, 0.9);font-size: 14px;";
     document.body.appendChild(m);
     setTimeout(function () {
         var d = 0.5;
@@ -683,8 +722,8 @@ class Handler {
     }
     // 校验视频链接是否有效
     checkCurrentVideoUrl() {
-        if (this.baseCheckCurrentVideoUrl()){
-            if(!isFullScreen){
+        if (this.baseCheckCurrentVideoUrl()) {
+            if (!isFullScreen) {
                 document.getElementById(BUTTON_DIV).style.display = DISPLAY_FLEX;
             }
             return true;
@@ -713,9 +752,9 @@ class Handler {
         return null;
     }
     // 视频链接基础校验
-    baseCheckCurrentVideoUrl(){
+    baseCheckCurrentVideoUrl() {
         // debug("current video url: " + currentVideoUrl);
-        if (!currentVideoUrl || !currentVideoUrl.startsWith("http") 
+        if (!currentVideoUrl || !currentVideoUrl.startsWith("http")
             || currentVideoUrl.indexOf("yun.66dm.net") != -1
             || currentVideoUrl.indexOf("www.xmfans.me") != -1
             || currentVideoUrl.indexOf("sod.bunediy.com") != -1) {
@@ -727,7 +766,14 @@ class Handler {
 
 // 油管
 const YOUTUBE = "www.youtube.com";
-
+const YOUTUBE_QN = {
+    "unlimited": "",
+    "2160p": "--ytdl-format=bestvideo[height<=?2160]%2Bbestaudio/best",
+    "1440p": "--ytdl-format=bestvideo[height<=?1440]%2Bbestaudio/best",
+    "1080p": "--ytdl-format=bestvideo[height<=?1080]%2Bbestaudio/best",
+    "720p": "--ytdl-format=bestvideo[height<=?720]%2Bbestaudio/best",
+    "480p": "--ytdl-format=bestvideo[height<=?480]%2Bbestaudio/best",
+};
 class YoutubeHandler extends Handler {
     // 获取当前视频链接
     getCurrentVideoUrl() {
@@ -743,6 +789,9 @@ class YoutubeHandler extends Handler {
         let urlProtocol = new UrlProtocol;
         urlProtocol.appendStartTime();
         urlProtocol.appendProxy();
+        if (bestQuality) {
+            urlProtocol.append(YOUTUBE_QN[bestQuality]);
+        }
         return urlProtocol.getLink();
     }
     // 校验视频链接是否有效
@@ -760,7 +809,14 @@ const BILIBILI = "www.bilibili.com";
 const BILIBILI_API = 'https://api.bilibili.com';
 // cid 用于传递给 mpv 获取弹幕
 var bilibiliCid;
-
+const BILIBILI_QN = {
+    "unlimited": 127,
+    "2160p": 126,
+    "1440p": 116,
+    "1080p": 116,
+    "720p": 74,
+    "480p": 32,
+};
 class BilibiliHandler extends Handler {
     // 获取当前视频链接
     getCurrentVideoUrl() {
@@ -798,7 +854,7 @@ class BilibiliHandler extends Handler {
             } else {
                 eno = "1";
             }
-            
+
             // debug('eno: ' + eno);
             getBilibiliBangumiUrl(epid, eno);
         }
@@ -902,9 +958,14 @@ function getBilibiliPlayUrl(avid, cid) {
                 // debug(dash.audio[0].id);
                 currentAudioUrl = dash.audio[0].baseUrl;
             }
-            let baseUrl = dash.video[0].baseUrl;
-            let id = dash.video[0].id;
-            let i = 1;
+            let i = 0;
+            // 限制画质
+            let qn = BILIBILI_QN[bestQuality];
+            while (i < dash.video.length && dash.video[i].id > qn) {
+                i++;
+            }
+            let baseUrl = dash.video[i].baseUrl;
+            let id = dash.video[i].id;
             while (i < dash.video.length) {
                 if (dash.video[i].id != id) {
                     break;
@@ -983,7 +1044,7 @@ class DmlaccHandler extends Handler {
     // 暂停网页视频
     pauseCurrentVideo() {
         document.getElementsByTagName("iframe")[2].contentWindow.postMessage("pause", "https://" + YHDMJX);
-    } 
+    }
 }
 
 // 樱花动漫网和风车动漫实际播放地址
