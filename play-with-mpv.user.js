@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.4
+// @version                 2.1.5
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -297,6 +297,7 @@ const CSS =
     text-align: left;
 }
 #pwmpv-setting-table td {
+    font-size: 14px;
     border: 0px solid rgba(255, 255, 255, 0.5);
     padding-top: 18px;
 }
@@ -308,15 +309,17 @@ const CSS =
     padding-top: 9px;
 }
 .pwmpv-title-td {
-    width: 70px;
+    width: 90px;
     height: 30px;
     border: none;
     font-size: 14px;
-    padding-left: 25px;
+    padding-left: 12px;
+    text-align: center;
 }
 #pwmpv-setting-table input {
+    font-size: 14px;
     width: 430px;
-    height: 25px;
+    height: 26px;
     border: none;
     outline: none;
     padding-left: 6px;
@@ -336,6 +339,7 @@ const CSS =
     background-color: rgba(255, 255, 255, 0.9);
 }
 #pwmpv-save-button {
+    font-size: 14px;
     margin-left: 105px;
     width: 300px;
     height: 30px;
@@ -356,6 +360,7 @@ const CSS =
     cursor: pointer;
 }
 .pwmpv-download-enable {
+    font-size: x-small;
     margin-left: 10px;
     width: 80px;
     height: 30px;
@@ -366,6 +371,7 @@ const CSS =
     
 }
 .pwmpv-download-disable {
+    font-size: x-small;
     margin-left: 10px;
     width: 80px;
     height: 30px;
