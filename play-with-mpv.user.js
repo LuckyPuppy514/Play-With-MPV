@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.5
+// @version                 2.1.6
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -15,7 +15,9 @@
 // @include                 https://www.youtube.com/watch/*
 // @include                 https://www.bilibili.com/bangumi/play/*
 // @include                 https://www.bilibili.com/video/*
+// @include                 https://live.bilibili.com/*
 // @connect                 api.bilibili.com
+// @connect                 api.live.bilibili.com
 // @include                 https://ddys.tv/*
 // @include                 https://ddys2.me/*
 // @include                 https://www.996dm.com/play/*
@@ -879,7 +881,7 @@ class BilibiliHandler extends Handler {
         urlProtocol.appendStartTime();
         urlProtocol.appendTitle();
         urlProtocol.append('--audio-file="' + currentAudioUrl + '"');
-        urlProtocol.append('--http-header-fields="referer: ' + currentUrl + ',user-agent: ' + navigator.userAgent + '"');
+        urlProtocol.append('--http-header-fields="referer: https://www.bilibili.com, user-agent: ' + navigator.userAgent + '"');
         urlProtocol.append('--script-opts="cid=' + bilibiliCid + '"');
         return urlProtocol.getLink();
     }
@@ -986,6 +988,53 @@ function getBilibiliPlayUrl(avid, cid) {
             handler.checkCurrentVideoUrl();
         }
     });
+}
+
+// B站直播
+const BILIBILI_LIVE = "live.bilibili.com";
+// B站直播 API
+const BILIBILI_LIVE_API = 'https://api.live.bilibili.com';
+
+const BILIBILI_LIVE_QN = {
+    "unlimited": 4,
+    "2160p": 4,
+    "1440p": 4,
+    "1080p": 4,
+    "720p": 3,
+    "480p": 2,
+};
+class BilibiliLiveHandler extends Handler {
+    // 获取当前视频链接
+    getCurrentVideoUrl() {
+        let url = document.getElementsByTagName("iframe")[0].src;
+        let index = url.indexOf("roomid=");
+        if (index == -1) {
+            return;
+        }
+        let roomid = url.substring(index + 7);
+        roomid = roomid.substring(0, roomid.indexOf("&"));
+        let queryBilibiliLiveVideoUrl = "/room/v1/Room/playUrl?"
+            + "quality=" + BILIBILI_LIVE_QN[bestQuality]
+            + "&cid=" + roomid;
+        $.ajax({
+            type: "GET",
+            url: BILIBILI_LIVE_API + queryBilibiliLiveVideoUrl,
+            xhrFields: {
+                withCredentials: true
+            },
+            success: function (res) {
+                currentVideoUrl = res.data.durl[0].url;
+                handler.checkCurrentVideoUrl();
+            }
+        });
+    }
+    // 获取调用 mpv 链接
+    getUrlProtocolLink() {
+        let urlProtocol = new UrlProtocol;
+        urlProtocol.appendTitle();
+        urlProtocol.append('--http-header-fields="referer: https://live.bilibili.com, user-agent: ' + navigator.userAgent + '"');
+        return urlProtocol.getLink();
+    }
 }
 
 // 低端影视
@@ -1241,6 +1290,8 @@ function createHandler() {
     // debug("start create handler: " + currentDomain);
     if (BILIBILI.indexOf(currentDomain) != -1) {
         handler = new BilibiliHandler();
+    } else if (BILIBILI_LIVE.indexOf(currentDomain) != -1) {
+        handler = new BilibiliLiveHandler();
     } else if (DDRK.indexOf(currentDomain) != -1) {
         handler = new DdrkHandler();
     } else if (YOUTUBE.indexOf(currentDomain) != -1) {
@@ -1303,16 +1354,21 @@ function pageChangeListener() {
     }
 }
 
-// 添加组件和监听器
-appendHTML();
-appendCSS();
-addListener();
+currentUrl = window.location.href;
+if (currentUrl.startsWith("https://live.bilibili.com/p/html/live-web-mng/index.html")) {
+    console.log("排除页面：" + currentUrl);
+} else {
+    // 添加组件和监听器
+    appendHTML();
+    appendCSS();
+    addListener();
 
-// 初始化页面信息
-initCurrentPageInfo();
-// 创建处理器
-createHandler();
-// 刷新视频链接
-refreshCurrentVideoUrl();
-// 定时监听页面变化
-setInterval(pageChangeListener, 700);
+    // 初始化页面信息
+    initCurrentPageInfo();
+    // 创建处理器
+    createHandler();
+    // 刷新视频链接
+    refreshCurrentVideoUrl();
+    // 定时监听页面变化
+    setInterval(pageChangeListener, 700);
+}
