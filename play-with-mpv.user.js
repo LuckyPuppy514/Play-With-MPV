@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.7
+// @version                 2.1.8
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -34,6 +34,9 @@
 // @include                 http*://*.rmvb
 // @include                 http*://alist.*
 // @include                 http*://*:5244*
+// @include                 https://hdzyk.com/?m=*
+// @include                 https://1080zyk*.com/?m=*
+// @include                 https://vip.zykbf.com/?url=*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -76,7 +79,7 @@ const DIV =
                 <a href="https://ani.gamer.com.tw/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 57px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bahaLOGO_1200x630.jpg"\></a>
                 <a href="https://www.996dm.com/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 95px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/logo_f.png"/></a>
                 <a href="http://www.dmlaa.com/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg"/></a>
-                <a href="https://www.dm233.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/dm233.ico"/></a>
+                <a href="https://github.com/LuckyPuppy514/Play-With-MPV#-%E7%AE%80%E4%BB%8B" target="_blank" style="margin-left: 6px;">. . . . . .</a>
             </td>
         </tr>
         <tr>
@@ -269,7 +272,7 @@ const CSS =
     border-radius: 50%;
     background-size: cover;
     background-color: rgba(255, 255, 255, 0);
-    background-image: url(https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/lx-setting.png);    
+    background-image: url(https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/lx-setting.png);
 }
 #pwmpv-setting-button:hover {
     bottom: 54px;
@@ -377,7 +380,7 @@ const CSS =
     border-radius: 3px;
     color: rgba(255, 255, 255, 1);
     background-color: rgba(0, 255, 50, 0.6);
-    
+
 }
 .pwmpv-download-disable {
     font-size: x-small;
@@ -423,7 +426,7 @@ const CSS =
     height: 25px;
     margin-left: 8px;
     margin-right: 8px;
-    margin-bottom: 2px;  
+    margin-bottom: 2px;
 }
 .pwmpv-support-url-icon-large {
     width: 37px;
@@ -791,16 +794,13 @@ const YOUTUBE_QN = {
     "480p": "--ytdl-format=bestvideo[height<=?480]%2Bbestaudio/best",
 };
 class YoutubeHandler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         currentVideoUrl = currentUrl;
         this.checkCurrentVideoUrl();
     }
-    // 获取开始时间
     getStartTime() {
         return this.getStartTimeByClassName("ytp-time-current");
     }
-    // 获取调用 mpv 链接
     getUrlProtocolLink() {
         let urlProtocol = new UrlProtocol;
         urlProtocol.appendStartTime();
@@ -810,7 +810,6 @@ class YoutubeHandler extends Handler {
         }
         return urlProtocol.getLink();
     }
-    // 校验视频链接是否有效
     checkCurrentVideoUrl() {
         if (currentUrl.indexOf("/watch") == -1 && currentUrl.indexOf("/playlist") == -1) {
             return false;
@@ -834,7 +833,6 @@ const BILIBILI_QN = {
     "480p": 32,
 };
 class BilibiliHandler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let index = currentUrl.indexOf('/video/');
         if (index != -1) {
@@ -875,7 +873,6 @@ class BilibiliHandler extends Handler {
             getBilibiliBangumiUrl(epid, eno);
         }
     }
-    // 获取开始时间
     getStartTime() {
         let startTime = this.getStartTimeByClassName("bpx-player-ctrl-time-current");
         if (!startTime) {
@@ -883,7 +880,6 @@ class BilibiliHandler extends Handler {
         }
         return startTime;
     }
-    // 获取调用 mpv 链接
     getUrlProtocolLink() {
         let urlProtocol = new UrlProtocol;
         urlProtocol.appendStartTime();
@@ -1012,7 +1008,6 @@ const BILIBILI_LIVE_QN = {
     "480p": 2,
 };
 class BilibiliLiveHandler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let url = document.getElementsByTagName("iframe")[0].src;
         let index = url.indexOf("roomid=");
@@ -1036,7 +1031,6 @@ class BilibiliLiveHandler extends Handler {
             }
         });
     }
-    // 获取调用 mpv 链接
     getUrlProtocolLink() {
         let urlProtocol = new UrlProtocol;
         urlProtocol.appendTitle();
@@ -1051,7 +1045,6 @@ const DDRK = "ddys.tv, ddys2.me";
 var ddrkPlayStatus;
 
 class DdrkHandler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         // 点击播放按钮加载 video 元素
         if (!ddrkPlayStatus) {
@@ -1066,7 +1059,6 @@ class DdrkHandler extends Handler {
         currentVideoUrl = document.getElementById('vjsp_html5_api').src;
         this.checkCurrentVideoUrl();
     }
-    // 获取开始时间
     getStartTime() {
         return this.getStartTimeByClassName("vjs-time-tooltip");
     }
@@ -1076,7 +1068,6 @@ class DdrkHandler extends Handler {
 const DM6CC = "www.6dm.cc, www.996dm.com";
 
 class Dm6ccHandler extends Handler {
-    // 获取当前视频链接
     constructor() {
         super();
         window.addEventListener('message', function (event) {
@@ -1085,7 +1076,6 @@ class Dm6ccHandler extends Handler {
             window.removeEventListener("message", () => { });
         }, false);
     }
-    // 暂停网页视频
     pauseCurrentVideo() {
         document.getElementsByTagName("iframe")[2].contentWindow.postMessage("pause", "https://" + YHDMJX);
     }
@@ -1095,7 +1085,6 @@ class Dm6ccHandler extends Handler {
 const DMLACC = "www.dmlaa.com";
 
 class DmlaccHandler extends Handler {
-    // 获取当前视频链接
     constructor() {
         super();
         window.addEventListener('message', function (event) {
@@ -1104,7 +1093,6 @@ class DmlaccHandler extends Handler {
             window.removeEventListener("message", () => { });
         }, false);
     }
-    // 暂停网页视频
     pauseCurrentVideo() {
         document.getElementsByTagName("iframe")[2].contentWindow.postMessage("pause", "https://" + YHDMJX);
     }
@@ -1116,22 +1104,18 @@ const YHDMJX = "danmu.yhdmjx.com";
 class YhdmjxHandler extends Handler {
     constructor() {
         super();
-        // 监听父页面暂停指令
         window.addEventListener("message", function (event) {
             if (event.data == "pause") {
                 document.getElementsByTagName('video')[0].pause();
             }
         }, false);
     }
-    // 获取当前视频链接
     getCurrentVideoUrl() {
-        // 发送视频链接到父页面
         currentVideoUrl = document.getElementsByTagName('video')[0].src;
         if (this.checkCurrentVideoUrl()) {
             window.parent.postMessage(currentVideoUrl, "*");
         }
     }
-    // 校验视频链接是否有效
     checkCurrentVideoUrl() {
         return this.baseCheckCurrentVideoUrl();
     }
@@ -1145,7 +1129,6 @@ class Dm233Handler extends Handler {
         super();
         this.videoElement = null;
     }
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let iframe = document.getElementById('id_main_playiframe');
         this.videoElement = iframe.contentWindow.document.getElementsByTagName("video")[0];
@@ -1159,11 +1142,9 @@ class Dm233Handler extends Handler {
         currentVideoUrl = videoUrl;
         this.checkCurrentVideoUrl();
     }
-    // 获取开始时间
     getStartTime() {
         return this.getStartTimeByClassName("dplayer-ptime");
     }
-    // 暂停网页视频
     pauseCurrentVideo() {
         this.videoElement.pause();
     }
@@ -1173,7 +1154,6 @@ class Dm233Handler extends Handler {
 const DMH8 = "www.dmh8.com";
 
 class Dmh8Handler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let iframe = document.getElementsByTagName('iframe')[2];
         let videoUrl = iframe.src;
@@ -1182,7 +1162,6 @@ class Dmh8Handler extends Handler {
         currentVideoUrl = decodeURIComponent(videoUrl.substring(startIndex, endIndex));
         this.checkCurrentVideoUrl();
     }
-    // 获取开始时间
     getStartTime() {
         return this.getStartTimeByClassName("dplayer-ptime");
     }
@@ -1196,22 +1175,21 @@ class YhdmpHandler extends Handler {
         super();
         this.videoElement = null;
     }
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let iframe = document.getElementById('yh_playfram');
+        if (!iframe) {
+            return;
+        }
         this.videoElement = iframe.contentWindow.document.getElementsByTagName("video")[0];
-
         let videoUrl = iframe.src;
         let startIndex = videoUrl.indexOf('url=http') + 4;
         let endIndex = videoUrl.indexOf('&getplay_url=');
         currentVideoUrl = decodeURIComponent(videoUrl.substring(startIndex, endIndex));
         this.checkCurrentVideoUrl();
     }
-    // 获取开始时间
     getStartTime() {
         return this.getStartTimeByClassName("dplayer-ptime");
     }
-    // 暂停网页视频
     pauseCurrentVideo() {
         this.videoElement.pause();
     }
@@ -1223,7 +1201,6 @@ const GAMER = "ani.gamer.com.tw";
 const GAMER_API = "https://ani.gamer.com.tw/ajax/m3u8.php";
 
 class GamerHandler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let index = currentUrl.indexOf("sn=") + 3;
         if (index == -1) {
@@ -1249,11 +1226,9 @@ class GamerHandler extends Handler {
             }
         })
     }
-    // 获取开始时间
     getStartTime() {
         return this.getStartTimeByClassName("vjs-current-time-display");
     }
-    // 获取调用 mpv 链接
     getUrlProtocolLink() {
         let urlProtocol = new UrlProtocol;
         urlProtocol.appendStartTime();
@@ -1264,12 +1239,10 @@ class GamerHandler extends Handler {
     }
 }
 
-
 // alist
 const ALIST = "alist";
 
 class AlistHandler extends Handler {
-    // 获取当前视频链接
     getCurrentVideoUrl() {
         let videoElement = document.getElementsByTagName("video")[0];
         if (!videoElement) {
@@ -1283,6 +1256,49 @@ class AlistHandler extends Handler {
             currentVideoUrl = src;
         }
         handler.checkCurrentVideoUrl();
+    }
+}
+
+// 优质资源库
+const HDZYK = "hdzyk.com, 1080zyk1.com, 1080zyk1.com, 1080zyk1.com, 1080zyk1.com, 1080zyk1.com";
+
+class HdzykHandler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener('message', function (event) {
+            currentVideoUrl = event.data;
+            this.checkCurrentVideoUrl();
+            window.removeEventListener("message", () => { });
+        }, false);
+    }
+    pauseCurrentVideo() {
+        document.getElementsByTagName("iframe")[1].contentWindow.postMessage("pause", "https://" + ZYKBF);
+    }
+}
+
+// 优质资源库实际播放地址
+const ZYKBF = "vip.zykbf.com";
+
+class ZykbfHandler extends Handler {
+    constructor() {
+        super();
+        // 监听父页面暂停指令
+        window.addEventListener("message", function (event) {
+            if (event.data == "pause") {
+                document.getElementsByTagName('video')[0].pause();
+            }
+        }, false);
+    }
+    getCurrentVideoUrl() {
+		let startIndex = currentUrl.indexOf('url=http') + 4;
+        let endIndex = currentUrl.indexOf('m3u8') + 4;
+		currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
+        if (this.checkCurrentVideoUrl()) {
+            window.parent.postMessage(currentVideoUrl, "*");
+        }
+    }
+    checkCurrentVideoUrl() {
+        return this.baseCheckCurrentVideoUrl();
     }
 }
 
@@ -1341,6 +1357,10 @@ function createHandler() {
         handler = new YhdmpHandler();
     } else if (GAMER.indexOf(currentDomain) != -1) {
         handler = new GamerHandler();
+    } else if (HDZYK.indexOf(currentDomain) != -1) {
+        handler = new HdzykHandler();
+    } else if (ZYKBF.indexOf(currentDomain) != -1) {
+        handler = new ZykbfHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
