@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.6
+// @version                 2.1.7
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -28,6 +28,12 @@
 // @include                 http://www.dmh8.com/player/*
 // @include                 https://www.yhdmp.net/vp/*
 // @include                 https://ani.gamer.com.tw/animeVideo.php?*
+// @include                 http*://*.mp4
+// @include                 http*://*.mkv
+// @include                 http*://*.avi
+// @include                 http*://*.rmvb
+// @include                 http*://alist.*
+// @include                 http*://*:5244*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -225,6 +231,7 @@ const CSS =
     color: rgba(255, 255, 255, 1);
     text-decoration: none;
     font-size: 14px;
+    display: inline-block;
 }
 
 #pwmpv-play-button {
@@ -396,6 +403,7 @@ const CSS =
     text-decoration: none;
     font-size: 14px;
     margin-bottom: 1px;
+    display: inline-block;
 }
 .pwmpv-footer-icon {
     width: 18px;
@@ -1208,6 +1216,7 @@ class YhdmpHandler extends Handler {
         this.videoElement.pause();
     }
 }
+
 // 巴哈姆特
 const GAMER = "ani.gamer.com.tw";
 // 巴哈姆特 API
@@ -1252,6 +1261,28 @@ class GamerHandler extends Handler {
         urlProtocol.appendProxy();
         urlProtocol.append('--http-header-fields="origin: https://ani.gamer.com.tw"');
         return urlProtocol.getLink();
+    }
+}
+
+
+// alist
+const ALIST = "alist";
+
+class AlistHandler extends Handler {
+    // 获取当前视频链接
+    getCurrentVideoUrl() {
+        let videoElement = document.getElementsByTagName("video")[0];
+        if (!videoElement) {
+            return;
+        }
+        let src = videoElement.src;
+        let index = src.indexOf("?");
+        if (index != -1) {
+            currentVideoUrl = src.substring(0, index + 1) + encodeURIComponent(src.substring(index + 1));
+        } else {
+            currentVideoUrl = src;
+        }
+        handler.checkCurrentVideoUrl();
     }
 }
 
@@ -1310,6 +1341,10 @@ function createHandler() {
         handler = new YhdmpHandler();
     } else if (GAMER.indexOf(currentDomain) != -1) {
         handler = new GamerHandler();
+    } else {
+        if (document.title.toLowerCase().indexOf(ALIST) != -1) {
+            handler = new AlistHandler();
+        }
     }
 }
 // 刷新视频链接
@@ -1353,22 +1388,30 @@ function pageChangeListener() {
         refreshCurrentVideoUrl();
     }
 }
+// 初始化
+function init() {
+    currentUrl = window.location.href;
+    currentDomain = window.location.host;
+    if (currentUrl.startsWith("https://live.bilibili.com/p/html/live-web-mng/index.html")) {
+        console.log("排除页面：" + currentUrl);
+    } else {
+        // 创建处理器
+        createHandler();
+        if (handler) {
+            // 添加组件和监听器
+            appendHTML();
+            appendCSS();
+            addListener();
 
-currentUrl = window.location.href;
-if (currentUrl.startsWith("https://live.bilibili.com/p/html/live-web-mng/index.html")) {
-    console.log("排除页面：" + currentUrl);
-} else {
-    // 添加组件和监听器
-    appendHTML();
-    appendCSS();
-    addListener();
-
-    // 初始化页面信息
-    initCurrentPageInfo();
-    // 创建处理器
-    createHandler();
-    // 刷新视频链接
-    refreshCurrentVideoUrl();
-    // 定时监听页面变化
-    setInterval(pageChangeListener, 700);
+            // 初始化页面信息
+            initCurrentPageInfo();
+            // 刷新视频链接
+            refreshCurrentVideoUrl();
+            // 定时监听页面变化
+            setInterval(pageChangeListener, 700);
+        } else {
+            console.log("create handler fail");
+        }
+    }
 }
+init();
