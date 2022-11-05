@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.1.9
+// @version                 2.2.0
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -37,6 +37,14 @@
 // @include                 https://hdzyk.com/?m=*
 // @include                 https://1080zyk*.com/?m=*
 // @include                 https://vip.zykbf.com/?url=*
+// @include                 https://www.kk151.com/play/*
+// @include                 https://jx.m3u8.tv/jiexi/?url=*
+// @include                 https://jx.wolongzywcdn.com:65/m3u8.php?url=*
+// @include                 https://www.m3u8.tv.cdn.8old.cn/jx.php?url=*
+// @include                 https://jx.wujinkk.com/dplayer/?url=*
+// @include                 https://www.ikdmjx.com/?url=*
+// @include                 https://hls.kuaibofang.com/?url=*
+// @include                 https://jx.jxbdzyw.com/m3u8/?url=*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1302,6 +1310,49 @@ class ZykbfHandler extends Handler {
     }
 }
 
+// 动漫之家
+const KK151 = "www.kk151.com";
+
+class Kk151Handler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener('message', function (event) {
+            currentVideoUrl = event.data;
+            handler.checkCurrentVideoUrl();
+            window.removeEventListener("message", () => { });
+        }, false);
+    }
+}
+
+// 动漫之家实际播放地址
+const JXM3U8TV = "jx.m3u8.tv, jx.wolongzywcdn.com:65, www.m3u8.tv.cdn.8old.cn, jx.wujinkk.com, www.ikdmjx.com, hls.kuaibofang.com, jx.jxbdzyw.com";
+
+class Jxm3u8tvHandler extends Handler {
+    constructor() {
+        super();
+        // 监听父页面暂停指令
+        window.addEventListener("message", function (event) {
+            if (event.data == "pause") {
+                document.getElementsByTagName('video')[0].pause();
+            }
+        }, false);
+    }
+    getCurrentVideoUrl() {
+		let startIndex = currentUrl.indexOf('url=http') + 4;
+        if(startIndex == 3){
+            startIndex = currentUrl.indexOf('url=%20http') + 7;
+        }
+        let endIndex = currentUrl.lastIndexOf('m3u8') + 4;
+		currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
+        if (this.checkCurrentVideoUrl()) {
+            window.top.postMessage(currentVideoUrl, "*");
+        }
+    }
+    checkCurrentVideoUrl() {
+        return this.baseCheckCurrentVideoUrl();
+    }
+}
+
 // 最大尝试次数
 const MAX_TRY_TIME = 8;
 // 定时器
@@ -1361,6 +1412,10 @@ function createHandler() {
         handler = new HdzykHandler();
     } else if (ZYKBF.indexOf(currentDomain) != -1) {
         handler = new ZykbfHandler();
+    }  else if (KK151.indexOf(currentDomain) != -1) {
+        handler = new Kk151Handler();
+    } else if (JXM3U8TV.indexOf(currentDomain) != -1) {
+        handler = new Jxm3u8tvHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
