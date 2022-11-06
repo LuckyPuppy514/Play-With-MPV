@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.0
+// @version                 2.2.1
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -45,6 +45,10 @@
 // @include                 https://www.ikdmjx.com/?url=*
 // @include                 https://hls.kuaibofang.com/?url=*
 // @include                 https://jx.jxbdzyw.com/m3u8/?url=*
+// @include                 https://libvio.fun/play/*
+// @include                 https://www.libvio.me/play/*
+// @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/ai.php?url=*
+// @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/lb.php?url=*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1328,6 +1332,43 @@ class Kk151Handler extends Handler {
 const JXM3U8TV = "jx.m3u8.tv, jx.wolongzywcdn.com:65, www.m3u8.tv.cdn.8old.cn, jx.wujinkk.com, www.ikdmjx.com, hls.kuaibofang.com, jx.jxbdzyw.com";
 
 class Jxm3u8tvHandler extends Handler {
+    getCurrentVideoUrl() {
+		let startIndex = currentUrl.indexOf('url=http') + 4;
+        if(startIndex == 3){
+            startIndex = currentUrl.indexOf('url=%20http') + 7;
+        }
+        let endIndex = currentUrl.lastIndexOf('m3u8') + 4;
+		currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
+        if (this.checkCurrentVideoUrl()) {
+            window.top.postMessage(currentVideoUrl, "*");
+        }
+    }
+    checkCurrentVideoUrl() {
+        return this.baseCheckCurrentVideoUrl();
+    }
+}
+
+// LIBVIO
+const LIBVIO = "libvio.fun, www.libvio.me";
+
+class LibvioHandler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener('message', function (event) {
+            currentVideoUrl = event.data;
+            handler.checkCurrentVideoUrl();
+            window.removeEventListener("message", () => { });
+        }, false);
+    }
+    pauseCurrentVideo() {
+        document.getElementsByTagName("iframe")[2].contentWindow.postMessage("pause", "https://" + LIBVIO_PLAYER);
+    }
+}
+
+// LIBVIO 实际播放地址
+const LIBVIO_PLAYER = "sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn";
+
+class LibvioPlayerHandler extends Handler {
     constructor() {
         super();
         // 监听父页面暂停指令
@@ -1338,12 +1379,7 @@ class Jxm3u8tvHandler extends Handler {
         }, false);
     }
     getCurrentVideoUrl() {
-		let startIndex = currentUrl.indexOf('url=http') + 4;
-        if(startIndex == 3){
-            startIndex = currentUrl.indexOf('url=%20http') + 7;
-        }
-        let endIndex = currentUrl.lastIndexOf('m3u8') + 4;
-		currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
+		currentVideoUrl = urls;
         if (this.checkCurrentVideoUrl()) {
             window.top.postMessage(currentVideoUrl, "*");
         }
@@ -1416,6 +1452,10 @@ function createHandler() {
         handler = new Kk151Handler();
     } else if (JXM3U8TV.indexOf(currentDomain) != -1) {
         handler = new Jxm3u8tvHandler();
+    } else if (LIBVIO.indexOf(currentDomain) != -1) {
+        handler = new LibvioHandler();
+    }  else if (LIBVIO_PLAYER.indexOf(currentDomain) != -1) {
+        handler = new LibvioPlayerHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
@@ -1465,6 +1505,7 @@ function pageChangeListener() {
 }
 // 初始化
 function init() {
+    console.log("Play-With-MPV ......");
     currentUrl = window.location.href;
     currentDomain = window.location.host;
     if (currentUrl.startsWith("https://live.bilibili.com/p/html/live-web-mng/index.html")) {
@@ -1488,5 +1529,6 @@ function init() {
             console.log("create handler fail");
         }
     }
+    handler.getCurrentVideoUrl();
 }
 init();
