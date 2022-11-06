@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.1
+// @version                 2.2.2
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -49,6 +49,7 @@
 // @include                 https://www.libvio.me/play/*
 // @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/ai.php?url=*
 // @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/lb.php?url=*
+// @include                 https://www.bdys01.com/play/*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1302,9 +1303,9 @@ class ZykbfHandler extends Handler {
         }, false);
     }
     getCurrentVideoUrl() {
-		let startIndex = currentUrl.indexOf('url=http') + 4;
+        let startIndex = currentUrl.indexOf('url=http') + 4;
         let endIndex = currentUrl.indexOf('m3u8') + 4;
-		currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
+        currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
         if (this.checkCurrentVideoUrl()) {
             window.parent.postMessage(currentVideoUrl, "*");
         }
@@ -1333,12 +1334,12 @@ const JXM3U8TV = "jx.m3u8.tv, jx.wolongzywcdn.com:65, www.m3u8.tv.cdn.8old.cn, j
 
 class Jxm3u8tvHandler extends Handler {
     getCurrentVideoUrl() {
-		let startIndex = currentUrl.indexOf('url=http') + 4;
-        if(startIndex == 3){
+        let startIndex = currentUrl.indexOf('url=http') + 4;
+        if (startIndex == 3) {
             startIndex = currentUrl.indexOf('url=%20http') + 7;
         }
         let endIndex = currentUrl.lastIndexOf('m3u8') + 4;
-		currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
+        currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
         if (this.checkCurrentVideoUrl()) {
             window.top.postMessage(currentVideoUrl, "*");
         }
@@ -1379,13 +1380,26 @@ class LibvioPlayerHandler extends Handler {
         }, false);
     }
     getCurrentVideoUrl() {
-		currentVideoUrl = urls;
+        currentVideoUrl = urls;
         if (this.checkCurrentVideoUrl()) {
             window.top.postMessage(currentVideoUrl, "*");
         }
     }
     checkCurrentVideoUrl() {
         return this.baseCheckCurrentVideoUrl();
+    }
+}
+
+// 哔嘀影视
+const BDYS01 = "www.bdys01.com";
+
+class Bdys01Handler extends Handler {
+    getCurrentVideoUrl() {
+        currentVideoUrl = document.getElementsByTagName("video")[0].src;
+        this.checkCurrentVideoUrl();
+    }
+    getStartTime() {
+        return this.getStartTimeByClassName("dplayer-ptime");
     }
 }
 
@@ -1448,14 +1462,16 @@ function createHandler() {
         handler = new HdzykHandler();
     } else if (ZYKBF.indexOf(currentDomain) != -1) {
         handler = new ZykbfHandler();
-    }  else if (KK151.indexOf(currentDomain) != -1) {
+    } else if (KK151.indexOf(currentDomain) != -1) {
         handler = new Kk151Handler();
     } else if (JXM3U8TV.indexOf(currentDomain) != -1) {
         handler = new Jxm3u8tvHandler();
     } else if (LIBVIO.indexOf(currentDomain) != -1) {
         handler = new LibvioHandler();
-    }  else if (LIBVIO_PLAYER.indexOf(currentDomain) != -1) {
+    } else if (LIBVIO_PLAYER.indexOf(currentDomain) != -1) {
         handler = new LibvioPlayerHandler();
+    } else if (BDYS01.indexOf(currentDomain) != -1) {
+        handler = new Bdys01Handler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
@@ -1529,6 +1545,5 @@ function init() {
             console.log("create handler fail");
         }
     }
-    handler.getCurrentVideoUrl();
 }
 init();
