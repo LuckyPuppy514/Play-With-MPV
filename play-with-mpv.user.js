@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.2
+// @version                 2.2.4
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -49,7 +49,8 @@
 // @include                 https://www.libvio.me/play/*
 // @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/ai.php?url=*
 // @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/lb.php?url=*
-// @include                 https://www.bdys01.com/play/*
+// @include                 https://www.bdys01.com/*play/*
+// @include                 https://www.btnull.org/py/*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -789,7 +790,8 @@ class Handler {
         if (!currentVideoUrl || !currentVideoUrl.startsWith("http")
             || currentVideoUrl.indexOf("yun.66dm.net") != -1
             || currentVideoUrl.indexOf("www.xmfans.me") != -1
-            || currentVideoUrl.indexOf("sod.bunediy.com") != -1) {
+            || currentVideoUrl.indexOf("sod.bunediy.com") != -1
+            || currentVideoUrl.indexOf("c2.monidai.com") != -1) {
             return false;
         }
         return true;
@@ -1403,6 +1405,20 @@ class Bdys01Handler extends Handler {
     }
 }
 
+// 无名小站
+const BTNULL = "www.btnull.org";
+
+class BtnullHandler extends Handler {
+    getCurrentVideoUrl() {
+        let html = document.documentElement.outerHTML;
+        let index = html.indexOf("_BT.PC.player({url:'http") + 20;
+        html = html.substring(index);
+        index = html.indexOf("m3u8") + 4;
+        currentVideoUrl = html.substring(0, index);
+        handler.checkCurrentVideoUrl();
+    }
+}
+
 // 最大尝试次数
 const MAX_TRY_TIME = 8;
 // 定时器
@@ -1472,6 +1488,8 @@ function createHandler() {
         handler = new LibvioPlayerHandler();
     } else if (BDYS01.indexOf(currentDomain) != -1) {
         handler = new Bdys01Handler();
+    } else if (BTNULL.indexOf(currentDomain) != -1) {
+        handler = new BtnullHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
