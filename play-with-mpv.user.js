@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.4
+// @version                 2.2.5
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -51,6 +51,7 @@
 // @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/lb.php?url=*
 // @include                 https://www.bdys01.com/*play/*
 // @include                 https://www.btnull.org/py/*
+// @include                 https://www.pkmp4.com/py/*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1419,6 +1420,19 @@ class BtnullHandler extends Handler {
     }
 }
 
+// 片库
+const PKMP4 = "www.pkmp4.com";
+
+class Pkmp4Handler extends Handler {
+    getCurrentVideoUrl() {
+        currentVideoUrl = player_aaaa.url;
+        handler.checkCurrentVideoUrl();
+    }
+    pauseCurrentVideo() {
+        document.getElementsByTagName("iframe")[2].contentWindow.document.getElementsByTagName("video")[0].pause();
+    }
+}
+
 // 最大尝试次数
 const MAX_TRY_TIME = 8;
 // 定时器
@@ -1490,6 +1504,8 @@ function createHandler() {
         handler = new Bdys01Handler();
     } else if (BTNULL.indexOf(currentDomain) != -1) {
         handler = new BtnullHandler();
+    } else if (PKMP4.indexOf(currentDomain) != -1) {
+        handler = new Pkmp4Handler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
