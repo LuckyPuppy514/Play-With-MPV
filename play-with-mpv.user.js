@@ -858,7 +858,7 @@ class BilibiliHandler extends Handler {
             if (videoId.startsWith("BV")) {
                 param = "bvid=" + videoId.substring(2, 12);
             } else if (videoId.startsWith("av")) {
-                param = "aid=" + videoId.substring(2, 10);
+                param = "aid=" + videoId.split(/av([1-9]\d{6,14})/)[1].substring(2);
             } else {
                 // debug("bilibili video id invalid: " + videoId);
                 return;
