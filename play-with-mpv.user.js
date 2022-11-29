@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.5
+// @version                 2.2.6
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -858,7 +858,7 @@ class BilibiliHandler extends Handler {
             if (videoId.startsWith("BV")) {
                 param = "bvid=" + videoId.substring(2, 12);
             } else if (videoId.startsWith("av")) {
-                param = "aid=" + videoId.split(/av([1-9]\d{6,14})/)[1].substring(2);
+                param = "aid=" + videoId.split(/av([1-9]\d{6,14})/)[1];
             } else {
                 // debug("bilibili video id invalid: " + videoId);
                 return;
