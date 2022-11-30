@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Play-With-MPV 导航页</title>
+    <meta name="description" content="Play-With-MPV 支持网站导航页">
+    <style>
+        body {
+            background-color: rgb(144, 158, 197);
+            background-image: url("https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/%E7%90%B4%E7%9F%B3%E5%A5%88%E7%91%A0_tuya.jpg");
+            background-repeat: no-repeat;
+            background-size: auto 100%;
+            background-attachment: fixed;
+            background-position: absolute;
+            background-position-y: 50%;
+            background-position-x: 50%;
+            padding: 20px 100px 0px 100px;
+        }
+
+        #header-div,
+        #tag-div {
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+
+        #header-div {
+            padding-top: 20px;
+        }
+
+        #tag-table tr td {
+            padding: 20px 0px 0px 20px;
+            font-size: 20px;
+            color: white;
+        }
+
+        #tag-table tr td input {
+            width: 16px;
+            height: 16px;
+            margin-top: 5px;
+        }
+
+        #list-div {
+            margin-top: 20px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 5px;
+            padding: 20px 0px 20px 0px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        #header-div h2,
+        #header-div p,
+        #list-div h2 {
+            margin-top: 0px;
+            padding-left: 30px;
+            color: rgba(255, 255, 255, 1);
+            text-align: left;
+        }
+
+        #header-div p {
+            color: rgba(255, 255, 255, 1) !important;
+        }
+
+        #header-div p a {
+            text-decoration: none;
+            color: rgb(0, 255, 47);
+            font-weight: bold;
+        }
+
+        #list-div .item {
+            width: 300px;
+            min-height: 110px;
+            max-height: 130px;
+            border-radius: 5px;
+            background-color: rgba(0, 0, 0, 0.6);
+            display: inline-block;
+            text-align: center;
+            padding: 25px 10px 20px 10px;
+            margin: 10px;
+        }
+
+        #list-div .item img {
+            max-width: 260px;
+            height: 60px;
+        }
+
+        #list-div .item p {
+            margin-top: 18px;
+            margin-bottom: 5px;
+        }
+
+        #list-div .item a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        #list-div .item span a {
+            margin-left: 145px !important;
+        }
+
+        #list-div .item span button,
+        #list-div .item span a {
+            width: 70px;
+            height: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 2px;
+            background-color: rgba(255, 255, 255, 0.3);
+            cursor: pointer;
+            margin-left: 15px;
+            margin-top: 8px;
+            color: white;
+            font-size: 12px;
+            font-weight: normal;
+            padding: 3px 5px 3px 5px;
+        }
+
+        #list-div .item button:hover,
+        #list-div .item span a:hover {
+            border: 1px solid rgb(0, 255, 47);
+            background-color: rgb(0, 255, 47);
+            color: black;
+        }
+
+        #footer-div {
+            position: relative;
+            bottom: 0;
+            left: 0;
+            z-index: 99999;
+            width: 100%;
+            height: 52px;
+            background-color: rgba(0, 0, 0, 0);
+        }
+
+        #footer-div p {
+            margin-top: 3px;
+            margin-bottom: 3px;
+        }
+
+        #footer-div a {
+            color: black;
+            font-weight: normal;
+            text-decoration: none;
+            font-size: 15px;
+        }
+
+        #footer-div .site_police a::before {
+            display: inline-block;
+            margin-right: 4px;
+            margin-bottom: 2px;
+            vertical-align: text-bottom;
+            content: "";
+            width: 15px;
+            height: 15px;
+            background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAMAAAC6V+0/AAAABGdBTUEAALGPC/xhBQAAAwBQTFRFtJR+///krYt6n2hV0a52/b9Ummlc2aht27qH//eX26xi8Na74bNo+M562rB75MGP5LaA5LaC47xp68l57N2y/vrs369n/++G1qx+/tiP6sN6+//e//nQ79l/+NqC6MZ87NmN+PPJ3qdc3alT25xR46xT57xs69KY57Vcw38+2a+C05NwyoRb6che5LxZ5MJt7d6A4bBn0Ktx+/TQ3KdZ8d/H9N+L7+ij8+mS9/O48deu///i7NOF+fG28+eq/vzgAAAAgVg6o31ShGlK7HEtxGsznl8wp41Z+sREcoWUHD6XlIx1xa58tYA/6Zc09oI24kYeo5mEBAVtbmJiNhpNtJlYAAiR96Q53bZp2U4qFzCJa3OEeWRg14pGxb2H/+Jj0RUKvbp+7XE02Mx3AABqzcJxfHp502U9CwZn/7VJzng6/Mxk24Y43Z9CXllm2QAG8F4eu0wo07yHuk0kk2A2yrZ4aX6O9LBA4JU504c9+9Jv46pKABB65G82vwAR2203YB5Q118zzCcT/S0U1Ugq00AmzaxSxicTTg5OxVIkyz0h/SsKDABdzD4txBgKrKJzjYZ3/75gQiREVDhTyQACaQI2XF94wQwLqbSRzxcR0QwR+59GuYtYABuOTAA5tgAQxj4dsQ4OAABhtKNm1JY94qlXyVkqbHmKVk5vzywa/I4sTjVP/9JmhI+Z8K9I1sB41jEfvZBe0iEa83wo7cJi/+9t/9hN469L1hoX6KA945M925tF+MRY15FT2J5Y8M1k67tc3oMy8dNp1XQo1o480oM92pZK68Vd5rZW5sBV6cpt7tRw6K5J7LlP6bFL6bdS7r5Q6L9O4KRM6LlP8slW58Rm6F8mAACAlI+B0zgiAAR33pBE13U41mUw2kko1AMJ6YI+8stuAABm/sVSORQ4cniCk3ha/9te4rJT5L5R8Nh21ZBG5bFQ3qNJ57ta3plE7c1m7Mlb6cFg6r1Z7cph68BX5rlZ6cZe9eNzAABuzgACAAB51z4g1h8Y/9JY5LVdEd5zqQAAAEF0Uk5TyxjR92/D++WYNfUc+cGpn7HH4MSDIdu+rrLmKUzsMPsnWsbG0uS8jOScSBRd8PTs4ecCXOtBunyrAmkclEJBCABK/YzMAAABgElEQVQY02NwgABGKwYmK2sohwFM2vIxuzk6O7FJyCAE7Tc+KXG95hLR/2SOPUzQmnf1s833b0b+mj1jsqQ9RFCaJyRv1aa/K+/NnD4xepKUAliQ0/u6e8H9DTtm3ZxyLfHnBDmQIDfrjVu+Afl///z5++tP8s80cVGgIEt44PVQ/1/Llry8nZCU+vPGPxGgIIefT1iwR/GCu3fqY+NjfseV8wMF2XMeegUVPmjpamytTc+IelUhBhTkysr0/D2/+27nnQfNdSlljyuFgIICudlFc+ct7Gtvutc7taa06oUNUFDw9tI1a289WtTR0PPo99Pn/6uFgYLy+/buerj+2fLFbdNWPN2yc/d2WaCg4su3rw/veb7t8bp/W/8dfP3iox3IR8a6J48e+XDgzbv9h94fO6VvC/amqeH37ye+Hv/05fPbb6evmtiBBc1+vPr///ObT+ffX/r27sMPC7CgvY3e5SsXzp098/XjxS8G5pbQQNbW0VRWUdVQUlPXMgLxASGRxIfJhdfLAAAAAElFTkSuQmCC) no-repeat center;
+            background-size: 100% 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="header-div">
+        <h2>简介</h2>
+        <p>本站主要是 Play-With-MPV 支持网站导航，下列网站大部分支持一键调用 mpv 播放，电视直播可调用 potplayer 播放</p>
+        <p>推荐方案：<a href="https://www.lckp.top/archives/mpvnetcm" target="_blank">mpv.net_CM</a> + <a
+                href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">Play-With-MPV</a></p>
+        <p>直播备选：<a href="https://potplayer.daum.net" target="_blank">potplayer</a></p>
+    </div>
+
+    <div id="tag-div">
+        <table id="tag-table">
+            <tbody>
+                <tr>
+                    <td><input type="checkbox" value="all" name="category" checked> 全选</td>
+                    <td><input type="checkbox" value="live" name="category" checked> 电视直播</td>
+                    <td><input type="checkbox" value="anime" name="category" checked> 动漫</td>
+                    <td><input type="checkbox" value="serial" name="category" checked> 电视剧</td>
+                    <td><input type="checkbox" value="show" name="category" checked> 综艺</td>
+                    <td><input type="checkbox" value="movie" name="category" checked> 电影</td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" value="all" name="resolution" checked> 全选</td>
+                    <td><input type="checkbox" value="2160p" name="resolution" checked> 超高清</td>
+                    <td><input type="checkbox" value="1080p" name="resolution" checked> 高清</td>
+                    <td><input type="checkbox" value="720p" name="resolution" checked> 标清</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="list-div"></div>
+    <div id="footer-div" style="text-align: center;">
+        <p><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">2022 ©LuckyPuppy514
+             - <a class="icp" href="https://beian.miit.gov.cn" target="_blank" rel="noopener noreferrer nofollow">粤ICP备2022080328号-1</a></a></p>
+        <p class="site_police">
+            <a class="site_police" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=44030702004874" target="_blank"
+                rel="noopener noreferrer nofollow">粤公网安备44030702004874号</a>
+        </p>
+    </div>
+</body>
+
+<script>
+    const WEBSITE_LIST_URL = "websiteList.json";
+    const ERROR_IMG_URL = "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/tv-channel-02.png";
+
+    // 获取所有网站
+    var websiteList = new Array;
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', WEBSITE_LIST_URL, true);
+    xhr.send();
+    xhr.onreadystatechange = function () {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            let wsJson = JSON.parse(xhr.responseText);
+            for (const website of wsJson) {
+                if (website.url.endsWith(".m3u")) {
+                    getIPTV(website);
+                } else {
+                    websiteList.push(website);
+                }
+            }
+        }
+    }
+
+    // 分类选择框监听器
+    var categories = document.getElementsByName("category");
+    var categoryCount = categories.length - 1;
+    var categoryChecked = categoryCount;
+    var categoryAll;
+    for (const category of categories) {
+        if (category.value == "all") {
+            categoryAll = category;
+        }
+        category.onclick = function () {
+            if (this.value == "all") {
+                for (const cg of categories) {
+                    cg.checked = this.checked;
+                }
+                if (this.checked) {
+                    categoryChecked = categoryCount;
+                } else {
+                    categoryChecked = 0;
+                }
+            } else {
+                if (this.checked) {
+                    categoryChecked++;
+                } else {
+                    categoryChecked--;
+                }
+                if (categoryChecked == categoryCount) {
+                    categoryAll.checked = true;
+                } else {
+                    categoryAll.checked = false;
+                }
+            }
+            checkCategory(this.value, this.checked);
+        }
+    }
+    // 分辨率选择框监听器
+    var resolutions = document.getElementsByName("resolution");
+    var resolutionCount = resolutions.length - 1;
+    var resolutionChecked = resolutionCount;
+    var resolutionAll;
+    for (const resolution of resolutions) {
+        if (resolution.value == "all") {
+            resolutionAll = resolution;
+        }
+        resolution.onclick = function () {
+            if (this.value == "all") {
+                for (const rs of resolutions) {
+                    rs.checked = this.checked;
+                }
+                if (this.checked) {
+                    resolutionChecked = resolutionCount;
+                } else {
+                    resolutionChecked = 0;
+                }
+            } else {
+                if (this.checked) {
+                    resolutionChecked++;
+                } else {
+                    resolutionChecked--;
+                }
+                if (resolutionChecked == resolutionCount) {
+                    resolutionAll.checked = true;
+                } else {
+                    resolutionAll.checked = false;
+                }
+            }
+            checkResolution(this.value, this.checked);
+        }
+    }
+    // 筛选分类
+    function checkCategory(category, checked) {
+        if (category == "all") {
+            for (const website of websiteList) {
+                website.categoryChecked = checked;
+            }
+        } else {
+            for (const website of websiteList) {
+                if (website.category.indexOf(category) != -1) {
+                    website.categoryChecked = checked;
+                }
+            }
+        }
+        generateHtml();
+    }
+    // 筛选分辨率
+    function checkResolution(resolution, checked) {
+        if (resolution == "all") {
+            for (const website of websiteList) {
+                website.resolutionChecked = checked;
+            }
+        } else {
+            for (const website of websiteList) {
+                if (website.resolution.indexOf(resolution) != -1) {
+                    website.resolutionChecked = checked;
+                }
+            }
+        }
+        generateHtml();
+    }
+    // 生成 html
+    function generateHtml() {
+        let live = "<h2> 电视直播 </h2> ",
+            anime = "<h2> 动漫 </h2>",
+            serial = "<h2> 电视剧 </h2>",
+            show = "<h2> 综艺 </h2>",
+            movie = "<h2> 电影 </h2>";
+        for (const website of websiteList) {
+            if (website.categoryChecked && website.resolutionChecked) {
+                let item = `<div class="item"><a href="${website.url}" target="_blank"><img referrerpolicy="no-referrer" src="${website.logo}"/><p>${website.title}</p></a></div>`;
+                if (website.category.indexOf("live") != -1) {
+                    let mpv = `mpv://%22${encodeURIComponent(website.url)}%22 --force-media-title=%22${encodeURIComponent(website.title)}%22 --no-terminal`;
+                    let potplayer = `potplayer://${encodeURIComponent(website.url)} /current /title=%22${encodeURIComponent(website.title)}%22`;
+                    live = live + `<div class="item">
+                        <a href="${mpv}" target="_blank"><img referrerpolicy="no-referrer" src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'"/><p>${website.title}</p></a>
+                        <input type="text" value="${website.url}" id="${website.url}" style="display: none">
+                        <span><a href="${potplayer}">potplayer</a><button onclick="copyUrl(this)" value="${website.url}">复制链接</button></span>
+                        </div>`;
+                }
+                if (website.category.indexOf("anime") != -1) {
+                    anime = anime + item;
+                }
+                if (website.category.indexOf("serial") != -1) {
+                    serial = serial + item;
+                }
+                if (website.category.indexOf("show") != -1) {
+                    show = show + item;
+                }
+                if (website.category.indexOf("movie") != -1) {
+                    movie = movie + item;
+                }
+            }
+        }
+        let html = "";
+        if (live.indexOf("item") != -1) {
+            html = html + live;
+        }
+        if (anime.indexOf("item") != -1) {
+            html = html + anime;
+        }
+        if (serial.indexOf("item") != -1) {
+            html = html + serial;
+        }
+        if (show.indexOf("item") != -1) {
+            html = html + show;
+        }
+        if (movie.indexOf("item") != -1) {
+            html = html + movie;
+        }
+        document.getElementById("list-div").innerHTML = html;
+        // 播放器选择器监听器
+        let playerSelect = document.getElementById("player-select");
+        if (playerSelect) {
+            playerSelect.addEventListener("change", () => {
+                if (playerSelect.value == "mpv") {
+                    localStorage.setItem("player", "mpv");
+                    generateHtml();
+                } else {
+                    localStorage.setItem("player", "potplayer");
+                    generateHtml();
+                }
+            });
+        }
+    }
+    // 获取 IPTV 播放链接
+    function getIPTV(website) {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', website.url, true);
+        xhr.send();
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState == 4 && xhr.status == 200) {
+                let m3us = xhr.responseText.replaceAll("\r\n", "\n").matchAll(/#EXTINF:[^\n]+\nhttp[^\n]+/g);
+                for (let m3u of m3us) {
+                    m3u = m3u.toString();
+                    let title = m3u.match(/,([^\n]+)/);
+                    if (title) {
+                        title = title[1];
+                    }
+                    let logo = m3u.match(/tvg-logo="([^"]+)"/);
+                    if (logo) {
+                        logo = logo[1];
+                    }
+                    let url = m3u.match(/\n(http[^\n]+)/);
+                    if (m3u.match(/(4K|4k|8K|8k|UHD|uhd|2160p)/)) {
+                        resolution = "2160p";
+                    } else {
+                        resolution = "1080p";
+                    }
+                    if (url) {
+                        url = url[1];
+                        let ws = {
+                            "title": title,
+                            "logo": logo,
+                            "url": url,
+                            "category": "live",
+                            "resolution": resolution,
+                            "categoryChecked": true,
+                            "resolutionChecked": true
+                        };
+                        websiteList.push(ws);
+                    }
+                }
+                generateHtml();
+            }
+        }
+    }
+    // 复制链接
+    function copyUrl(button) {
+        let input = document.getElementById(button.value);
+        input.style.display = "block";
+        input.select();
+        document.execCommand("copy");
+        input.style.display = "none";
+        Toast("✅ 复制成功！");
+    }
+    // 显示消息
+    function Toast(msg, duration) {
+        duration = isNaN(duration) ? 2500 : duration;
+        var m = document.createElement('div');
+        m.innerHTML = msg;
+        m.style.cssText = "max-width:60%;min-width: 120px;padding:0 14px;height: 40px;color: rgba(0, 0, 0, 0.6);line-height: 40px;text-align: center;border-radius: 4px;position: fixed;top: 20%;left: 50%;transform: translate(-50%, -50%);z-index: 999999;background: rgba(255, 255, 255, 1);font-size: 15px;font-weight: blod;";
+        document.body.appendChild(m);
+        setTimeout(function () {
+            var d = 0.5;
+            m.style.opacity = '0';
+            setTimeout(function () { document.body.removeChild(m) }, d * 1000);
+        }, duration);
+    }  
+</script>
+
+</html>

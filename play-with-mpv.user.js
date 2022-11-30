@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.6
+// @version                 2.2.7
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -88,13 +88,7 @@ const DIV =
         <tr>
             <td colspan="2"><a href="https://github.com/LuckyPuppy514/Play-With-MPV#-%E7%AE%80%E4%BB%8B" target="_blank">支持网站</a></td>
             <td colspan="4">
-                <a href="https://www.bilibili.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bilibili.ico"/></a>
-                <a href="https://ddys2.me/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp"/></a>
-                <a href="https://www.youtube.com/" target="_blank"><img class="pwmpv-support-url-icon" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/youtube.png"/></a>
-                <a href="https://ani.gamer.com.tw/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 57px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bahaLOGO_1200x630.jpg"\></a>
-                <a href="https://www.996dm.com/" target="_blank"><img class="pwmpv-support-url-icon" style="width: 95px;" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/logo_f.png"/></a>
-                <a href="http://www.dmlaa.com/" target="_blank"><img class="pwmpv-support-url-icon-small" src="https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg"/></a>
-                <a href="https://github.com/LuckyPuppy514/Play-With-MPV#-%E7%AE%80%E4%BB%8B" target="_blank" style="margin-left: 6px;">. . . . . .</a>
+                <a href="https://www.lckp.top/play-with-mpv/index.html" target="_blank">👆 请前往导航页查看 👆</a>
             </td>
         </tr>
         <tr>

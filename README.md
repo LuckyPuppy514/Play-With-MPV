@@ -19,27 +19,9 @@
 
 - 支持的系统：Windows
 - 支持浏览器：Edge, Chrome, Firefox, 360极速浏览器X 等
+- 支持的网站：[👆 请前往导航页查看 👆](https://www.lckp.top/play-with-mpv/index.html)
 
 ![20221019063400](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221019063400.png)
-
-| 网站名称 | 网址 | 支持率 | 资源 | 画质 | 是否需要代理 |
-| :---: | :---: | :---: | :---: | :---: | :---: |
-| B站 | [www.bilibili.com](https://www.bilibili.com) | 🤗 绝大部分 🤗 | 投稿，番剧，电影，电视剧，直播 | 高 | 否 |
-| 低端影视 | [ddys.tv](https://ddys2.me) | 🤗 绝大部分 🤗 | 电影，电视剧，动漫 | 高 | 否 |
-| Youtube | [www.youtube.com](https://www.youtube.com) | 🤗 绝大部分 🤗 | 投稿，电视剧，电影，动漫 | 高 | 是 |
-| 巴哈姆特 | [ani.gamer.com.tw](https://ani.gamer.com.tw) | 🤗 绝大部分 🤗 | 动漫 | 高 | 是 |
-| LIBVIO | [libvio.fun](https://libvio.fun) | 🤗 绝大部分 🤗 | 电影，电视剧，动漫 | 高 | 否 |
-| 樱花动漫 | [www.6dm.cc](https://www.996dm.com/) | 🤗 绝大部分 🤗 | 动漫 | 高 | 否 |
-| 动漫之家 | [www.kk151.com](https://www.kk151.com) | 🤗 绝大部分 🤗 | 动漫，电视剧，综艺 | 中 | 否 |
-| 优质资源库 | [hdzyk.com](https://hdzyk.com) | 🤗 绝大部分 🤗 | 电影，电视剧，综艺，动漫 | 低 | 否 |
-| Alist | [alist.nn.ci](https://github.com/alist-org/alist) | 🤗 绝大部分 🤗 | Alist 网盘视频 | - | 否 |
-| 无名小站 | [www.btnull.org](https://www.btnull.org) | 🤗 大部分 🤗 | 电影，电视剧，动漫 | 高 | 否 |
-| 片库 | [www.pkmp4.com](https://www.pkmp4.com) | 🤗 大部分 🤗 | 电影，电视剧，动漫 | 高 | 否 |
-| 哔嘀影视 | [www.bdys01.com](https://www.bdys01.com) | 🤗 大部分 🤗 | 电影，电视剧，动漫，综艺 | 高 | 否 |
-| 风车动漫 | [www.dmla.cc](http://www.dmla.cc) | 🙂 第一线路 🙂 | 动漫 | 高 | 否 |
-| 233动漫网 | [www.dm233.me](https://www.dm233.me) | 🙂 线路Ⅲ 🙂 | 动漫 | 中 | 否 |
-| 樱花动漫 | [www.dmh8.com](http://www.dmh8.com) | 😢 小部分 😢 | 动漫 | 中 | 否 |
-| 樱花动漫 | [www.yhdmp.net](https://www.yhdmp.net) | 😢 小部分 😢 | 动漫 | 中 | 否 |
 
 ## 🐳 安装
 
@@ -108,6 +90,7 @@
 - [Anime4K](https://github.com/bloc97/Anime4K) — 动漫画质增强
 - [bilibili-API-collect](https://github.com/SocialSisterYi/bilibili-API-collect) — B站接口整理
 - [MPV-Play-BiliBili-Comments](https://github.com/itKelis/MPV-Play-BiliBili-Comments) — mpv B站弹幕脚本
+- [IPTV](https://github.com/youshandefeiyang/IPTV) — 肥羊的IPTV直播源
 
 ## 👏 特别感谢
 

@@ -1,0 +1,137 @@
+[
+    {
+        "title": "IPTV",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/tv-channel-02.png",
+        "url": "https://www.lckp.top/gh/youshandefeiyang/IPTV/main/IPTV.m3u",
+        "category": "live",
+        "resolution": "2160p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "Bilibili",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bilibili.ico",
+        "url": "https://www.bilibili.com",
+        "category": "anime, serial, movie",
+        "resolution": "2160p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "低端影视",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp",
+        "url": "https://ddys2.me",
+        "category": "anime, serial, movie",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "LIBVIO",
+        "logo": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-ae4eabf5-1b15-425e-bdc9-144e48cded99/557c0b73-33e3-4a57-a94a-26532647efbf.png",
+        "url": "https://libvio.fun",
+        "category": "anime, serial, movie",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "樱花动漫",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/logo_f.png",
+        "url": "https://www.996dm.com/",
+        "category": "anime",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "优质资源库",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/hdzyk.gif",
+        "url": "https://hdzyk.com/",
+        "category": "anime, serial, show, movie",
+        "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "Alist",
+        "logo": "https://alist.nn.ci/logo.svg",
+        "url": "https://alist.nn.ci/",
+        "category": "anime, serial, show, movie",
+        "resolution": "2160p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "无名小站",
+        "logo": "https://www.btnull.org/favicon.ico",
+        "url": "https://www.btnull.org/",
+        "category": "anime, serial, movie",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "片库",
+        "logo": "https://www.pkmp4.com/template/pianku/image/logo.png",
+        "url": "https://www.pkmp4.com/",
+        "category": "anime, serial, movie",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "风车动漫",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/fengchedongman.jpg",
+        "url": "http://www.dmla.cc/",
+        "category": "anime",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "233动漫网",
+        "logo": "https://www.dm233.me/d23st/pic/logo.png?ver=202001161729",
+        "url": "https://www.dm233.me/",
+        "category": "anime",
+        "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "Youtube",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/youtube.png",
+        "url": "https://www.youtube.com",
+        "category": "anime, serial, movie",
+        "resolution": "2160p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "巴哈姆特",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/bahaLOGO_1200x630.jpg",
+        "url": "https://ani.gamer.com.tw",
+        "category": "anime",
+        "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "樱花动漫",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/yhdm1130.png",
+        "url": "http://www.dmh8.com/",
+        "category": "anime",
+        "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "樱花动漫",
+        "logo": "https://www.yhdmp.net/yxsf/yh_css/yh_logo.png",
+        "url": "https://www.yhdmp.net/",
+        "category": "anime",
+        "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    }
+]
