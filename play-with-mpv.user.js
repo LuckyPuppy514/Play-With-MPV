@@ -2,15 +2,15 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.8
+// @version                 2.2.9
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
 // @description             使用 MPV 播放网页上的视频
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
 // @icon                    https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/mpv.png
-// @updateURL               https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
-// @downloadURL             https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv
+// @updateURL               https://greasyfork.org/scripts/444056-play-with-mpv/code/Play-With-MPV.user.js
+// @downloadURL             https://greasyfork.org/scripts/444056-play-with-mpv/code/Play-With-MPV.user.js
 // @match                   *://www.youtube.com/*
 // @include                 https://www.youtube.com/watch/*
 // @include                 https://www.bilibili.com/bangumi/play/*
@@ -46,6 +46,7 @@
 // @include                 https://hls.kuaibofang.com/?url=*
 // @include                 https://jx.jxbdzyw.com/m3u8/?url=*
 // @include                 https://libvio.fun/play/*
+// @include                 https://libvio.me/play/*
 // @include                 https://www.libvio.me/play/*
 // @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/*.php?url=*
 // @include                 https://p.cfnode1.xyz/*.php?url=*
@@ -1347,7 +1348,7 @@ class Jxm3u8tvHandler extends Handler {
 }
 
 // LIBVIO
-const LIBVIO = "libvio.fun, www.libvio.me";
+const LIBVIO = "libvio.fun, www.libvio.me, libvio.me";
 
 class LibvioHandler extends Handler {
     constructor() {
