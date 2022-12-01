@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.2.7
+// @version                 2.2.8
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -47,8 +47,8 @@
 // @include                 https://jx.jxbdzyw.com/m3u8/?url=*
 // @include                 https://libvio.fun/play/*
 // @include                 https://www.libvio.me/play/*
-// @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/ai.php?url=*
-// @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/lb.php?url=*
+// @include                 https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/*.php?url=*
+// @include                 https://p.cfnode1.xyz/*.php?url=*
 // @include                 https://www.bdys01.com/*play/*
 // @include                 https://www.btnull.org/py/*
 // @include                 https://www.pkmp4.com/py/*
@@ -1364,7 +1364,7 @@ class LibvioHandler extends Handler {
 }
 
 // LIBVIO 实际播放地址
-const LIBVIO_PLAYER = "sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn";
+const LIBVIO_PLAYER = "sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn, p.cfnode1.xyz";
 
 class LibvioPlayerHandler extends Handler {
     constructor() {
