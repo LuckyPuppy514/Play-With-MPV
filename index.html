@@ -215,11 +215,16 @@
     xhr.onreadystatechange = function () {
         if (xhr.readyState == 4 && xhr.status == 200) {
             let wsJson = JSON.parse(xhr.responseText);
-            for (const website of wsJson) {
+            for (let website of wsJson) {
                 if (website.url.endsWith(".m3u")) {
                     getIPTV(website);
                 } else {
-                    websiteList.push(website);
+                    let cgs = website.category.split(",");
+                    for (let cg of cgs) {
+                        cg = cg.trim();
+                        website.category = cg;
+                        websiteList.push(JSON.parse(JSON.stringify(website)));
+                    }
                 }
             }
         }
