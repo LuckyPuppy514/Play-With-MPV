@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.3.0
+// @version                 2.3.1
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -863,25 +863,11 @@ class BilibiliHandler extends Handler {
 
         } else {
             // 番剧
-            let aElement = document.getElementsByClassName('ep-item cursor visited')[0];
-            if (!aElement) {
-                aElement = document.getElementsByClassName('ep-item cursor')[0];
-            }
-            let epid = aElement.getElementsByTagName('a')[0].href;
-            epid = epid.substring(epid.indexOf('/ep') + 3);
-            epid = epid.substring(0, epid.indexOf('/'));
-            // debug('epid: ' + epid);
-
-            let eno = document.getElementsByClassName("ep-list-progress")[0];
-            if (eno) {
-                eno = eno.innerHTML;
-                eno = eno.substring(0, eno.indexOf('/'));
-            } else {
-                eno = "1";
-            }
-
-            // debug('eno: ' + eno);
-            getBilibiliBangumiUrl(epid, eno);
+            let visitedLi = document.getElementsByClassName("ep-item cursor visited")[0];
+            visitedLi = visitedLi ? visitedLi : document.getElementsByClassName('ep-item cursor')[0];
+            let epid = visitedLi.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
+            let className = visitedLi.parentElement.parentElement.className;
+            getBilibiliBangumiUrl(epid, className);
         }
     }
     getStartTime() {
@@ -928,10 +914,9 @@ function getBilibiliVideoUrl(param) {
     })
 }
 // 获取B站番剧视频链接
-function getBilibiliBangumiUrl(epid, eno) {
-    if (!epid || !eno) {
-        return;
-    }
+function getBilibiliBangumiUrl(epid, className) {
+    // debug('epid: ' + epid);
+    // debug('className: ' + className);
     $.ajax({
         type: "GET",
         url: BILIBILI_API + "/pgc/view/web/season?ep_id=" + epid,
@@ -941,12 +926,26 @@ function getBilibiliBangumiUrl(epid, eno) {
         success: function (res) {
             // debug("get acid and cid by epid result: ");
             // debug(res);
-            let episodes = res.result.episodes;
-            if (eno.indexOf('PV') != -1 || eno.indexOf('OP') != -1 || eno.indexOf('ED') != -1) {
-                return;
+            var currentEpisode;
+            var section = new Array;
+            if (className.indexOf("list-wrapper") != -1) {
+                section[0] = { episodes: res.result.episodes };
+            } else {
+                section = res.result.section;
             }
-            let episode = episodes[eno - 1];
-            getBilibiliPlayUrl(episode.aid, episode.cid);
+            for (let i = 0; i < section.length; i++) {
+                let episodes = section[i].episodes;
+                for (const episode of episodes) {
+                    if (episode.id == epid) {
+                        currentEpisode = episode;
+                        break;
+                    }
+                }
+                if (currentEpisode) {
+                    break;
+                }
+            }
+            getBilibiliPlayUrl(currentEpisode.aid, currentEpisode.cid);
         }
     })
 }
