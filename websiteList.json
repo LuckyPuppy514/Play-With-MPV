@@ -27,6 +27,15 @@
         "resolutionChecked": true
     },
     {
+        "title": "稀饭动漫",
+        "logo": "https://dick.xfani.com/upload/mxprocms/20220815-1/f4ec06904fb3fa438030d22718dcaf38.png",
+        "url": "https://dick.xfani.com/",
+        "category": "anime",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
         "title": "LIBVIO",
         "logo": "https://vkceyugu.cdn.bspapp.com/VKCEYUGU-ae4eabf5-1b15-425e-bdc9-144e48cded99/557c0b73-33e3-4a57-a94a-26532647efbf.png",
         "url": "https://libvio.fun",
@@ -41,24 +50,6 @@
         "url": "https://www.996dm.com/",
         "category": "anime",
         "resolution": "1080p",
-        "categoryChecked": true,
-        "resolutionChecked": true
-    },
-    {
-        "title": "优质资源库",
-        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/hdzyk.gif",
-        "url": "https://hdzyk.com/",
-        "category": "anime, serial, show, movie",
-        "resolution": "720p",
-        "categoryChecked": true,
-        "resolutionChecked": true
-    },
-    {
-        "title": "Alist",
-        "logo": "https://alist.nn.ci/logo.svg",
-        "url": "https://alist.nn.ci/",
-        "category": "anime, serial, show, movie",
-        "resolution": "2160p",
         "categoryChecked": true,
         "resolutionChecked": true
     },
@@ -131,6 +122,24 @@
         "url": "https://www.yhdmp.net/",
         "category": "anime",
         "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "优质资源库",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/hdzyk.gif",
+        "url": "https://hdzyk.com/",
+        "category": "anime, serial, show, movie",
+        "resolution": "720p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "Alist",
+        "logo": "https://alist.nn.ci/logo.svg",
+        "url": "https://alist.nn.ci/",
+        "category": "anime, serial, show, movie",
+        "resolution": "2160p",
         "categoryChecked": true,
         "resolutionChecked": true
     }

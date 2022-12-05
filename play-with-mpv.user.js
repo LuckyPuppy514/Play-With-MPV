@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.3.1
+// @version                 2.3.2
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -53,6 +53,8 @@
 // @include                 https://www.bdys01.com/*play/*
 // @include                 https://www.btnull.org/py/*
 // @include                 https://www.pkmp4.com/py/*
+// @include                 https://dick.xfani.com/watch/*
+// @include                 https://m3.moedot.net/muiplayer/?url=*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1427,6 +1429,63 @@ class Pkmp4Handler extends Handler {
     }
 }
 
+// 稀饭动漫
+const XFANI = "dick.xfani.com";
+
+class XfaniHandler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener('message', function (event) {
+            currentVideoUrl = event.data;
+            handler.checkCurrentVideoUrl();
+            window.removeEventListener("message", () => { });
+        }, false);
+    }
+    pauseCurrentVideo() {
+        document.getElementsByTagName("iframe")[2].contentWindow.postMessage("pause", "https://" + XFANI_PLAYER);
+    }
+}
+
+// 稀饭动漫实际播放地址
+const XFANI_PLAYER = "m3.moedot.net";
+
+class XfaniPlayerHandler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener("message", function (event) {
+            if (event.data == "pause") {
+                document.getElementsByTagName('video')[0].pause();
+            }
+        }, false);
+    }
+    getCurrentVideoUrl() {
+        if (config.url.indexOf(".m3u8") > 0 || config.url.indexOf(".mp4") > 0 || config.url.indexOf(".flv") > 0) {
+            currentVideoUrl = config.url;
+            if (handler.checkCurrentVideoUrl()) {
+                window.top.postMessage(currentVideoUrl, "*");
+            }
+        } else {
+            $.ajax({
+                type: "POST",
+                url: "api_config.php",
+                data: { "url": config.url, "time": config.time, "key": config.key, "title": config.title },
+                success: function (res) {
+                    if (res.code == "200") {
+                        currentVideoUrl = res.url;
+                        if (handler.checkCurrentVideoUrl()) {
+                            window.top.postMessage(currentVideoUrl, "*");
+                        }
+                    }
+                }
+            });
+        }
+    }
+    checkCurrentVideoUrl() {
+        return this.baseCheckCurrentVideoUrl();
+    }
+}
+
+
 // 最大尝试次数
 const MAX_TRY_TIME = 8;
 // 定时器
@@ -1500,6 +1559,10 @@ function createHandler() {
         handler = new BtnullHandler();
     } else if (PKMP4.indexOf(currentDomain) != -1) {
         handler = new Pkmp4Handler();
+    } else if (XFANI.indexOf(currentDomain) != -1) {
+        handler = new XfaniHandler();
+    } else if (XFANI_PLAYER.indexOf(currentDomain) != -1) {
+        handler = new XfaniPlayerHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
