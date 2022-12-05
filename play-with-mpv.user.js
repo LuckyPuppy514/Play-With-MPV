@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.3.2
+// @version                 2.3.3
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -55,6 +55,8 @@
 // @include                 https://www.pkmp4.com/py/*
 // @include                 https://dick.xfani.com/watch/*
 // @include                 https://m3.moedot.net/muiplayer/?url=*
+// @include                 https://www.mgnacg.com/bangumi/*
+// @include                 https://play.mknacg.top:8585/?url=*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1485,6 +1487,51 @@ class XfaniPlayerHandler extends Handler {
     }
 }
 
+// 橘子动漫
+const MGNACG = "www.mgnacg.com";
+
+class MgnacgHandler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener('message', function (event) {
+            currentVideoUrl = event.data;
+            handler.checkCurrentVideoUrl();
+            window.removeEventListener("message", () => { });
+        }, false);
+    }
+    getUrlProtocolLink() {
+        let urlProtocol = new UrlProtocol;
+        urlProtocol.appendTitle();
+        urlProtocol.append('--http-header-fields="referer: https://' + MGNACG_PLAYER + '"');
+        return urlProtocol.getLink();
+    }
+    pauseCurrentVideo() {
+        document.getElementsByTagName("iframe")[2].contentWindow.postMessage("pause", "https://" + MGNACG_PLAYER);
+    }
+}
+
+// 橘子动漫实际播放地址
+const MGNACG_PLAYER = "play.mknacg.top:8585";
+
+class MgnacgPlayerHandler extends Handler {
+    constructor() {
+        super();
+        window.addEventListener("message", function (event) {
+            if (event.data == "pause") {
+                document.getElementsByTagName('video')[0].pause();
+            }
+        }, false);
+    }
+    getCurrentVideoUrl() {
+        currentVideoUrl = config.url;
+        if (handler.checkCurrentVideoUrl()) {
+            window.top.postMessage(currentVideoUrl, "*");
+        }
+    }
+    checkCurrentVideoUrl() {
+        return this.baseCheckCurrentVideoUrl();
+    }
+}
 
 // 最大尝试次数
 const MAX_TRY_TIME = 8;
@@ -1563,6 +1610,10 @@ function createHandler() {
         handler = new XfaniHandler();
     } else if (XFANI_PLAYER.indexOf(currentDomain) != -1) {
         handler = new XfaniPlayerHandler();
+    } else if (MGNACG.indexOf(currentDomain) != -1) {
+        handler = new MgnacgHandler();
+    } else if (MGNACG_PLAYER.indexOf(currentDomain) != -1) {
+        handler = new MgnacgPlayerHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();
