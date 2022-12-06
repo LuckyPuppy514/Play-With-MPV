@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.3.3
+// @version                 2.3.4
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -57,6 +57,7 @@
 // @include                 https://m3.moedot.net/muiplayer/?url=*
 // @include                 https://www.mgnacg.com/bangumi/*
 // @include                 https://play.mknacg.top:8585/?url=*
+// @include                 https://spdcat.net/vodplay/*
 // @run-at                  document-end
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
 // @grant                   GM_setValue
@@ -1172,7 +1173,7 @@ class Dmh8Handler extends Handler {
         let iframe = document.getElementsByTagName('iframe')[2];
         let videoUrl = iframe.src;
         let startIndex = videoUrl.indexOf('url=http') + 4;
-        let endIndex = videoUrl.indexOf('m3u8') + 4;
+        let endIndex = videoUrl.indexOf('.m3u8') + 5;
         currentVideoUrl = decodeURIComponent(videoUrl.substring(startIndex, endIndex));
         this.checkCurrentVideoUrl();
     }
@@ -1305,7 +1306,7 @@ class ZykbfHandler extends Handler {
     }
     getCurrentVideoUrl() {
         let startIndex = currentUrl.indexOf('url=http') + 4;
-        let endIndex = currentUrl.indexOf('m3u8') + 4;
+        let endIndex = currentUrl.indexOf('.m3u8') + 5;
         currentVideoUrl = decodeURIComponent(currentUrl.substring(startIndex, endIndex));
         if (this.checkCurrentVideoUrl()) {
             window.parent.postMessage(currentVideoUrl, "*");
@@ -1533,6 +1534,22 @@ class MgnacgPlayerHandler extends Handler {
     }
 }
 
+// 迅猫动漫
+const SPDCAT = "spdcat.net";
+
+class SpdcatHandler extends Handler {
+    getCurrentVideoUrl() {
+        let videoUrl = document.getElementsByTagName('iframe')[2].src;
+        let startIndex = videoUrl.indexOf('url=http') + 4;
+        let endIndex = videoUrl.indexOf('.m3u8') + 5;
+        currentVideoUrl = decodeURIComponent(videoUrl.substring(startIndex, endIndex));
+        this.checkCurrentVideoUrl();
+    }
+    pauseCurrentVideo() {
+        document.getElementsByTagName("iframe")[2].contentWindow.document.getElementsByTagName("video")[0].pause();
+    }
+}
+
 // 最大尝试次数
 const MAX_TRY_TIME = 8;
 // 定时器
@@ -1614,6 +1631,8 @@ function createHandler() {
         handler = new MgnacgHandler();
     } else if (MGNACG_PLAYER.indexOf(currentDomain) != -1) {
         handler = new MgnacgPlayerHandler();
+    } else if (SPDCAT.indexOf(currentDomain) != -1) {
+        handler = new SpdcatHandler();
     } else {
         if (document.title.toLowerCase().indexOf(ALIST) != -1) {
             handler = new AlistHandler();

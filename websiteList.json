@@ -18,10 +18,19 @@
         "resolutionChecked": true
     },
     {
-        "title": "低端影视",
-        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp",
-        "url": "https://ddys2.me",
-        "category": "anime, serial, movie",
+        "title": "橘子动漫",
+        "logo": "https://www.mgnacg.com/upload/mxcms/20220209-1/dc8b624931efc8a08b4582a1d5a77ac0.png",
+        "url": "https://www.mgnacg.com/",
+        "category": "anime",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "迅猫动漫",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/140222_39457151.png",
+        "url": "https://spdcat.net/",
+        "category": "anime",
         "resolution": "1080p",
         "categoryChecked": true,
         "resolutionChecked": true
@@ -30,15 +39,6 @@
         "title": "稀饭动漫",
         "logo": "https://dick.xfani.com/upload/mxprocms/20220815-1/f4ec06904fb3fa438030d22718dcaf38.png",
         "url": "https://dick.xfani.com/",
-        "category": "anime",
-        "resolution": "1080p",
-        "categoryChecked": true,
-        "resolutionChecked": true
-    },
-    {
-        "title": "橘子动漫",
-        "logo": "https://www.mgnacg.com/upload/mxcms/20220209-1/dc8b624931efc8a08b4582a1d5a77ac0.png",
-        "url": "https://www.mgnacg.com/",
         "category": "anime",
         "resolution": "1080p",
         "categoryChecked": true,
@@ -75,6 +75,15 @@
         "title": "片库",
         "logo": "https://www.pkmp4.com/template/pianku/image/logo.png",
         "url": "https://www.pkmp4.com/",
+        "category": "anime, serial, movie",
+        "resolution": "1080p",
+        "categoryChecked": true,
+        "resolutionChecked": true
+    },
+    {
+        "title": "低端影视",
+        "logo": "https://www.lckp.top/gh/LuckyPuppy514/pic-bed/common/ddrk.webp",
+        "url": "https://ddys2.me",
         "category": "anime, serial, movie",
         "resolution": "1080p",
         "categoryChecked": true,
