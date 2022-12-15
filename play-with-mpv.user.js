@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 2.3.4
+// @version                 2.3.5
 // @author                  LuckyPuppy514
 // @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1049,7 +1049,6 @@ class BilibiliLiveHandler extends Handler {
     getUrlProtocolLink() {
         let urlProtocol = new UrlProtocol;
         urlProtocol.appendTitle();
-        urlProtocol.append('--http-header-fields="referer: https://live.bilibili.com, user-agent: ' + navigator.userAgent + '"');
         return urlProtocol.getLink();
     }
 }
