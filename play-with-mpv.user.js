@@ -1074,6 +1074,7 @@ class DdrkHandler extends Handler {
         this.checkCurrentVideoUrl();
     }
     getStartTime() {
+	document.title = document.getElementsByClassName("post-title")[0].textContent + document.getElementsByClassName("wp-playlist-playing")[0].textContent
         return this.getStartTimeByClassName("vjs-time-tooltip");
     }
 }
