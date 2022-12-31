@@ -21,15 +21,15 @@
 - 支持浏览器：Edge, Chrome, Firefox, 360极速浏览器X 等
 - 支持的网站：[👆 请前往导航页查看 👆](https://www.lckp.top/play-with-mpv/index.html)
 
-![20221019063400](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221019063400.png)
+[![20221231154504](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221231154504.png)](https://www.lckp.top/play-with-mpv/index.html)
 
 ## 🐳 安装
 
 ### 1. 💡 安装 mpv
 
-- 选项一：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)
-- 选项二：[🌟🌟 mpv-lazy](https://www.lckp.top/archives/mpv-lazy)
-- 选项三：[🌟🌟🌟 mpv.net_CM](https://www.lckp.top/archives/mpvnetcm)
+- 推荐：[🌟🌟🌟 mpv.net_CM](https://www.lckp.top/archives/mpvnetcm)
+- 备选：[🌟🌟 mpv-lazy](https://www.lckp.top/archives/mpv-lazy)
+- 备选：[🌟 mpv](https://github.com/mpv-player/mpv) + [yt-dlp](https://github.com/yt-dlp/yt-dlp)
 
 ### 2. 🐵 安装油猴插件
 
@@ -48,19 +48,19 @@
 1. 打开一个支持的网页，比如：[打工吧！魔王大人 第二季](https://www.bilibili.com/bangumi/play/ep674708)  
 
 2. 点击设置按钮，输入你的软件路径，并保存设置  
-   ⚠️ **不要包含中文或空格等特殊字符，不要漏掉最后面的 `mpv.com` 或 `mpvnet.com`** ⚠️
+   ⚠️ **不要包含中文或空格等特殊字符，不要漏掉最后面的 `mpv.exe` 或 `mpvnet.exe`** ⚠️
 
    ```text
    # mpv 或 mpv-lazy
-   D:/daily/mpv-lazy/mpv.com
+   D:/daily/mpv-lazy/mpv.exe
 
    # mpvnet 或 mpvnet_CM
-   D:/daily/mpvnet/mpvnet.com
+   D:/daily/mpvnet/mpvnet.exe
    ```
 
 3. 下载注册表 `mpv.reg` 到本地，鼠标双击添加即可  
 
-![20221019042901](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221019042901.png)
+![20221231011029](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221231011029.png)
 
 ⚠️ **注意** ⚠️
 
@@ -68,7 +68,7 @@
 - **v2rayN 默认：`http://127.0.0.1:10809`**
 - **clash 默认：`http://127.0.0.1:7890`**
 
-![20221019043009](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221019043009.png)
+![20221231011147](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20221231011147.png)
 
 ## ✅ 效果展示
 

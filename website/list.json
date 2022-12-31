@@ -1,0 +1,178 @@
+[
+    {
+        "title": "电视直播",
+        "logo": "./logo/404.png",
+        "url": [
+            "https://www.lckp.top/gh/youshandefeiyang/IPTV/main/IPTV.m3u"
+        ],
+        "category": "iptv",
+        "resolution": "超高清"
+    },
+    {
+        "title": "Bilibili",
+        "logo": "./website/logo/bilibili.png",
+        "url": [
+            "https://www.bilibili.com"
+        ],
+        "category": "anime, serial, movie, user, show",
+        "resolution": "超高清"
+    },
+    {
+        "title": "低端影视",
+        "logo": "./website/logo/ddys.png",
+        "url": [
+            "https://ddys.art",
+            "https://ddys.pro"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "LIBVIO",
+        "logo": "./website/logo/libvio.png",
+        "url": [
+            "https://libvio.fun",
+            "https://libvio.me",
+            "https://www.libvio.me"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "片库",
+        "logo": "./website/logo/pkmp4.png",
+        "url": [
+            "https://www.pkmp4.com"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
+        "title": "无名小站",
+        "logo": "./website/logo/btnull.png",
+        "url": [
+            "https://www.btnull.org",
+            "https://www.btnull.to",
+            "https://www.btnull.nu",
+            "https://www.btnull.in"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "樱花动漫网",
+        "logo": "./website/logo/yhdmw.png",
+        "url": [
+            "https://www.996dm.com",
+            "http://www.996dm.com",
+            "http://www.dmlaa.com",
+            "http://www.qdmsh.com"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "橘子动漫",
+        "logo": "./website/logo/mgnacg.png",
+        "url": [
+            "https://www.mgnacg.com"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "OmoFun",
+        "logo": "./website/logo/omofun.png",
+        "url": [
+            "https://www.omofun.top"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "迅猫动漫",
+        "logo": "./website/logo/spdcat.png",
+        "url": [
+            "https://spdcat.net"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "稀饭动漫",
+        "logo": "./website/logo/xfani.png",
+        "url": [
+            "https://dick.xfani.com"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "哔嘀影视",
+        "logo": "./website/logo/bdys.svg",
+        "url": [
+            "https://www.bdys01.com"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "樱花动漫",
+        "logo": "./website/logo/dm88.png",
+        "url": [
+            "http://www.dm88.me"
+        ],
+        "category": "anime",
+        "resolution": "标清"
+    },
+    {
+        "title": "动漫之家",
+        "logo": "./website/logo/kk151.png",
+        "url": [
+            "https://www.kk151.com"
+        ],
+        "category": "anime",
+        "resolution": "标清"
+    },
+    {
+        "title": "优质资源库",
+        "logo": "./website/logo/hdzyk.gif",
+        "url": [
+            "https://hdzyk.com",
+            "https://1080zyk1.com",
+            "https://1080zyk2.com",
+            "https://1080zyk3.com",
+            "https://1080zyk4.com",
+            "https://1080zyk5.com"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "标清"
+    },
+    {
+        "title": "YouTube",
+        "logo": "./website/logo/youtube.png",
+        "url": [
+            "https://www.youtube.com"
+        ],
+        "category": "anime, serial, movie, user, show",
+        "resolution": "超高清"
+    },
+    {
+        "title": "巴哈姆特",
+        "logo": "./website/logo/gamer.png",
+        "url": [
+            "https://ani.gamer.com.tw"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "AList",
+        "logo": "./website/logo/alist.svg",
+        "url": [
+            "https://alist.nn.ci/zh/guide"
+        ],
+        "category": "anime, serial, movie, user, show",
+        "resolution": "超高清"
+    }
+]
