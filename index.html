@@ -120,7 +120,7 @@
             height: 190px;
             border-radius: 5px;
             backdrop-filter: blur(30px);
-            background-color: rgb(3, 150, 255, .7);
+            background-color: rgb(3, 150, 255, .6);
             position: relative;
             overflow: visible;
             display: inline-block;
@@ -129,7 +129,8 @@
         }
 
         .item-div:hover {
-            background-color: rgba(251, 107, 40, .9);
+            background-color: rgba(251, 107, 40, .8);
+            transform: translate3d(0, -3px, 0);
             cursor: pointer;
         }
 
@@ -173,15 +174,14 @@
             border-radius: 2px;
             color: rgba(255, 255, 255, 1);
             border: none;
-            background-color: #0396ff;
+            background-color: rgb(3, 150, 255, 1);
             font-size: 13px;
             text-decoration: none;
         }
 
         .item-button-div button:hover,
         .item-button-div a:hover {
-            opacity: .85;
-            -webkit-transform: translate3d(0, -2px, 0);
+            opacity: .9;
             transform: translate3d(0, -2px, 0);
             cursor: pointer;
         }
@@ -325,7 +325,7 @@
         </div>
         <div id="content-div"></div>
         <div id="footer-div">
-            <p><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">2022 ©LuckyPuppy514
+            <p><a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">© 2023 LuckyPuppy514
                     - <a class="icp" href="https://beian.miit.gov.cn" target="_blank"
                         rel="noopener noreferrer nofollow">粤ICP备2022080328号-1</a></a></p>
             <p class="site_police">
@@ -458,7 +458,7 @@
 				    </div>
                     <a href="${mpv}" target="_blank">
                         <div class="item-logo-div">
-                            <img src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'">
+                            <img src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'" referrerpolicy="no-referrer">
                         </div>
                         <div class="item-title-div">${title}</div>
                     </a>
@@ -481,7 +481,7 @@
 				    </div>
                     <a href="${website.url[0]}" target="_blank">
                         <div class="item-logo-div">
-                            <img src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'">
+                            <img src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'" referrerpolicy="no-referrer">
                         </div>
                         <div class="item-title-div">${website.title}</div>
                     </a>

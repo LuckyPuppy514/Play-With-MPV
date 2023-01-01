@@ -2,9 +2,9 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.0.0
+// @version                 3.0.1
 // @author                  LuckyPuppy514
-// @copyright               2022, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
+// @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
 // @description             使用 MPV 播放网页上的视频
 // @homepage                https://github.com/LuckyPuppy514/Play-With-MPV
@@ -80,7 +80,7 @@ const INFO = `
 ▶️                                                       ◀️
 ▶️    https://github.com/LuckyPuppy514/Play-With-MPV     ◀️
 ▶️                                                       ◀️
-▶️                  2022 @LuckyPuppy514                  ◀️
+▶️                  © 2023 LuckyPuppy514                 ◀️
 ▶️                                                       ◀️
 ▶️🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼🔼◀️
 
@@ -606,7 +606,7 @@ const HTML = `
         </tr>
     </table>
     <span class="${CLASS.footerSpan}">
-        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank"> 2022 © LuckyPuppy514 </a>
+        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank"> © 2023 LuckyPuppy514 </a>
         <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank"> 🆕 </a>
         <a href="https://github.com/LuckyPuppy514/Play-With-MPV/issues/new" target="_blank"> 👻 </a>
     </span>
