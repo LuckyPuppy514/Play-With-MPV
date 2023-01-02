@@ -39,6 +39,15 @@
         "resolution": "高清"
     },
     {
+        "title": "泥视频",
+        "logo": "./website/logo/nivod.png",
+        "url": [
+            "https://www.nivod.tv"
+        ],
+        "category": "anime, serial, movie, user, show",
+        "resolution": "高清"
+    },
+    {
         "title": "片库",
         "logo": "./website/logo/pkmp4.png",
         "url": [

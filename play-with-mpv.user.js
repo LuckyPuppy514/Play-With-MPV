@@ -21,6 +21,7 @@
 // @match                   https://www.libvio.me/play/*
 // @match                   https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
 // @match                   https://p.cfnode1.xyz/*?url=*
+// @match                   https://www.nivod.tv/*
 // @match                   https://www.pkmp4.com/py/*
 // @match                   https://www.pkmp4.com/addons/dplayer/?url=*
 // @match                   https://www.btnull.org/py/*
@@ -970,7 +971,6 @@ class BaseHandler {
                 break;
             }
         }
-        this.media.setTitle(document.title);
         if (window.self == window.top) {
             if (!document.getElementById(ID.buttonDiv)) {
                 console.log(INFO);
@@ -980,6 +980,7 @@ class BaseHandler {
             }
             document.getElementById(ID.buttonDiv).style.display = "none";
         }
+        this.media.setTitle(document.title);
     }
     async parse() { }
     pause() {
@@ -1399,6 +1400,20 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(urls);
+            }
+        }
+    },
+    {
+        // ✅ https://www.nivod.tv/UXEwMmLqnUjHG5e4MwmlvmVnWiAJ9rIQ-RofV7wPhhed3uoi50mYsftLPq4mYyIhB-720-0-0-play.html?x=1
+        name: "泥视频",
+        home: [
+            "https://www.nivod.tv",
+        ],
+        regex: /^https:\/\/www\.nivod\.tv\/.*play\.html?.*/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setVideoUrl(__dp.options.video.url);
+                this.media.setTitle(document.title);
             }
         }
     },
