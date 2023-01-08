@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.0.1
+// @version                 3.0.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -99,8 +99,9 @@ const DEFAULT_CONFIG = {
     bilibiliCodecs: 12,
     playAuto: 0,
     syncStartTime: 0,
+    subtitlePrefer: "zh-Hans",
     regVersion: "20221230",
-    version: "20221230"
+    version: "20230108"
 };
 var currentConfig;
 // 视频链接匹配正则
@@ -131,6 +132,7 @@ const PLAYER = {
         params: {
             videoUrl: 'mpv://"${videoUrl}" ',
             audioUrl: '--audio-file="${audioUrl}" ',
+            subtitleUrl: '--sub-file="${subtitleUrl}" ',
             title: '--force-media-title="${title}" ',
             startTime: '--start=${startTime} ',
             referer: '--http-header-fields="referer: ${referer}" ',
@@ -143,6 +145,7 @@ const PLAYER = {
         name: "potplayer",
         params: {
             videoUrl: 'potplayer://${videoUrl} /current ',
+            subtitleUrl: '/sub="${subtitleUrl}" ',
             title: '/title="${title}" ',
             startTime: '/seek=${startTime} ',
             referer: '/referer="${referer}" ',
@@ -172,17 +175,18 @@ const ID = {
     settingButton: `${PREFIX}-setting-button`,
     settingDiv: `${PREFIX}-setting-div`,
     settingTable: `${PREFIX}-setting-table`,
-    playerSelect: `${PREFIX}-player-input`,
+    playerRadio: `${PREFIX}-player-radio`,
     mpvPathInput: `${PREFIX}-mpv-path-input`,
     proxyInput: `${PREFIX}-proxy-input`,
-    bestQualitySelect: `${PREFIX}-best-quality-select`,
-    bilibiliCodecsSelect: `${PREFIX}-bilibili-codecs-select`,
+    bestQualityRadio: `${PREFIX}-best-quality-radio`,
+    bilibiliCodecsRadio: `${PREFIX}-bilibili-codecs-radio`,
     saveButton: `${PREFIX}-save-button`,
     downloadButton: `${PREFIX}-download-button`,
     playAutoInput: `${PREFIX}-play-auto-input`,
     syncStartTimeInput: `${PREFIX}-sync-start-time-input`,
     aboutDiv: `${PREFIX}-about-div`,
     aboutTable: `${PREFIX}-about-table`,
+    subtitlePreferRadio: `${PREFIX}-subtitle-prefer-radio`,
 }
 // 组件 class
 const CLASS = {
@@ -192,7 +196,7 @@ const CLASS = {
     closeButton: `${PREFIX}-cloase-button-class`,
     tipSpan: `${PREFIX}-tip-span-class`,
     footerSpan: `${PREFIX}-footer-span-class`,
-    switchLabel: `${PREFIX}-footer-label-class`,
+    switchLabel: `${PREFIX}-switch-label-class`,
     sliderSpan: `${PREFIX}-slider-span-class`,
     roundSpan: `${PREFIX}-round-span-class`,
     customSelect: `${PREFIX}-custom-select-class`,
@@ -317,21 +321,20 @@ ${ID.buttonDiv} {
     transform: translate(-50%, -50%);
     z-index: 99999;
 
-    width: 780px;
-    height: 410px;
-    border: 6px solid rgba(255, 255, 255, 0.5);
-    background-color: rgba(0, 113, 255, 1);
+    width: 900px;
+    height: 520px;
+    background-color: rgb(65, 146, 247);
     display: none;
     flex-direction: column;
 	border-radius: 6px;
 	align-items: center;
-    color: rgba(255, 255, 255, 1);
+    color: rgba(0, 0, 0, .7);
     font-family: "微软雅黑";
 }
 #${ID.settingTable} {
     margin-top: 10px;
-    width: 680px;
-    height: 330px;
+    width: 800px;
+    height: 460px;
     border-radius: 5px !important;
     border: 3px solid rgba(255, 255, 255, 1) !important;
     text-align: left;
@@ -340,24 +343,27 @@ ${ID.buttonDiv} {
 #${ID.settingTable} td {
     font-size: 14px;
     border: 0px solid rgba(255, 255, 255, 0.5);
-    padding-top: 18px;
+    padding-top: 19px;
 }
 .${CLASS.titleSpan} {
     padding-top: 15px;
     font-size: 16px;
     font-weight: bold;
+    color: rgba(255, 255, 255, 1) !important;
 }
 .${CLASS.closeButton} {
     position: absolute;
     top: 4px;
-    right: 3px;
+    right: 8px;
     height: 25px;
-    width: 40px;
+    width: 25px;
     border: none;
     font-size: 17px;
     background-color: rgba(0, 0, 0, 0);
     line-height: 0px;
     border-radius: 3px;
+    transform: scale(1.32, 1);
+    color: rgba(255, 255, 255, 1);
 }
 .${CLASS.closeButton}:hover {
     font-size: 20px;
@@ -365,23 +371,23 @@ ${ID.buttonDiv} {
     cursor: pointer;
 }
 .${CLASS.tipSpan} {
-    font-size: xx-small;
+    font-size: 12px;
     color: yellow;
     position: fixed;
-    padding-left: 5px;
-    padding-top: 9px;
 }
 .${CLASS.titleTd} {
-    width: 100px;
+    width: 135px;
     height: 30px;
     border: none;
     font-size: 14px;
     padding-right: 15px;
     text-align: right;
+    color: rgba(255, 255, 255, 1) !important;
+    cursor: default;
 }
 #${ID.settingTable} input {
-    font-size: 12px;
-    width: 420px;
+    font-size: 12px !important;
+    width: 542px;
     height: 26px;
     border: none;
     outline: none;
@@ -390,7 +396,7 @@ ${ID.buttonDiv} {
     color: rgba(0, 0, 0, 1);
     background-color: rgba(255, 255, 255, 1);
     cursor: auto;
-    display: inline-block !important;
+    display: block !important;
     margin-top: 1px !important;
     margin-bottom: 1px !important;
 }
@@ -400,13 +406,13 @@ ${ID.buttonDiv} {
 }
 #${ID.saveButton} {
     font-size: 14px;
-    margin-left: 185px;
+    margin-left: 195px;
     width: 300px;
     height: 30px;
     border: none;
     border-radius: 3px;
     color: rgba(255, 255, 255, 1);
-    background-color: rgba(255, 255, 255, .6);
+    background-color: rgba(0, 255, 0, .7);
 }
 #${ID.downloadButton} {
     font-size: x-small;
@@ -416,26 +422,13 @@ ${ID.buttonDiv} {
     border: none;
     border-radius: 3px;
     color: rgba(255, 255, 255, 1);
-    background-color: rgba(255, 255, 255, .6);
+    background-color: rgba(0, 255, 0, .7);
 }
 #${ID.saveButton}:hover,
 #${ID.downloadButton}:hover {
-    background-color: rgba(0, 255, 0, .7);
+    opacity: .8;
+    background-color: rgba(0, 255, 0, .8);
     cursor: pointer;
-}
-.${CLASS.customSelect} {
-    position: relative;
-    display: inline-block;
-    width: 90px;
-    height: 25px;
-    border: none;
-    outline: none;
-    padding-left: 6px;
-    border-radius: 3px;
-    color: rgba(0, 0, 0, 1);
-    background-color: rgba(255, 255, 255, 1);
-    cursor: pointer;
-    font-size: 12px;
 }
 .${CLASS.footerSpan} {
     margin-top: 10px;
@@ -455,6 +448,7 @@ ${ID.buttonDiv} {
     display: inline-block;
     width: 50px;
     height: 21px;
+    margin-top: 3px;
 }
 .${CLASS.switchLabel} input { 
     opacity: 0;
@@ -501,8 +495,8 @@ input:checked + .${CLASS.sliderSpan}:before {
     border-radius: 50%;
 }
 .${CLASS.readOnly} {
-    color: rgba(255, 0, 0, .9) !important;
-    background-color: rgba(255, 0, 0, .9) !important;
+    color: rgba(255, 255, 255, .3) !important;
+    background-color: rgba(0, 0, 0, .3) !important;
     cursor: default !important;
 }
 #${ID.aboutButton} {
@@ -518,6 +512,60 @@ input:checked + .${CLASS.sliderSpan}:before {
     width: 29px;
     height: 29px;
 }
+.tabs {
+    display: flex;
+    width: 560px;
+    height: 28px;
+}
+
+.tabs>.tab {
+    flex: 1;
+    display: flex;
+}
+
+.tab>.tab-input {
+    width: 0 !important;
+    height: 0 !important;
+    margin: 0 !important;
+    display: none !important;
+}
+
+.tab>.tab-box {
+    padding: 5px;
+    width: 100%;
+    text-align: center;
+    align-self: center;
+    transition: 0.3s;
+    background: rgba(255, 255, 255, 1);
+    margin-right: 12px;
+    border-radius: 3px;
+    font-size: 12px;
+    font-weight: normal !important;
+}
+
+.tab>.tab-box:hover {
+    opacity: .8;
+    cursor: pointer;
+}
+
+.tab>.tab-input:checked+.tab-box {
+    color: rgba(255, 255, 255, 1);
+    background: rgba(0, 255, 0, .7);
+}
+.${CLASS.titleTd}:hover:after {
+    position: absolute !important;
+    background-color: rgba(0, 0, 0, 0) !important;
+    font-size: 12px !important;
+    color: yellow !important;
+    content: attr(data-tip) !important;
+    text-align: left !important;
+    z-index: 99999 !important;
+    width: 230px !important;
+    height: 22px !important;
+    display: inline-block !important;
+    margin-left: -56px !important;
+    margin-top: -23px !important;
+}
 `;
 const HTML = `
 <div id="${ID.loadingDiv}">
@@ -532,71 +580,122 @@ const HTML = `
 </div>
 
 <div id="${ID.settingDiv}">
-    <span class="${CLASS.titleSpan}"> Play-With-MPV <button class="${CLASS.closeButton}">❌</button></span>
+    <span class="${CLASS.titleSpan}"> Play-With-MPV <button class="${CLASS.closeButton}">X</button></span>
     <table id="${ID.settingTable}">
         <tr>
-            <td class="${CLASS.titleTd}">播放软件</td>
-            <td>
-                <select id="${ID.playerSelect}" class="${CLASS.customSelect}">
-                    <option value="${PLAYER.mpv.name}" selected>${PLAYER.mpv.name}</option>
-                    <option value="${PLAYER.potplayer.name}">${PLAYER.potplayer.name}</option>
-                </select>
-                <span class="${CLASS.tipSpan}">选择 potplayer 时：软件路径，最高画质，视频编码无效</span>
-            </td>
-        </tr>
-        <tr>
-            <td class="${CLASS.titleTd}">软件路径</td>
+            <td class="${CLASS.titleTd}" data-tip="软件路径，最高画质，视频编码无法使用">播放软件</td>
             <td colspan="3">
-                <input id="${ID.mpvPathInput}" type=text placeholder="请输入软件路径，例如：D://mpvnet//mpvnet.exe">
-                <span class="${CLASS.tipSpan}">mpv.exe 完整路径</span>
+                <div class="tabs" style="width: 286px">
+                    <label class="tab">
+                        <input type="radio" name="${ID.playerRadio}" value="${PLAYER.mpv.name}" class="tab-input">
+                        <div class="tab-box">mpv</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.playerRadio}" value="${PLAYER.potplayer.name}" class="tab-input">
+                        <div class="tab-box">potplayer</div>
+                    </label>
+                </div>
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}">代理设置</td>
+            <td class="${CLASS.titleTd}" data-tip="mpv.exe 完整路径">软件路径</td>
             <td colspan="3">
-                <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
-                <span class="${CLASS.tipSpan}">油管和巴哈专属</span>
+                <div>
+                    <input id="${ID.mpvPathInput}" type=text placeholder="请输入软件路径，例如：D://mpvnet//mpvnet.exe">
+                </div>
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}">最高画质</td>
-            <td>
-                <select id="${ID.bestQualitySelect}" class="${CLASS.customSelect}">
-                    <option value="unlimited" selected>无限制</option>
-                    <option value="2160p">2160p</option>
-                    <option value="1440p">1440p</option>
-                    <option value="1080p">1080p</option>
-                    <option value="720p">720p</option>
-                    <option value="480p">480p</option>
-                </select>
-                <span class="${CLASS.tipSpan}">油管和B站专属</span>
-            </td>
-            <td class="${CLASS.titleTd}">视频编码</td>
-            <td>
-                <select id="${ID.bilibiliCodecsSelect}" class="${CLASS.customSelect}">
-                    <option value="12" selected>HEVC</option>
-                    <option value="13">AV1</option>
-                    <option value="7">AVC</option>
-                </select>
-                <span class="${CLASS.tipSpan}">B站专属</span>
+            <td class="${CLASS.titleTd}" data-tip="仅对油管和巴哈姆特生效">代理设置</td>
+            <td colspan="3">
+                <div>
+                    <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809" data-tip="仅对油管和巴哈姆特有效">
+                </div>
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}">自动播放</td>
-            <td>
-                <label class="${CLASS.switchLabel}">
-                    <input type="checkbox" id="${ID.playAutoInput}">
-                    <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
-                </label>
-                <span class="${CLASS.tipSpan}">解析成功自动播放</span>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于油管和B站">最高画质</td>
+            <td colspan="3">
+                <div class="tabs">
+                    <label class="tab">
+                        <input type="radio" name="${ID.bestQualityRadio}" value="unlimited" class="tab-input">
+                        <div class="tab-box" name="${ID.bestQualityRadio}">无限制</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.bestQualityRadio}" value="2160p" class="tab-input">
+                        <div class="tab-box" name="${ID.bestQualityRadio}">2160p</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.bestQualityRadio}" value="1440p" class="tab-input">
+                        <div class="tab-box" name="${ID.bestQualityRadio}">1440p</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.bestQualityRadio}" value="1080p" class="tab-input">
+                        <div class="tab-box" name="${ID.bestQualityRadio}">1080p</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.bestQualityRadio}" value="720p" class="tab-input">
+                        <div class="tab-box" name="${ID.bestQualityRadio}">720p</div>
+                    </label>
+                </div>
             </td>
-            <td class="${CLASS.titleTd}">同步时间</td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于B站">视频编码</td>
+            <td colspan="3">
+                <div class="tabs">
+                    <label class="tab">
+                        <input type="radio" name="${ID.bilibiliCodecsRadio}" value="12" class="tab-input">
+                        <div class="tab-box" name="${ID.bilibiliCodecsRadio}">HEVC</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.bilibiliCodecsRadio}" value="13" class="tab-input">
+                        <div class="tab-box" name="${ID.bilibiliCodecsRadio}">AV1</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.bilibiliCodecsRadio}" value="7" class="tab-input">
+                        <div class="tab-box" name="${ID.bilibiliCodecsRadio}">AVC</div>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于B站">首选字幕</td>
+            <td colspan="3">
+                <div class="tabs">
+                    <label class="tab">
+                        <input type="radio" name="${ID.subtitlePreferRadio}" value="zh-Hans" class="tab-input">
+                        <div class="tab-box">中文（简体）</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.subtitlePreferRadio}" value="zh-Hant" class="tab-input">
+                        <div class="tab-box">中文（繁体）</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.subtitlePreferRadio}" value="en-US" class="tab-input"=>
+                        <div class="tab-box">英语（美国）</div>
+                    </label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}" data-tip="解析成功自动播放">自动播放</td>
             <td>
-                <label class="${CLASS.switchLabel}">
-                    <input type="checkbox" id="${ID.syncStartTimeInput}">
-                    <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
-                </label>
-                <span class="${CLASS.tipSpan}">同步网页播放时间</span>
+                <div>
+                    <label class="${CLASS.switchLabel}">
+                        <input type="checkbox" id="${ID.playAutoInput}">
+                        <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
+                    </label>
+                </div>
+            </td>
+            <td class="${CLASS.titleTd}" data-tip="同步网页播放时间">同步时间</td>
+            <td>
+                <div>
+                    <label class="${CLASS.switchLabel}">
+                        <input type="checkbox" id="${ID.syncStartTimeInput}">
+                        <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
+                    </label>
+                </div>
             </td>
         </tr>
         <tr>
@@ -683,17 +782,15 @@ function addListener() {
     let playButton = document.getElementById(ID.playButton);
     let settingButton = document.getElementById(ID.settingButton);
     let settingDiv = document.getElementById(ID.settingDiv);
-    let playerSelect = document.getElementById(ID.playerSelect);
     let mpvPathInput = document.getElementById(ID.mpvPathInput);
     let proxyInput = document.getElementById(ID.proxyInput);
-    let bestQualitySelect = document.getElementById(ID.bestQualitySelect);
-    let bilibiliCodecsSelect = document.getElementById(ID.bilibiliCodecsSelect);
     let playAutoInput = document.getElementById(ID.playAutoInput);
     let syncStartTimeInput = document.getElementById(ID.syncStartTimeInput);
     let downloadButton = document.getElementById(ID.downloadButton);
     let saveButton = document.getElementById(ID.saveButton);
     let closeButtons = document.getElementsByClassName(CLASS.closeButton);
     let aboutButton = document.getElementById(ID.aboutButton);
+
     switchStatus(downloadButton, false);
     // 播放按钮
     playButton.onclick = function () {
@@ -732,25 +829,27 @@ function addListener() {
         } else {
             settingDiv.style.display = "flex";
             // 加载配置
-            playerSelect.value = currentConfig.player;
             mpvPathInput.value = currentConfig.mpvPath;
             proxyInput.value = currentConfig.proxy;
-            bestQualitySelect.value = currentConfig.bestQuality;
-            bilibiliCodecsSelect.value = currentConfig.bilibiliCodecs;
+            $(`input:radio[name="${ID.bestQualityRadio}"][value="${currentConfig.bestQuality}"]`).prop('checked', true);
+            $(`input:radio[name="${ID.bilibiliCodecsRadio}"][value="${currentConfig.bilibiliCodecs}"]`).prop('checked', true);
+            $(`input:radio[name="${ID.playerRadio}"][value="${currentConfig.player}"]`).prop('checked', true);
             playAutoInput.checked = currentConfig.playAuto == 1 ? true : false;
             syncStartTimeInput.checked = currentConfig.syncStartTime == 1 ? true : false;
-            switchPlayer(playerSelect.value);
+            console.log(currentConfig.subtitlePrefer);
+            $(`input:radio[name="${ID.subtitlePreferRadio}"][value="${currentConfig.subtitlePrefer}"]`).prop('checked', true);
+            switchPlayer($(`input:radio[name="${ID.playerRadio}"]:checked`).val());
         }
     }
     // 播放器选择框
-    playerSelect.onchange = function () {
+    $(`input:radio[name="${ID.playerRadio}"]`).change(function () {
         switchPlayer(this.value);
-    }
+    });
     // 保存按钮
     saveButton.onclick = function () {
         let oldMpvPath = currentConfig.mpvPath;
         let newMpvPath = mpvPathInput.value;
-        if (playerSelect.value == PLAYER.mpv.name) {
+        if ($(`input:radio[name="${ID.playerRadio}"]:checked`).val() == PLAYER.mpv.name) {
             if (!newMpvPath) {
                 toast("软件路径不能为空", TOAST_TYPE.error);
                 return;
@@ -772,12 +871,13 @@ function addListener() {
             }
             mpvPathInput.value = newMpvPath;
             currentConfig.mpvPath = newMpvPath;
-            currentConfig.bestQuality = bestQualitySelect.value;
-            currentConfig.bilibiliCodecs = bilibiliCodecsSelect.value;
+            currentConfig.bestQuality = $(`input:radio[name="${ID.bestQualityRadio}"]:checked`).val();
+            currentConfig.bilibiliCodecs = $(`input:radio[name="${ID.bilibiliCodecsRadio}"]:checked`).val();
             switchStatus(downloadButton, mpvPathInput.value ? true : false);
         }
         currentConfig.proxy = proxyInput.value;
-        currentConfig.player = playerSelect.value;
+        currentConfig.player = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        currentConfig.subtitlePrefer = $(`input:radio[name="${ID.subtitlePreferRadio}"]:checked`).val();
         currentConfig.playAuto = playAutoInput.checked ? 1 : 0;
         currentConfig.syncStartTime = syncStartTimeInput.checked ? 1 : 0;
         GM_setValue(KEY.config, currentConfig);
@@ -811,19 +911,29 @@ function addListener() {
     aboutButton.onclick = function () {
         window.open("https://www.lckp.top/play-with-mpv/index.html", "_blank");
     }
+    let bestQualityRadios = document.getElementsByName(ID.bestQualityRadio);
+    let bilibiliCodecsRadios = document.getElementsByName(ID.bilibiliCodecsRadio);
     // 切换播放器
     function switchPlayer(player) {
         if (player == PLAYER.mpv.name) {
             switchStatus(mpvPathInput, true);
-            switchStatus(bestQualitySelect, true);
-            switchStatus(bilibiliCodecsSelect, true);
+            for (const radio of bestQualityRadios) {
+                switchStatus(radio, true);
+            }
+            for (const radio of bilibiliCodecsRadios) {
+                switchStatus(radio, true);
+            }
             if (mpvPathInput.value) {
                 switchStatus(downloadButton, true);
             }
         } else if (player == PLAYER.potplayer.name) {
             switchStatus(mpvPathInput, false);
-            switchStatus(bestQualitySelect, false);
-            switchStatus(bilibiliCodecsSelect, false);
+            for (const radio of bestQualityRadios) {
+                switchStatus(radio, false);
+            }
+            for (const radio of bilibiliCodecsRadios) {
+                switchStatus(radio, false);
+            }
             switchStatus(downloadButton, false);
         }
     }
@@ -873,7 +983,7 @@ function loadConfig() {
         if (oldConifg.version != DEFAULT_CONFIG.version) {
             currentConfig = copy(DEFAULT_CONFIG);
             for (const key in oldConifg) {
-                config[key] = oldConifg[key];
+                currentConfig[key] = oldConifg[key];
             }
             currentConfig.version = DEFAULT_CONFIG.version;
             GM_setValue(KEY.config, currentConfig);
@@ -896,6 +1006,7 @@ class Media {
         this.title = "";
         this.videoUrl = "";
         this.audioUrl = "";
+        this.subtitleUrl = "";
         this.startTime = "";
         this.referer = "";
         this.origin = "";
@@ -918,6 +1029,9 @@ class Media {
     }
     setAudioUrl(audioUrl) {
         this.audioUrl = audioUrl;
+    }
+    setSubtitleUrl(subtitleUrl) {
+        this.subtitleUrl = subtitleUrl;
     }
     setStartTime(startTime) {
         this.startTime = Math.floor(startTime);
@@ -1120,6 +1234,38 @@ function getBilibiliPlayUrl(avid, cid) {
     if (handler.player.params.audioUrl) {
         fnval = 4048;
     }
+    if (handler.player.name == PLAYER.mpv.name) {
+        handler.media.setOther(`--script-opts="cid=${cid}"`);
+    }
+    // 字幕
+    $.ajax({
+        type: "GET",
+        url: `https://api.bilibili.com/x/player/v2?aid=${avid}&cid=${cid}`,
+        xhrFields: {
+            withCredentials: true
+        },
+        async: false,
+        success: function (res) {
+            if (res.code == 0 && res.data.subtitle && res.data.subtitle.subtitles.length > 0) {
+                let subtitles = res.data.subtitle.subtitles;
+                let url = "https:" + subtitles[0].subtitle_url;
+                let lan = subtitles[0].lan;
+                for (const subtitle of subtitles) {
+                    if (currentConfig.subtitlePrefer.startsWith("zh") && subtitle.lan.startsWith("zh")) {
+                        url = "https:" + subtitle.subtitle_url;
+                        lan = subtitle.lan;
+                    }
+                    if (subtitle.lan == currentConfig.subtitlePrefer) {
+                        url = "https:" + subtitle.subtitle_url;
+                        lan = subtitle.lan;
+                        break;
+                    }
+                }
+                handler.media.setSubtitleUrl(`https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`);
+            }
+        }
+    });
+    // 视频 + 音频
     $.ajax({
         type: "GET",
         url: `https://api.bilibili.com/x/player/playurl?qn=120&otype=json&fourk=1&fnver=0&fnval=${fnval}&avid=${avid}&cid=${cid}`,
@@ -1128,7 +1274,6 @@ function getBilibiliPlayUrl(avid, cid) {
         },
         async: false,
         success: function (res) {
-            handler.media.setOther(`--script-opts="cid=${cid}"`);
             if (handler.player.params.audioUrl) {
                 let videoUrl = undefined;
                 let audioUrl = undefined;
@@ -1166,20 +1311,6 @@ function getBilibiliPlayUrl(avid, cid) {
         }
     });
 }
-// function getBilibiliSubtitle(aid, cid) {
-//     $.ajax({
-//         type: "GET",
-//         url: `https://api.bilibili.com/x/player/v2?aid=${aid}&cid=${cid}`,
-//         xhrFields: {
-//             withCredentials: true
-//         },
-//         async: true,
-//         success: function (res) {
-//             let subtitleUrl = res.data.subtitle.subtitles[0].subtitle_url;
-//             console.log(subtitleUrl);
-//         }
-//     });
-// }
 const BEST_QUALITY = {
     bilibili: {
         "unlimited": 127,
