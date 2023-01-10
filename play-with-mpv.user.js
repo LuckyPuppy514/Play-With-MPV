@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.0
+// @version                 3.1.1
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1333,9 +1333,18 @@ class BaseHandler {
             let value = this.media[key];
             if (value) {
                 let param = this.player.params[key];
-                do {
-                    param = param.replace('${' + key + '}', value);
-                } while (param.indexOf('${' + key + '}') != -1)
+                let matchKey = '${' + key + '}';
+                while (param.indexOf(matchKey) != -1) {
+                    param = param.replace(matchKey, value);
+                }
+                matchKey = '${E' + key + '}';
+                while (param.indexOf(matchKey) != -1) {
+                    param = param.replace(matchKey, encodeURIComponent(value));
+                }
+                matchKey = '${D' + key + '}';
+                while (param.indexOf(matchKey) != -1) {
+                    param = param.replace(matchKey, decodeURIComponent(value));
+                }
                 link = link + " " + param;
             }
         }
@@ -1345,7 +1354,11 @@ class BaseHandler {
             if (title.length > maxLength) {
                 title = title.substring(0, maxLength) + '...';
             }
-            link = link + " " + this.player.params.title.replace('${title}', title);
+            let param = this.player.params.title;
+            param = param.replace('${title}', title);
+            param = param.replace('${Etitle}', encodeURIComponent(title));
+            param = param.replace('${Dtitle}', decodeURIComponent(title));
+            link = link + " " + param;
         }
         window.open(link, "_self");
     }
