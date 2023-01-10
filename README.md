@@ -56,7 +56,7 @@
 
 ![20230110073318](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20230110073318.png)
 
-| 参数名 | 参数取值 | 说明 |
+| 参数名称 | 参数取值 | 说明 |
 |:---:|:---:|:---:|
 | 视频链接 | ${videoUrl} | 视频格式：yt-dlp / m3u8 / flv / m4s / mp4 / mkv ... 播放器不支持则无法播放对应格式视频 |
 | 音频链接 | ${audioUrl} | 为空则不支持最高画质和视频编码 |
