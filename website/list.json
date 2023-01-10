@@ -3,7 +3,7 @@
         "title": "电视直播",
         "logo": "./logo/404.png",
         "url": [
-            "https://www.lckp.top/gh/youshandefeiyang/IPTV/main/IPTV.m3u"
+            "https://www.lckp.top/play-with-mpv/IPTV.m3u"
         ],
         "category": "iptv",
         "resolution": "超高清"
