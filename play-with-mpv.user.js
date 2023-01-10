@@ -103,7 +103,7 @@ const DEFAULT_CONFIG = {
     customPlayer: {
         name: "custom",
         params: {
-            videoUrl: 'iina://weblink?url=${videoUrl}',
+            videoUrl: 'iina://weblink?url=${EvideoUrl}',
             audioUrl: '',
             subtitleUrl: '',
             title: '',
