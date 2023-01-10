@@ -52,9 +52,9 @@
 
 ![20230110073201](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20230110073201.png)
 
-例如，iina 对应的视频参数为：iina://weblink?url=${videoUrl}
+例如，iina 对应的视频参数为：iina://weblink?url=${EvideoUrl}
 
-![20230110073318](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20230110073318.png)
+![20230111013225](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20230111013225.png)
 
 | 参数名称 | 参数取值 | 说明 |
 |:---:|:---:|:---:|
