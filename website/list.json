@@ -18,16 +18,6 @@
         "resolution": "超高清"
     },
     {
-        "title": "低端影视",
-        "logo": "./website/logo/ddys.png",
-        "url": [
-            "https://ddys.art",
-            "https://ddys.pro"
-        ],
-        "category": "anime, serial, movie",
-        "resolution": "高清"
-    },
-    {
         "title": "LIBVIO",
         "logo": "./website/logo/libvio.png",
         "url": [
@@ -36,6 +26,18 @@
             "https://www.libvio.me"
         ],
         "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "樱花动漫网",
+        "logo": "./website/logo/yhdmw.png",
+        "url": [
+            "https://www.996dm.com",
+            "http://www.996dm.com",
+            "http://www.dmlaa.com",
+            "http://www.qdmsh.com"
+        ],
+        "category": "anime",
         "resolution": "高清"
     },
     {
@@ -69,15 +71,13 @@
         "resolution": "高清"
     },
     {
-        "title": "樱花动漫网",
-        "logo": "./website/logo/yhdmw.png",
+        "title": "低端影视",
+        "logo": "./website/logo/ddys.png",
         "url": [
-            "https://www.996dm.com",
-            "http://www.996dm.com",
-            "http://www.dmlaa.com",
-            "http://www.qdmsh.com"
+            "https://ddys.art",
+            "https://ddys.pro"
         ],
-        "category": "anime",
+        "category": "anime, serial, movie",
         "resolution": "高清"
     },
     {

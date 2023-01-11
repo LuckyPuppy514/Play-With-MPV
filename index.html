@@ -27,7 +27,7 @@
             display: flex;
             flex-flow: column;
             height: 100%;
-            min-width: 700px;
+            min-width: 800px;
             min-height: 700px;
             padding-left: 100px;
             padding-right: 100px;
@@ -136,6 +136,26 @@
 
         .item-div a {
             text-decoration: none;
+        }
+
+        .item-div a:hover:after {
+            position: absolute;
+            font-size: 12px;
+            left: 208px;
+            top: 10px;
+            padding: 5px 5px 5px 5px !important;
+            background-color: rgba(0, 0, 0, 0.6);
+            color: rgba(255, 255, 255, 1);
+            content: attr(data-tip);
+            text-align: center;
+            z-index: 999999;
+            width: auto !important;
+            height: auto !important;
+            white-space: nowrap;
+        }
+
+        .item-button-div a:hover:after {
+            background-color: rgba(0, 0, 0, 0) !important;
         }
 
         .item-logo-div {
@@ -309,10 +329,11 @@
             <h3>🧭 简介</h3>
             <p>本站是 Play-With-MPV 支持网站导航，建议配合下列项目食用 ♨️</p>
             <p><a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank"
-                    style="color: #fb6c28;"> - Play-With-MPV 👆</a>&nbsp;一个支持一键调用 mpv / potplayer 播放下列网页上的视频的油猴脚本
+                    style="color: #fb6c28;"> - Play-With-MPV 👆</a>&nbsp;一个支持一键调用 mpv / potplayer / iina
+                等播放下列网页上的视频的油猴脚本
             </p>
             <p><a href="https://www.lckp.top/archives/mpvnetcm" target="_blank" style="color: #fb6c28;"> -
-                    mpv.net_CM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 👆</a>&nbsp;一款已经集成了多种着色器，滤镜和脚本的功能强大的播放器</p>
+                    mpv.net_CM&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 👆</a>&nbsp;一款使用方便，功能强大，并且已经集成了多种着色器，滤镜和脚本的的播放器</p>
         </div>
         <div id="category-div">
             <h3>🏳️‍🌈 分类</h3>
@@ -403,6 +424,7 @@
                 let wsJson = JSON.parse(xhr.responseText);
                 for (let website of wsJson) {
                     if (website.category == "iptv") {
+                        localStorage.iptvUrl = website.url[0];
                         await loadIPTV(website);
                     } else {
                         websiteList.push(website);
@@ -453,14 +475,37 @@
                     if (title.length > 20) {
                         title = title.substring(0, 20) + " ...";
                     }
-                    let mpv = `mpv://%22${encodeURIComponent(website.url)}%22 --force-media-title=%22${encodeURIComponent(website.title)}%22 --no-terminal`;
-                    let potplayer = `potplayer://${encodeURIComponent(website.url)} /current /title=%22${encodeURIComponent(website.title)}%22`;
+                    let link = "";
+                    let player = undefined;
+                    if (localStorage.player) {
+                        player = JSON.parse(localStorage.player);
+                    }
+                    if (player && player.name != "mpv") {
+                        let param = player.params.videoUrl;
+                        let videoUrl = encodeURIComponent(website.url);
+                        param = param.replace('${videoUrl}', videoUrl);
+                        param = param.replace('${EvideoUrl}', videoUrl);
+                        param = param.replace('${DvideoUrl}', website.url);
+                        link = param;
+                        param = player.params.title;
+                        if (param) {
+                            let title = encodeURIComponent(website.title);
+                            param = param.replace('${title}', title);
+                            param = param.replace('${Etitle}', title);
+                            param = param.replace('${Dtitle}', website.title);
+                            link = link + " " + param;
+                        }
+                        link = link.replaceAll('"', "%22") + "%20";
+                    } else {
+                        link = `mpv://%22${encodeURIComponent(website.url)}%22 --force-media-title=%22${encodeURIComponent(website.title)}%22%20`;
+                    }
+                    let potplayer = `potplayer://${encodeURIComponent(website.url)} /current /title=%22${encodeURIComponent(website.title)}%22%20`;
                     html = html + `
                 <div class="item-div">
                     <div class='ribbon'>
 					    <div class='ribbon1'>${website.resolution}</div>
 				    </div>
-                    <a href="${mpv}" target="_blank">
+                    <a href="${link}" target="_blank" data-tip="调用外部播放器打开">
                         <div class="item-logo-div">
                             <img src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'" referrerpolicy="no-referrer">
                         </div>
@@ -483,7 +528,7 @@
                     <div class='ribbon'>
 					    <div class='ribbon1'>${website.resolution}</div>
 				    </div>
-                    <a href="${website.url[0]}" target="_blank">
+                    <a href="${website.url[0]}" target="_blank" data-tip="点击打开主站首页">
                         <div class="item-logo-div">
                             <img src="${website.logo}" onerror="this.src='${ERROR_IMG_URL}'" referrerpolicy="no-referrer">
                         </div>

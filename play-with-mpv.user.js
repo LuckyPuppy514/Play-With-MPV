@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.2
+// @version                 3.1.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -64,6 +64,7 @@
 // @match                   *://*/*.mkv
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
+// @match                   https://www.lckp.top/play-with-mpv/index.html
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -189,7 +190,9 @@ const ID = {
     loadingDiv: `${PREFIX}-loading-div`,
     toastDiv: `${PREFIX}-toast-div`,
     buttonDiv: `${PREFIX}-button-div`,
-    aboutButton: `${PREFIX}-about-button`,
+    infoButton: `${PREFIX}-info-button`,
+    infoDiv: `${PREFIX}-info-div`,
+    infoTable: `${PREFIX}-info-table`,
     playButton: `${PREFIX}-play-button`,
     settingButton: `${PREFIX}-setting-button`,
     settingDiv: `${PREFIX}-setting-div`,
@@ -204,8 +207,8 @@ const ID = {
     playAutoInput: `${PREFIX}-play-auto-input`,
     syncStartTimeInput: `${PREFIX}-sync-start-time-input`,
     syncStartTimeSpan: `${PREFIX}-sync-start-time-span`,
-    aboutDiv: `${PREFIX}-about-div`,
-    aboutTable: `${PREFIX}-about-table`,
+    infoDiv: `${PREFIX}-info-div`,
+    infoTable: `${PREFIX}-info-table`,
     subtitlePreferRadio: `${PREFIX}-subtitle-prefer-radio`,
     customPlayerButton: `${PREFIX}-custom-player-button`,
     customPlayerTable: `${PREFIX}-custom-player-table`,
@@ -216,7 +219,7 @@ const ID = {
     startTimeParamInput: `${PREFIX}-start-time-param-input`,
     proxyParamInput: `${PREFIX}-proxy-param-input`,
     refererParamInput: `${PREFIX}-referer-param-input`,
-    originParamInput: `${PREFIX}-origin-param-input`
+    originParamInput: `${PREFIX}-origin-param-input`,
 }
 // 组件 class
 const CLASS = {
@@ -231,6 +234,7 @@ const CLASS = {
     roundSpan: `${PREFIX}-round-span-class`,
     readOnly: `${PREFIX}-read-only-class`,
     footerA: `${PREFIX}-footer-a-class`,
+    infoInput: `${PREFIX}-info-input-class`,
 }
 // 消息类型
 TOAST_TYPE = {
@@ -349,7 +353,8 @@ ${ID.buttonDiv} {
     width: 32px;
     height: 32px;
 }
-#${ID.settingDiv} {
+#${ID.settingDiv},
+#${ID.infoDiv} {
     position: fixed;
     top: 40%;
     left: 50%;
@@ -366,6 +371,10 @@ ${ID.buttonDiv} {
     color: rgba(0, 0, 0, .7);
     font-family: "微软雅黑";
 }
+#${ID.infoDiv} {
+    background-color: rgb(234, 122, 153) !important;
+}
+#${ID.infoTable},
 #${ID.settingTable},
 #${ID.customPlayerTable} {
     width: 800px;
@@ -382,11 +391,15 @@ ${ID.buttonDiv} {
 #${ID.customPlayerTable} {
     display: none;
 }
+#${ID.infoTable} td,
 #${ID.settingTable} td,
 #${ID.customPlayerTable} td {
     font-size: 14px;
     border: 0px solid rgba(255, 255, 255, 0.5);
     padding-top: 19px;
+}
+#${ID.infoTable} td {
+    padding-top: 16.5px !important;
 }
 .${CLASS.titleSpan} {
     padding-top: 12.5px;
@@ -429,6 +442,7 @@ ${ID.buttonDiv} {
     color: rgba(255, 255, 255, 1) !important;
     cursor: default;
 }
+#${ID.infoTable} input,
 #${ID.settingTable} input,
 #${ID.customPlayerTable} input {
     font-size: 12px !important;
@@ -483,6 +497,7 @@ ${ID.buttonDiv} {
     margin-bottom: 8px;
     color: rgba(255, 255, 255, 1);
 }
+#${ID.infoDiv} a,
 .${CLASS.footerSpan} a {
     color: rgba(255, 255, 255, 1);
     text-decoration: none;
@@ -551,14 +566,14 @@ input:checked + .${CLASS.sliderSpan}:before {
 .${CLASS.readOnly}::placeholder {
     color: rgba(255, 255, 255, .3) !important;
 }
-#${ID.aboutButton} {
+#${ID.infoButton} {
     bottom: 52px;
     left: 3px;
     width: 25px;
     height: 25px;
     background-image: url(data:image/png;base64,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);
 }
-#${ID.aboutButton}:hover {
+#${ID.infoButton}:hover {
     bottom: 50px;
     left: 1px;
     width: 29px;
@@ -600,7 +615,7 @@ input:checked + .${CLASS.sliderSpan}:before {
     background: rgba(0, 255, 0, .7);
 }
 #${ID.customPlayerButton}:hover:after,
-.${CLASS.titleTd}:hover:after,
+#${ID.settingDiv} .${CLASS.titleTd}:hover:after,
 .${CLASS.footerA}:hover:after {
     position: absolute;
     font-size: 12px;
@@ -646,13 +661,78 @@ const HTML = `
 <div id="${ID.toastDiv}"></div>
 
 <div id="${ID.buttonDiv}" class="${CLASS.button}">
-    <button id="${ID.aboutButton}" class="${CLASS.button}"></button>
+    <button id="${ID.infoButton}" class="${CLASS.button}"></button>
     <button id="${ID.playButton}" class="${CLASS.button}"></button>
     <button id="${ID.settingButton}" class="${CLASS.button}"></button>
 </div>
 
+<div id="${ID.infoDiv}">
+    <span class="${CLASS.titleSpan}">Play-With-MPV<button class="${CLASS.closeButton}">X</button></span>
+    <table id="${ID.infoTable}">
+        <tr>
+            <td colspan="4" style="text-align: center; color: white; font-size: 16px;">本 页 视 频 信 息</td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}">视频标题</td>
+            <td colspan="3">
+                <input type="text" readonly class="${CLASS.infoInput}">
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}">视频链接</td>
+            <td colspan="3">
+                <input type="text" readonly class="${CLASS.infoInput}">
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}">音频链接</td>
+            <td colspan="3">
+                <input type="text" readonly class="${CLASS.infoInput}">
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}">字幕链接</td>
+            <td colspan="3">
+                <input type="text" readonly class="${CLASS.infoInput}">
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}">referer</td>
+            <td colspan="3">
+                <input type="text" readonly class="${CLASS.infoInput}">
+            </td>
+        </tr>
+        <tr>
+            <td class="${CLASS.titleTd}">origin</td>
+            <td colspan="3">
+                <input type="text" readonly class="${CLASS.infoInput}">
+            </td>
+        </tr>
+        <tr><td></td></tr>
+        <tr>
+            <td style="text-align: right;">
+                <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank">🆕 升级 🆕</a>
+            </td>
+            <td style="text-align: right;">
+                <a href="https://www.lckp.top/play-with-mpv/index.html" target="_blank">🧭 网站导航 🧭</a>
+            </td>
+            <td style="text-align: right;">
+                <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank">🌟 项目源码 🌟</a>
+            </td>
+            <td style="text-align: right;">
+                <a href="https://github.com/LuckyPuppy514/Play-With-MPV/issues/new" target="_blank">👻 反馈 👻</a>
+            </td>
+        </tr>
+    </table>
+    <span class="${CLASS.footerSpan}">
+        <a href="https://greasyfork.org/zh-CN/scripts/444056-play-with-mpv" target="_blank" class="${CLASS.footerA}" data-tip="版本升级"> 🆕 </a>
+        <a href="https://github.com/LuckyPuppy514/Play-With-MPV" target="_blank" class="${CLASS.footerA}" data-tip="项目源码"> © 2023 LuckyPuppy514 </a>
+        <a href="https://github.com/LuckyPuppy514/Play-With-MPV/issues/new" target="_blank" class="${CLASS.footerA}" data-tip="问题反馈"> 👻 </a>
+    </span>
+</div>
+
 <div id="${ID.settingDiv}">
-    <span class="${CLASS.titleSpan}"> Play-With-MPV <button class="${CLASS.closeButton}">X</button></span>
+    <span class="${CLASS.titleSpan}">Play-With-MPV<button class="${CLASS.closeButton}">X</button></span>
     <button id="${ID.customPlayerButton}" class="${CLASS.button}" data-tip="设置自定义播放器"></button>
     <table id="${ID.settingTable}">
         <tr>
@@ -934,7 +1014,8 @@ function addListener() {
     let downloadButton = document.getElementById(ID.downloadButton);
     let saveButton = document.getElementById(ID.saveButton);
     let closeButtons = document.getElementsByClassName(CLASS.closeButton);
-    let aboutButton = document.getElementById(ID.aboutButton);
+    let infoButton = document.getElementById(ID.infoButton);
+    let infoDiv = document.getElementById(ID.infoDiv);
     let customPlayerTable = document.getElementById(ID.customPlayerTable);
     let customPlayerButton = document.getElementById(ID.customPlayerButton);
     let videoUrlParamInput = document.getElementById(ID.videoUrlParamInput);
@@ -945,13 +1026,14 @@ function addListener() {
     let proxyParamInput = document.getElementById(ID.proxyParamInput);
     let refererParamInput = document.getElementById(ID.refererParamInput);
     let originParamInput = document.getElementById(ID.originParamInput);
+    let infoInputs = document.getElementsByClassName(CLASS.infoInput);
     switchStatus(downloadButton, false);
     // 播放按钮
     playButton.onclick = function () {
         if (currentConfig.player == PLAYER.mpv.name) {
             let message = undefined;
             if (!currentConfig.mpvPath) {
-                message = "请先进行设置";
+                message = "请先进行设置"; play()
             } else if (!currentConfig.regVersion) {
                 message = "请先下载注册表";
             } else if (currentConfig.regVersion != DEFAULT_CONFIG.regVersion) {
@@ -981,6 +1063,7 @@ function addListener() {
         if (display == "flex") {
             settingDiv.style.display = "none";
         } else {
+            infoDiv.style.display = "none";
             settingDiv.style.display = "flex";
             // 加载配置
             mpvPathInput.value = currentConfig.mpvPath;
@@ -1042,6 +1125,10 @@ function addListener() {
         if (currentConfig.playAuto == 1) {
             playButtonClickLimit();
         }
+        if (document.getElementById("iptv") && localStorage.category == "iptv") {
+            localStorage.player = JSON.stringify(PLAYER[currentConfig.player]);
+            document.getElementById("iptv").click();
+        }
         init();
     }
     // 下载按钮
@@ -1058,11 +1145,35 @@ function addListener() {
     for (let closeButton of closeButtons) {
         closeButton.onclick = function () {
             settingDiv.style.display = "none";
+            infoDiv.style.display = "none";
         }
     }
-    // 关于按钮
-    aboutButton.onclick = function () {
-        window.open("https://www.lckp.top/play-with-mpv/index.html", "_blank");
+    // 信息按钮
+    infoButton.onclick = function () {
+        let display = infoDiv.style.display;
+        if (display == "flex") {
+            infoDiv.style.display = "none";
+        } else {
+            settingDiv.style.display = "none";
+            infoDiv.style.display = "flex";
+            let title = handler.media.title;
+            infoInputs[0].value = title ? title : document.title;
+            infoInputs[1].value = handler.media.videoUrl;
+            infoInputs[2].value = handler.media.audioUrl;
+            infoInputs[3].value = handler.media.subtitleUrl;
+            infoInputs[4].value = handler.media.referer;
+            infoInputs[5].value = handler.media.origin;
+            for (const infoInput of infoInputs) {
+                if (infoInput.value) {
+                    infoInput.style.cursor = "pointer";
+                    infoInput.onclick = function () {
+                        this.select();
+                        navigator.clipboard.writeText(this.value);
+                        toast("已复制到剪贴板");
+                    }
+                }
+            }
+        }
     }
     let bestQualityRadios = document.getElementsByName(ID.bestQualityRadio);
     let bilibiliCodecsRadios = document.getElementsByName(ID.bilibiliCodecsRadio);
@@ -1253,7 +1364,7 @@ class Media {
     // 检查视频链接是否有效
     check(videoUrl) {
         if (videoUrl && videoUrl.startsWith("http")) {
-            if (videoUrl.match(/(\.m3u|\.m3u8)/g)) {
+            if (videoUrl.match(/(\.m3u|\.m3u8)/g) && videoUrl != localStorage.iptvUrl) {
                 let m3u8 = "";
                 $.ajax({
                     type: "GET",
@@ -1708,7 +1819,7 @@ var websiteList = [
         ],
         regex: /^https:\/\/www\.ixigua\.com\/\d.*/g,
         handler: class Handler extends BaseHandler {
-            constructor(){
+            constructor() {
                 super();
                 this.media.setReferer("https://www.ixigua.com/");
             }
@@ -1722,12 +1833,12 @@ var websiteList = [
                         let _SSR_HYDRATED_DATA = (new Function("return " + res.match(/<script id="SSR_HYDRATED_DATA"[^<]*window._SSR_HYDRATED_DATA=({[^<]*})[^<]*<\/script>/)[1]))();
                         let packerData = _SSR_HYDRATED_DATA.anyVideo.gidInformation.packerData;
                         let main_url = undefined;
-                        if(packerData.video){
+                        if (packerData.video) {
                             let videoList = packerData.video.videoResource.normal.video_list;
-                            if(videoList) {
+                            if (videoList) {
                                 let video = undefined;
                                 for (const key in videoList) {
-                                    if(!video || videoList[key].vheight > video.vheight) {
+                                    if (!video || videoList[key].vheight > video.vheight) {
                                         video = videoList[key];
                                     }
                                 }
@@ -2208,6 +2319,21 @@ var websiteList = [
             }
         },
     },
+    {
+        // ✅ https://www.lckp.top/play-with-mpv/index.html
+        name: "电视直播",
+        home: [
+            "https://www.lckp.top/play-with-mpv/index.html"
+        ],
+        regex: /^https?:\/\/(www.lckp.top\/play-with-mpv|127.0.0.1:5502\/web\/tampermonkey\/Play-With-MPV)\/index.html/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setTitle("");
+                this.media.setVideoUrl(localStorage.iptvUrl);
+                localStorage.player = JSON.stringify(this.player);
+            }
+        },
+    }
 ];
 // 初始化
 async function init() {
