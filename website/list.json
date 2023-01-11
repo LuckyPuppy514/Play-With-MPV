@@ -176,6 +176,15 @@
         "resolution": "高清"
     },
     {
+        "title": "西瓜视频",
+        "logo": "./website/logo/ixigua.svg",
+        "url": [
+            "https://www.ixigua.com"
+        ],
+        "category": "user",
+        "resolution": "高清"
+    },
+    {
         "title": "AList",
         "logo": "./website/logo/alist.svg",
         "url": [

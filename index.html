@@ -357,9 +357,9 @@
         category = category ? category : "iptv";
         choose(category);
     }
-    async function loadIPTV(website) {
+    function loadIPTV(website) {
         var xhr = new XMLHttpRequest();
-        xhr.open('GET', website.url[0], false);
+        xhr.open('GET', website.url[0], true);
         xhr.onreadystatechange = function () {
             if (xhr.readyState == 4 && xhr.status == 200) {
                 let m3us = xhr.responseText.replaceAll("\r\n", "\n").matchAll(/#EXTINF:[^\n]+\nhttp[^\n]+/g);
@@ -388,9 +388,12 @@
                         });
                     }
                 }
+                if (!localStorage.category || localStorage.category == "iptv") {
+                    choose("iptv");
+                }
             }
         }
-        await xhr.send();
+        xhr.send();
     }
     async function loadWebsiteList() {
         var xhr = new XMLHttpRequest();
@@ -442,16 +445,17 @@
     }
     function appendWebsiteItem(list) {
         let html = "";
-        if (list[0].category == "iptv") {
-            let index = 0;
-            for (const website of list) {
-                let title = website.title;
-                if (title.length > 20) {
-                    title = title.substring(0, 20) + " ...";
-                }
-                let mpv = `mpv://%22${encodeURIComponent(website.url)}%22 --force-media-title=%22${encodeURIComponent(website.title)}%22 --no-terminal`;
-                let potplayer = `potplayer://${encodeURIComponent(website.url)} /current /title=%22${encodeURIComponent(website.title)}%22`;
-                html = html + `
+        if (list.length > 0) {
+            if (list[0].category == "iptv") {
+                let index = 0;
+                for (const website of list) {
+                    let title = website.title;
+                    if (title.length > 20) {
+                        title = title.substring(0, 20) + " ...";
+                    }
+                    let mpv = `mpv://%22${encodeURIComponent(website.url)}%22 --force-media-title=%22${encodeURIComponent(website.title)}%22 --no-terminal`;
+                    let potplayer = `potplayer://${encodeURIComponent(website.url)} /current /title=%22${encodeURIComponent(website.title)}%22`;
+                    html = html + `
                 <div class="item-div">
                     <div class='ribbon'>
 					    <div class='ribbon1'>${website.resolution}</div>
@@ -470,11 +474,11 @@
                         </span>
                     </div>
                 </div>`;
-                index++;
-            }
-        } else {
-            for (const website of list) {
-                html = html + `
+                    index++;
+                }
+            } else {
+                for (const website of list) {
+                    html = html + `
                 <div class="item-div">
                     <div class='ribbon'>
 					    <div class='ribbon1'>${website.resolution}</div>
@@ -487,14 +491,17 @@
                     </a>
                     <div class="item-button-div">
                         <span>`;
-                for (let index = website.url.length - 1; index > 0; index--) {
-                    html = html + `<a href="${website.url[index]}" target="_blank" style="width: 42px;">备用</a>`;
-                }
-                html = html + `<a href="${website.url[0]}" target="_blank" style="width: 50px;">主站</a>
+                    for (let index = website.url.length - 1; index > 0; index--) {
+                        html = html + `<a href="${website.url[index]}" target="_blank" style="width: 42px;">备用</a>`;
+                    }
+                    html = html + `<a href="${website.url[0]}" target="_blank" style="width: 50px;">主站</a>
                         </span>
                     </div>
                 </div>`;
+                }
             }
+        } else {
+            html = `<div style="position: relative; top: 49%; left: 49%; transform:translate(-50%,-50%);">空空如也~~</div>`;
         }
         document.getElementById("content-div").innerHTML = html;
     }

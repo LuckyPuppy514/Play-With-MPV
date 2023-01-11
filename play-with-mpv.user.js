@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.1
+// @version                 3.1.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -14,6 +14,7 @@
 // @match                   https://www.bilibili.com/bangumi/play/*
 // @match                   https://www.bilibili.com/video/*
 // @match                   https://live.bilibili.com/*
+// @match                   https://www.ixigua.com/*
 // @match                   https://ddys.art/*
 // @match                   https://ddys.pro/*
 // @match                   https://libvio.fun/play/*
@@ -1491,7 +1492,7 @@ function getBilibiliPlayUrl(avid, cid) {
             if (handler.player.params.audioUrl) {
                 let videoUrl = undefined;
                 let audioUrl = undefined;
-                if(!res.data) {
+                if (!res.data) {
                     console.log("Play-With-MPV 获取视频失败，如未登录请先登录");
                     return;
                 }
@@ -1693,6 +1694,51 @@ var websiteList = [
                     },
                     success: function (res) {
                         that.media.setVideoUrl(res.data.durl[0].url);
+                    }
+                });
+            }
+        },
+    },
+    {
+        // ✅ https://www.ixigua.com/
+        name: "西瓜视频",
+        home: [
+            "https://www.ixigua.com"
+        ],
+        regex: /^https:\/\/www\.ixigua\.com\/\d.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor(){
+                super();
+                this.media.setReferer("https://www.ixigua.com/");
+            }
+            async parse() {
+                let that = this;
+                $.ajax({
+                    type: "GET",
+                    url: page.url,
+                    async: false,
+                    success: function (res) {
+                        let _SSR_HYDRATED_DATA = (new Function("return " + res.match(/<script id="SSR_HYDRATED_DATA"[^<]*window._SSR_HYDRATED_DATA=({[^<]*})[^<]*<\/script>/)[1]))();
+                        let packerData = _SSR_HYDRATED_DATA.anyVideo.gidInformation.packerData;
+                        let main_url = undefined;
+                        if(packerData.video){
+                            let videoList = packerData.video.videoResource.normal.video_list;
+                            if(videoList) {
+                                let video = undefined;
+                                for (const key in videoList) {
+                                    if(!video || videoList[key].vheight > video.vheight) {
+                                        video = videoList[key];
+                                    }
+                                }
+                                main_url = video.main_url;
+                            }
+                        } else {
+                            // 非投稿视频，播放一分钟后花屏，暂时屏蔽
+                            main_url = packerData.videoResource.dash_120fps.dynamic_video.main_url;
+                            tryTime = TRY_TIME.maxParse;
+                            return;
+                        }
+                        that.media.setVideoUrl(window.atob(main_url).replace("http://", "https://"));
                     }
                 });
             }
