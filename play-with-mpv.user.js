@@ -1493,7 +1493,8 @@ function getBilibiliPlayUrl(avid, cid) {
                 let videoUrl = undefined;
                 let audioUrl = undefined;
                 if (!res.data) {
-                    console.log("Play-With-MPV 获取视频失败，如未登录请先登录");
+                    toast("Play-With-MPV 获取视频失败，如未登录请先登录", TOAST_TYPE.error);
+                    tryTime = TRY_TIME.maxParse;
                     return;
                 }
                 let dash = res.data.dash;
