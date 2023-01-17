@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.4
+// @version                 3.1.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1033,7 +1033,7 @@ function addListener() {
         if (currentConfig.player == PLAYER.mpv.name) {
             let message = undefined;
             if (!currentConfig.mpvPath) {
-                message = "请先进行设置"; play()
+                message = "请先进行设置";
             } else if (!currentConfig.regVersion) {
                 message = "请先下载注册表";
             } else if (currentConfig.regVersion != DEFAULT_CONFIG.regVersion) {
