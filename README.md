@@ -40,11 +40,9 @@
 
 #### 4.2. potplayer
 
-播放软件选择 potplayer 保存设置即可
+输入软件路径，保存设置后，下载注册表到本地并打开
 
-![20230110073049](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/20230110073049.png)
-
-> 点击播放按钮没反应一般是 potplayer 安装时没有写入注册表，请自行重装 🔥
+![1674062048261](https://cdn.jsdelivr.net/gh/LuckyPuppy514/pic-bed/common/1674062048261.jpg)
 
 #### 4.3. 自定义
 
