@@ -499,7 +499,7 @@
                     } else {
                         link = `mpv://%22${encodeURIComponent(website.url)}%22 --force-media-title=%22${encodeURIComponent(website.title)}%22%20`;
                     }
-                    let potplayer = `potplayer://${encodeURIComponent(website.url)} /current /title=%22${encodeURIComponent(website.title)}%22%20`;
+                    let potplayer = `potplayer://${website.url} /current /title=%22${encodeURIComponent(website.title)}%22%20`;
                     html = html + `
                 <div class="item-div">
                     <div class='ribbon'>

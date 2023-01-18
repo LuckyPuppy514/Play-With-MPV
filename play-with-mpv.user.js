@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.5
+// @version                 3.1.6
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -95,7 +95,14 @@ const KEY = {
 // 默认配置
 const DEFAULT_CONFIG = {
     player: "mpv",
-    mpvPath: "",
+    mpv: {
+        path: "",
+        regVersion: "20230118",
+    },
+    potplayer: {
+        path: "",
+        regVersion: "20230118",
+    },
     proxy: "",
     bestQuality: "2160p",
     bilibiliCodecs: 12,
@@ -116,8 +123,7 @@ const DEFAULT_CONFIG = {
             other: ''
         }
     },
-    regVersion: "20221230",
-    version: "20230110"
+    version: "20230118"
 };
 var currentConfig;
 // 视频链接匹配正则
@@ -130,7 +136,7 @@ const METHOD = {
 // 时间 ms
 const TIME = {
     out: 3000,
-    toast: 3000,
+    toast: 3500,
     refresh: 600,
     reportInterval: 600,
     pauseInterval: 2000
@@ -198,7 +204,7 @@ const ID = {
     settingDiv: `${PREFIX}-setting-div`,
     settingTable: `${PREFIX}-setting-table`,
     playerRadio: `${PREFIX}-player-radio`,
-    mpvPathInput: `${PREFIX}-mpv-path-input`,
+    softwarePathInput: `${PREFIX}-software-path-input`,
     proxyInput: `${PREFIX}-proxy-input`,
     bestQualityRadio: `${PREFIX}-best-quality-radio`,
     bilibiliCodecsRadio: `${PREFIX}-bilibili-codecs-radio`,
@@ -755,10 +761,10 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="mpv.exe 或 mpv.com 的完整路径">软件路径</td>
+            <td class="${CLASS.titleTd}" data-tip="mpv.exe 或 PotPlayerMini64.exe 的完整路径">软件路径</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.mpvPathInput}" type=text placeholder="请输入软件路径，例如：D://mpvnet//mpvnet.exe">
+                    <input id="${ID.softwarePathInput}" type=text placeholder="请输入软件路径，例如：D://mpvnet//mpvnet.exe">
                 </div>
             </td>
         </tr>
@@ -943,21 +949,21 @@ const REG =
 [HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Microsoft\\Edge]
 "ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
 
-[HKEY_CLASSES_ROOT\\mpv]
-@="mpv Protocol"
+[HKEY_CLASSES_ROOT\\\${PLAYER_NAME}]
+@="\${PLAYER_NAME} Protocol"
 "URL Protocol"=""
 
-[HKEY_CLASSES_ROOT\\mpv\\DefaultIcon]
+[HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\DefaultIcon]
 @=""
 
-[HKEY_CLASSES_ROOT\\mpv\\shell]
+[HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell]
 @=""
 
-[HKEY_CLASSES_ROOT\\mpv\\shell\\open]
+[HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open]
 @=""
 
-[HKEY_CLASSES_ROOT\\mpv\\shell\\open\\command]
-@="cmd /V:ON /C \\"FOR /F \\"tokens=* USEBACKQ\\" %%F IN (\`C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -command \\"Add-Type -AssemblyName System.Web;[System.Web.HTTPUtility]::UrlDecode('%1')\\"\`) DO (SET param=%%F) & SET param=!param:mpv://=! & start /min \${MPV_PATH} !param!\\""
+[HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
+@="cmd /V:ON /C \\"FOR /F \\"tokens=* USEBACKQ\\" %%F IN (\`C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -command \\"Add-Type -AssemblyName System.Web;[System.Web.HTTPUtility]::UrlDecode('%1')\\"\`) DO (SET param=%%F) & SET param=!param:\${PLAYER_NAME}://=! & start /min \${SOFTWARE_PATH} !param!\\""
 `
 function appendCSS() {
     let css = document.createElement("style");
@@ -1006,7 +1012,7 @@ function addListener() {
     let settingButton = document.getElementById(ID.settingButton);
     let settingDiv = document.getElementById(ID.settingDiv);
     let settingTable = document.getElementById(ID.settingTable);
-    let mpvPathInput = document.getElementById(ID.mpvPathInput);
+    let softwarePathInput = document.getElementById(ID.softwarePathInput);
     let proxyInput = document.getElementById(ID.proxyInput);
     let playAutoInput = document.getElementById(ID.playAutoInput);
     let syncStartTimeInput = document.getElementById(ID.syncStartTimeInput);
@@ -1030,13 +1036,13 @@ function addListener() {
     switchStatus(downloadButton, false);
     // 播放按钮
     playButton.onclick = function () {
-        if (currentConfig.player == PLAYER.mpv.name) {
+        if (currentConfig.player == PLAYER.mpv.name || currentConfig.player == PLAYER.potplayer.name) {
             let message = undefined;
-            if (!currentConfig.mpvPath) {
+            if (!currentConfig[currentConfig.player].path) {
                 message = "请先进行设置";
-            } else if (!currentConfig.regVersion) {
+            } else if (!currentConfig[currentConfig.player].regVersion) {
                 message = "请先下载注册表";
-            } else if (currentConfig.regVersion != DEFAULT_CONFIG.regVersion) {
+            } else if (currentConfig[currentConfig.player].regVersion != DEFAULT_CONFIG[currentConfig.player].regVersion) {
                 message = "注册表有更新，请重新下载注册表";
             }
             if (message) {
@@ -1066,7 +1072,7 @@ function addListener() {
             infoDiv.style.display = "none";
             settingDiv.style.display = "flex";
             // 加载配置
-            mpvPathInput.value = currentConfig.mpvPath;
+            softwarePathInput.value = currentConfig[currentConfig.player].path;
             proxyInput.value = currentConfig.proxy;
             $(`input:radio[name="${ID.bestQualityRadio}"][value="${currentConfig.bestQuality}"]`).prop('checked', true);
             $(`input:radio[name="${ID.bilibiliCodecsRadio}"][value="${currentConfig.bilibiliCodecs}"]`).prop('checked', true);
@@ -1083,45 +1089,49 @@ function addListener() {
     });
     // 保存按钮
     saveButton.onclick = function () {
-        let oldMpvPath = currentConfig.mpvPath;
-        let newMpvPath = mpvPathInput.value;
-        if ($(`input:radio[name="${ID.playerRadio}"]:checked`).val() == PLAYER.mpv.name) {
-            if (!newMpvPath) {
+        let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        if (playerChecked == PLAYER.mpv.name || playerChecked == PLAYER.potplayer.name) {
+            let oldSoftwarePath = currentConfig[playerChecked].path;
+            let newSoftwarePath = softwarePathInput.value;
+            if (!newSoftwarePath) {
                 toast("软件路径不能为空", TOAST_TYPE.error);
                 return;
             }
-            if (/.*[\u4e00-\u9fa5 ]+.*/g.test(newMpvPath)) {
+            if (/.*[\u4e00-\u9fa5 ]+.*/g.test(newSoftwarePath)) {
                 toast("软件路径不能包含中文或空格", TOAST_TYPE.error);
                 return;
             }
-            newMpvPath = newMpvPath.replace(/[\\|/]+/g, "//");
-            if (!newMpvPath.endsWith(".com") && !newMpvPath.endsWith(".exe")) {
-                if (!newMpvPath.endsWith("//")) {
-                    newMpvPath = newMpvPath + "//";
+            newSoftwarePath = newSoftwarePath.replace(/[\\|/]+/g, "//");
+            if (!newSoftwarePath.endsWith(".com") && !newSoftwarePath.endsWith(".exe")) {
+                if (!newSoftwarePath.endsWith("//")) {
+                    newSoftwarePath = newSoftwarePath + "//";
                 }
-                if (newMpvPath.toLowerCase().indexOf("mpvnet") != -1 || newMpvPath.toLowerCase().indexOf("mpv.net") != -1) {
-                    newMpvPath = newMpvPath + "mpvnet.exe";
-                } else {
-                    newMpvPath = newMpvPath + "mpv.exe";
+                if (playerChecked == PLAYER.mpv.name) {
+                    if (newSoftwarePath.toLowerCase().indexOf("mpvnet") != -1 || newSoftwarePath.toLowerCase().indexOf("mpv.net") != -1) {
+                        newSoftwarePath = newSoftwarePath + "mpvnet.exe";
+                    } else {
+                        newSoftwarePath = newSoftwarePath + "mpv.exe";
+                    }
+                } else if (playerChecked == PLAYER.potplayer.name) {
+                    newSoftwarePath = newSoftwarePath + "PotPlayerMini64.exe";
                 }
             }
-            mpvPathInput.value = newMpvPath;
-            currentConfig.mpvPath = newMpvPath;
-            switchStatus(downloadButton, mpvPathInput.value ? true : false);
+            softwarePathInput.value = newSoftwarePath;
+            currentConfig[playerChecked].path = newSoftwarePath;
+            switchStatus(downloadButton, softwarePathInput.value ? true : false);
+            if (oldSoftwarePath != newSoftwarePath) {
+                currentConfig[playerChecked].regVersion = "00000000";
+            }
         }
         currentConfig.proxy = proxyInput.value;
         currentConfig.bestQuality = $(`input:radio[name="${ID.bestQualityRadio}"]:checked`).val();
         currentConfig.bilibiliCodecs = $(`input:radio[name="${ID.bilibiliCodecsRadio}"]:checked`).val();
-        currentConfig.player = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        currentConfig.player = playerChecked;
         currentConfig.subtitlePrefer = $(`input:radio[name="${ID.subtitlePreferRadio}"]:checked`).val();
         currentConfig.playAuto = playAutoInput.checked ? 1 : 0;
         currentConfig.syncStartTime = syncStartTimeInput.checked ? 1 : 0;
         GM_setValue(KEY.config, currentConfig);
-        if (oldMpvPath != newMpvPath) {
-            toast("软件路径已修改，请重新下载注册表", TOAST_TYPE.warn);
-        } else {
-            toast("保存成功");
-        }
+        toast("保存成功");
         if (currentConfig.playAuto == 1) {
             playButtonClickLimit();
         }
@@ -1133,12 +1143,15 @@ function addListener() {
     }
     // 下载按钮
     downloadButton.onclick = function () {
-        currentConfig.regVersion = DEFAULT_CONFIG.regVersion;
+        let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        currentConfig[playerChecked].regVersion = DEFAULT_CONFIG[playerChecked].regVersion;
         GM_setValue(KEY.config, currentConfig);
-        var a = document.createElement('a');
-        var blob = new Blob([REG.replace("${MPV_PATH}", currentConfig.mpvPath)], { 'type': 'application/octet-stream' });
+        let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path);
+        reg = reg.replaceAll("${PLAYER_NAME}", playerChecked);
+        let a = document.createElement('a');
+        let blob = new Blob([reg], { 'type': 'application/octet-stream' });
         a.href = window.URL.createObjectURL(blob);
-        a.download = "mpv.reg";
+        a.download = `${playerChecked}.reg`;
         a.click();
     }
     // 关闭按钮
@@ -1181,14 +1194,17 @@ function addListener() {
     // 切换播放器
     function switchPlayer(player) {
         player = PLAYER[player];
-        // mpv 专属
-        if (player.name == PLAYER.mpv.name) {
-            switchStatus(mpvPathInput, true);
-            if (mpvPathInput.value) {
+        // mpv 和 potplayer 专属
+        if (player.name == PLAYER.mpv.name || player.name == PLAYER.potplayer.name) {
+            switchStatus(softwarePathInput, true);
+            softwarePathInput.value = currentConfig[player.name].path;
+            if (softwarePathInput.value) {
                 switchStatus(downloadButton, true);
+            } else {
+                switchStatus(downloadButton, false);
             }
         } else {
-            switchStatus(mpvPathInput, false);
+            switchStatus(softwarePathInput, false);
             switchStatus(downloadButton, false);
         }
         // 代理
@@ -1287,15 +1303,19 @@ function sleep(ms) {
 // 加载配置
 function loadConfig() {
     let oldConifg = GM_getValue(KEY.config);
+    currentConfig = JSON.parse(JSON.stringify(DEFAULT_CONFIG));
+    currentConfig.mpv.regVersion = "";
+    currentConfig.potplayer.regVersion = "";
     if (!oldConifg) {
-        currentConfig = copy(DEFAULT_CONFIG);
-        currentConfig.regVersion = "";
         GM_setValue(KEY.config, currentConfig);
     } else {
         if (oldConifg.version != DEFAULT_CONFIG.version) {
-            currentConfig = copy(DEFAULT_CONFIG);
             for (const key in oldConifg) {
                 currentConfig[key] = oldConifg[key];
+            }
+            if (!currentConfig.mpv.path && currentConfig.mpvPath) {
+                currentConfig.mpv.path = currentConfig.mpvPath;
+                delete currentConfig['mpvPath'];
             }
             currentConfig.version = DEFAULT_CONFIG.version;
             GM_setValue(KEY.config, currentConfig);
@@ -1305,14 +1325,6 @@ function loadConfig() {
         }
     }
     PLAYER.custom = currentConfig.customPlayer;
-}
-// 复制
-function copy(oldBean) {
-    let newBean = {};
-    for (const key in oldBean) {
-        newBean[key] = oldBean[key];
-    }
-    return newBean;
 }
 class Media {
     constructor() {
