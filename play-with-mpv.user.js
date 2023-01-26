@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.6
+// @version                 3.1.7
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -62,6 +62,8 @@
 // @match                   https://www.bdys01.com/*
 // @match                   *://*/*.mp4
 // @match                   *://*/*.mkv
+// @include                 *://alist.*
+// @include                 *://*:5244*
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
