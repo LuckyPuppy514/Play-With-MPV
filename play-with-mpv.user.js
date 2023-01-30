@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.7
+// @version                 3.1.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -64,6 +64,7 @@
 // @match                   *://*/*.mkv
 // @include                 *://alist.*
 // @include                 *://*:5244*
+// @match                   https://www.dora-family.com/Resource:TV
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
@@ -2245,6 +2246,27 @@ var websiteList = [
                         this.media.setVideoUrl(this.scriptParser());
                     }
                 }
+            }
+        }
+    },
+    {
+        // ✅ https://www.dora-family.com/Resource:TV
+        name: "哆啦A梦新番",
+        home: [
+            "https://www.dora-family.com/Resource:TV"
+        ],
+        regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
+        handler: class Handler extends BaseHandler {
+            constructor(){
+                super();
+                setInterval(() => {
+                    if (handler.media.videoUrl != handler.videoParser()) {
+                        init();
+                    }
+                }, TIME.refresh);
+            }
+            async parse() {
+                this.media.setVideoUrl(this.videoParser());
             }
         }
     },

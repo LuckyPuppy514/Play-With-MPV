@@ -185,6 +185,15 @@
         "resolution": "高清"
     },
     {
+        "title": "哆啦A梦新番",
+        "logo": "./website/logo/dora-family.png",
+        "url": [
+            "https://www.dora-family.com/Resource:TV"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "AList",
         "logo": "./website/logo/alist.svg",
         "url": [
