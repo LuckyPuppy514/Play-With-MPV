@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.1.8
+// @version                 3.1.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1100,8 +1100,8 @@ function addListener() {
                 toast("软件路径不能为空", TOAST_TYPE.error);
                 return;
             }
-            if (/.*[\u4e00-\u9fa5 ]+.*/g.test(newSoftwarePath)) {
-                toast("软件路径不能包含中文或空格", TOAST_TYPE.error);
+            if (/.*[\u4e00-\u9fa5]+.*/g.test(newSoftwarePath)) {
+                toast("软件路径不能包含中文", TOAST_TYPE.error);
                 return;
             }
             newSoftwarePath = newSoftwarePath.replace(/[\\|/]+/g, "//");
@@ -1149,7 +1149,7 @@ function addListener() {
         let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
         currentConfig[playerChecked].regVersion = DEFAULT_CONFIG[playerChecked].regVersion;
         GM_setValue(KEY.config, currentConfig);
-        let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path);
+        let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path.replaceAll(/(\s+)/g, '\\"$1\\"'));
         reg = reg.replaceAll("${PLAYER_NAME}", playerChecked);
         let a = document.createElement('a');
         let blob = new Blob([reg], { 'type': 'application/octet-stream' });
