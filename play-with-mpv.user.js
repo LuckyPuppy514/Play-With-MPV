@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.0
+// @version                 3.2.1
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -15,6 +15,7 @@
 // @match                   https://www.bilibili.com/video/*
 // @match                   https://live.bilibili.com/*
 // @match                   https://www.ixigua.com/*
+// @match                   https://yun.nxflv.com/?url=*
 // @match                   https://ddys.art/*
 // @match                   https://ddys.pro/*
 // @match                   https://libvio.fun/play/*
@@ -229,6 +230,7 @@ const ID = {
     proxyParamInput: `${PREFIX}-proxy-param-input`,
     refererParamInput: `${PREFIX}-referer-param-input`,
     originParamInput: `${PREFIX}-origin-param-input`,
+    nxParserIframe: `${PREFIX}-nx-parser-iframe`
 }
 // 组件 class
 const CLASS = {
@@ -1347,6 +1349,10 @@ class Media {
     setVideoUrl(videoUrl) {
         if (this.check(videoUrl)) {
             this.videoUrl = videoUrl;
+            let nxParserIframe = document.getElementById(ID.nxParserIframe);
+            if (nxParserIframe) {
+                document.body.removeChild(nxParserIframe);
+            }
             if (document.getElementById(ID.buttonDiv)) {
                 document.getElementById(ID.buttonDiv).style.display = "flex";
                 if (currentConfig.playAuto == 1) {
@@ -1564,6 +1570,17 @@ class BaseHandler {
         let urls = page.url.match(VIDEO_URL_REGEX);
         if (urls && urls.length > 0) {
             return urls[0];
+        }
+    }
+    // 诺讯解析
+    nxParser() {
+        handler.addIframeListener();
+        let nxParserIframe = document.getElementById(ID.nxParserIframe);
+        if (!nxParserIframe) {
+            nxParserIframe = document.createElement("iframe");
+            nxParserIframe.id = ID.nxParserIframe;
+            nxParserIframe.src = `https://yun.nxflv.com/?url=${page.url}`;
+            document.body.appendChild(nxParserIframe);
         }
     }
 }
@@ -1843,29 +1860,50 @@ var websiteList = [
                     url: page.url,
                     async: false,
                     success: function (res) {
-                        let _SSR_HYDRATED_DATA = (new Function("return " + res.match(/<script id="SSR_HYDRATED_DATA"[^<]*window._SSR_HYDRATED_DATA=({[^<]*})[^<]*<\/script>/)[1]))();
-                        let packerData = _SSR_HYDRATED_DATA.anyVideo.gidInformation.packerData;
-                        let main_url = undefined;
-                        if (packerData.video) {
-                            let videoList = packerData.video.videoResource.normal.video_list;
-                            if (videoList) {
-                                let video = undefined;
-                                for (const key in videoList) {
-                                    if (!video || videoList[key].vheight > video.vheight) {
-                                        video = videoList[key];
+                        try {
+                            let _SSR_HYDRATED_DATA = (new Function("return " + res.match(/<script id="SSR_HYDRATED_DATA"[^<]*window._SSR_HYDRATED_DATA=({[^<]*})[^<]*<\/script>/)[1]))();
+                            let packerData = _SSR_HYDRATED_DATA.anyVideo.gidInformation.packerData;
+                            let main_url = undefined;
+                            if (packerData.video) {
+                                let videoList = packerData.video.videoResource.normal.video_list;
+                                if (videoList) {
+                                    let video = undefined;
+                                    for (const key in videoList) {
+                                        if (!video || videoList[key].vheight > video.vheight) {
+                                            video = videoList[key];
+                                        }
                                     }
+                                    main_url = video.main_url;
                                 }
-                                main_url = video.main_url;
+                                that.media.setVideoUrl(window.atob(main_url).replace("http://", "https://"));
+                                return;
                             }
-                        } else {
-                            // 非投稿视频，播放一分钟后花屏，暂时屏蔽
-                            main_url = packerData.videoResource.dash_120fps.dynamic_video.main_url;
-                            tryTime = TRY_TIME.maxParse;
-                            return;
+                        } catch (error) {
+                            console.error("解析出错：" + error);
                         }
-                        that.media.setVideoUrl(window.atob(main_url).replace("http://", "https://"));
+                        that.nxParser();
                     }
                 });
+            }
+        },
+    },
+    {
+        // ✅ https://yun.nxflv.com/?url=https://www.ixigua.com/7186534626612118071
+        name: "诺讯解析",
+        regex: /^https:\/\/yun\.nxflv\.com\/\?url=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                for (let index = 0; index < sessionStorage.key.length; index++) {
+                    let url = sessionStorage.key(index);
+                    url = url.match(/http[^#]*/g);
+                    if(url && url.length > 0) {
+                        this.media.setVideoUrl(url[0]);
+                    }
+                }
             }
         },
     },
@@ -2257,7 +2295,7 @@ var websiteList = [
         ],
         regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
         handler: class Handler extends BaseHandler {
-            constructor(){
+            constructor() {
                 super();
                 setInterval(() => {
                     if (handler.media.videoUrl != handler.videoParser()) {
