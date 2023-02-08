@@ -1901,7 +1901,7 @@ var websiteList = [
                 let url = this.videoParser();
                 if(url.startsWith("blob")) {
                     for (let index = 0; index < sessionStorage.key.length; index++) {
-                        let url = sessionStorage.key(index);
+                        url = sessionStorage.key(index);
                         url = url.match(/http[^#]*/g);
                         if(url && url.length > 0) {
                             url = url[0];
