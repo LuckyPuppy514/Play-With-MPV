@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.1
+// @version                 3.2.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -186,7 +186,6 @@ const PLAYER = {
 }
 // 页面信息
 var page = {
-    title: undefined,
     host: undefined,
     url: undefined,
     isFullScreen: false,
@@ -1349,6 +1348,9 @@ class Media {
     setVideoUrl(videoUrl) {
         if (this.check(videoUrl)) {
             this.videoUrl = videoUrl;
+            if(!this.title) {
+                this.setTitle(document.title);
+            }
             let nxParserIframe = document.getElementById(ID.nxParserIframe);
             if (nxParserIframe) {
                 document.body.removeChild(nxParserIframe);
@@ -1428,7 +1430,6 @@ class BaseHandler {
             }
             document.getElementById(ID.buttonDiv).style.display = "none";
         }
-        this.media.setTitle(document.title);
     }
     async parse() { }
     pause() {
@@ -1456,7 +1457,7 @@ class BaseHandler {
             if (key == "startTime") {
                 if (currentConfig.syncStartTime != 1) {
                     continue;
-                } else if (!this.media.startTime) {
+                } else {
                     let video = document.getElementsByTagName("video")[0];
                     if (video) {
                         this.media.setStartTime(video.currentTime);
@@ -1897,13 +1898,17 @@ var websiteList = [
                 this.addTopListener();
             }
             async parse() {
-                for (let index = 0; index < sessionStorage.key.length; index++) {
-                    let url = sessionStorage.key(index);
-                    url = url.match(/http[^#]*/g);
-                    if(url && url.length > 0) {
-                        this.media.setVideoUrl(url[0]);
+                let url = this.videoParser();
+                if(url.startsWith("blob")) {
+                    for (let index = 0; index < sessionStorage.key.length; index++) {
+                        let url = sessionStorage.key(index);
+                        url = url.match(/http[^#]*/g);
+                        if(url && url.length > 0) {
+                            url = url[0];
+                        }
                     }
                 }
+                this.media.setVideoUrl(url);
             }
         },
     },
@@ -2411,7 +2416,6 @@ var websiteList = [
 async function init() {
     // 加载页面信息
     page = {
-        title: document.title,
         host: window.location.host,
         url: window.location.href,
         isFullScreen: false
