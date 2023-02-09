@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.2
+// @version                 3.2.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -68,6 +68,7 @@
 // @match                   https://www.dora-family.com/Resource:TV
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
+// @match                   https://hanime1.me/watch?v=*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
@@ -397,6 +398,8 @@ ${ID.buttonDiv} {
     justify-content: center;
     padding-top: 3px;
     padding-bottom: 12px;
+    line-height: 20px !important;
+    font-weight: normal !important;
 }
 #${ID.customPlayerTable} {
     display: none;
@@ -406,7 +409,7 @@ ${ID.buttonDiv} {
 #${ID.customPlayerTable} td {
     font-size: 14px;
     border: 0px solid rgba(255, 255, 255, 0.5);
-    padding-top: 19px;
+    padding: 19px 0px 0px 0px !important;
 }
 #${ID.infoTable} td {
     padding-top: 16.5px !important;
@@ -425,7 +428,8 @@ ${ID.buttonDiv} {
     height: 25px;
     width: 25px;
     border: none;
-    font-size: 17px;
+    font-size: 17px !important;
+    font-weight: normal !important;
     background-color: rgba(0, 0, 0, 0);
     line-height: 0px;
     border-radius: 3px;
@@ -511,7 +515,8 @@ ${ID.buttonDiv} {
 .${CLASS.footerSpan} a {
     color: rgba(255, 255, 255, 1);
     text-decoration: none;
-    font-size: 14px;
+    font-size: 14px !important;
+    font-weight: normal !important;
     margin-bottom: 1px;
     display: inline-block;
 }
@@ -773,10 +778,10 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅对油管和巴哈姆特生效">代理设置</td>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特和H站">代理设置</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809" data-tip="仅对油管和巴哈姆特有效">
+                    <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
                 </div>
             </td>
         </tr>
@@ -1348,7 +1353,7 @@ class Media {
     setVideoUrl(videoUrl) {
         if (this.check(videoUrl)) {
             this.videoUrl = videoUrl;
-            if(!this.title) {
+            if (!this.title) {
                 this.setTitle(document.title);
             }
             let nxParserIframe = document.getElementById(ID.nxParserIframe);
@@ -1899,11 +1904,11 @@ var websiteList = [
             }
             async parse() {
                 let url = this.videoParser();
-                if(url.startsWith("blob")) {
+                if (url.startsWith("blob")) {
                     for (let index = 0; index < sessionStorage.key.length; index++) {
                         url = sessionStorage.key(index);
                         url = url.match(/http[^#]*/g);
-                        if(url && url.length > 0) {
+                        if (url && url.length > 0) {
                             url = url[0];
                         }
                     }
@@ -2337,12 +2342,10 @@ var websiteList = [
         regex: /^https:\/\/www\.youtube\.com\/(watch|playlist)\?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                if (page.url != "https://www.youtube.com/") {
-                    this.media.setTitle("");
-                    this.media.setProxy(currentConfig.proxy);
-                    this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
-                    this.media.setVideoUrl(this.ytDlpParser());
-                }
+                this.media.setTitle("");
+                this.media.setProxy(currentConfig.proxy);
+                this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
             }
         },
     },
@@ -2393,6 +2396,28 @@ var websiteList = [
                     that.media.setProxy(currentConfig.proxy);
                     that.media.setVideoUrl(res.src);
                 }
+            }
+        },
+    },
+    {
+        // ✅ https://hanime1.me/watch?v=26262
+        name: "Hanime1.me",
+        home: [
+            "https://hanime1.me"
+        ],
+        regex: /^https:\/\/hanime1\.me\/watch\?v=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                setInterval(() => {
+                    if (handler.media.videoUrl != handler.videoParser()) {
+                        init();
+                    }
+                }, TIME.refresh);
+            }
+            async parse() {
+                this.media.setProxy(currentConfig.proxy);
+                this.media.setVideoUrl(this.videoParser());
             }
         },
     },
