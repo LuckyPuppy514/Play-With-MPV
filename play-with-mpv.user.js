@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.3
+// @version                 3.2.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -2308,7 +2308,9 @@ var websiteList = [
             constructor() {
                 super();
                 setInterval(() => {
-                    if (handler.media.videoUrl != handler.videoParser()) {
+                    let oldVideoUrl = handler.media.videoUrl;
+                    let newVideoUrl = handler.videoParser();
+                    if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
                         init();
                     }
                 }, TIME.refresh);
@@ -2407,17 +2409,13 @@ var websiteList = [
         ],
         regex: /^https:\/\/hanime1\.me\/watch\?v=.*/g,
         handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                setInterval(() => {
-                    if (handler.media.videoUrl != handler.videoParser()) {
-                        init();
-                    }
-                }, TIME.refresh);
-            }
             async parse() {
                 this.media.setProxy(currentConfig.proxy);
-                this.media.setVideoUrl(this.videoParser());
+                let url = this.videoParser();
+                if (!url) {
+                    url = this.iframeParser();
+                }
+                this.media.setVideoUrl(url);
             }
         },
     },

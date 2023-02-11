@@ -1,6 +1,6 @@
 # Play-With-MPV
 
-![bilibili_tuya](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/bilibili_tuya.jpg)
+![bilibili_tuya](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/bilibili_tuya.jpg)
 
 ## 🌟 简介
 
@@ -10,7 +10,7 @@
 - 支持浏览器：Edge，Chrome，Firefox，[查看更多 👆](https://www.tampermonkey.net/index.php)
 - 支持的网站：[Bilibili](https://www.bilibli.com)，[YouTube](https://www.youtube.com)，[巴哈姆特](https://ani.gamer.com.tw)，[低端影视](https://ddys.art)，[查看更多 👆](https://www.lckp.top/play-with-mpv/index.html)
 
-[![20230110060253](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/20230110060253.png)](https://www.lckp.top/play-with-mpv/index.html)
+[![20230110060253](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/20230110060253.png)](https://www.lckp.top/play-with-mpv/index.html)
 
 ## 🐳 安装
 
@@ -36,23 +36,23 @@
 
 输入软件路径，保存设置后，下载注册表到本地并打开
 
-![20230110072427](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/20230110072427.png)
+![20230110072427](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/20230110072427.png)
 
 #### 4.2. potplayer
 
 输入软件路径，保存设置后，下载注册表到本地并打开
 
-![1674062048261](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/1674062048261.jpg)
+![1674062048261](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/1674062048261.jpg)
 
 #### 4.3. 自定义
 
 需要自行查找相关文档，找到播放器对应的 URL 调用命令和参数
 
-![20230110073201](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/20230110073201.png)
+![20230110073201](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/20230110073201.png)
 
 例如，iina 对应的视频参数为：iina://weblink?url=${EvideoUrl}
 
-![20230111013225](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/20230111013225.png)
+![20230111013225](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/20230111013225.png)
 
 | 参数名称 | 参数取值 | 说明 |
 |:---:|:---:|:---:|
@@ -74,7 +74,7 @@
 
 仅对油管和巴哈姆特有效，请先尝试不设置代理的情况下观看
 
-![20230110073650](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/20230110073650.png)
+![20230110073650](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/20230110073650.png)
 
 > 一般情况对于 v2rayN 或 clash 等代理软件，才需要手动进行代理设置
 
@@ -83,11 +83,11 @@
 
 ## ✅ 效果展示
 
-![ddrk_tuya](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/ddrk_tuya.jpg)
+![ddrk_tuya](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/ddrk_tuya.jpg)
 
-![youtube_tuya](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/youtube_tuya.jpg)
+![youtube_tuya](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/youtube_tuya.jpg)
 
-![gamer_tuya](https://gitee.com/LuckyPuppy514/pic-bed/raw/main/common/gamer_tuya.jpg)
+![gamer_tuya](https://github.lckp.top/LuckyPuppy514/pic-bed/main/common/gamer_tuya.jpg)
 
 ## 👏 相关仓库
 
