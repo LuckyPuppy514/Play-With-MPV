@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.4
+// @version                 3.2.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -13,6 +13,8 @@
 // @downloadURL             https://greasyfork.org/scripts/444056-play-with-mpv/code/Play-With-MPV.user.js
 // @match                   https://www.bilibili.com/bangumi/play/*
 // @match                   https://www.bilibili.com/video/*
+// @match                   https://www.bilibili.com/festival/*
+// @match                   https://www.bilibili.com/list/*
 // @match                   https://live.bilibili.com/*
 // @match                   https://www.ixigua.com/*
 // @match                   https://yun.nxflv.com/?url=*
@@ -1436,6 +1438,9 @@ class BaseHandler {
             document.getElementById(ID.buttonDiv).style.display = "none";
         }
     }
+    initCheck() {
+        return window.location.href != page.url;
+    }
     async parse() { }
     pause() {
         let videos = document.getElementsByTagName("video");
@@ -1707,108 +1712,57 @@ const BEST_QUALITY = {
 var websiteList = [
     {
         // ✅ https://www.bilibili.com/bangumi/play/ep508404
-        name: "B站影视",
-        home: [
-            "https://www.bilibili.com"
-        ],
-        regex: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.*/g,
-        handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                this.media.setReferer("https://www.bilibili.com");
-            }
-            async parse() {
-                let epid = undefined;
-                let epidElement = document.getElementsByClassName("ep-item cursor visited")[0];
-                if (!epidElement) {
-                    epidElement = document.getElementsByClassName('ep-item cursor')[0];
-                }
-                if (epidElement) {
-                    epid = epidElement.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
-                } else {
-                    epidElement = document.getElementsByClassName("squirtle-pagelist-select-item active squirtle-blink")[0];
-                    if (epidElement) {
-                        epid = epidElement.dataset.value;
-                    }
-                }
-                if (!epid) {
-                    return;
-                }
-                $.ajax({
-                    type: "GET",
-                    url: `https://api.bilibili.com/pgc/view/web/season?ep_id=${epid}`,
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    async: false,
-                    success: function (res) {
-                        let currentEpisode;
-                        let section = res.result.section;
-                        if (!section) {
-                            section = new Array();
-                        }
-                        section.push({ episodes: res.result.episodes });
-                        for (let i = section.length - 1; i >= 0; i--) {
-                            let episodes = section[i].episodes;
-                            for (const episode of episodes) {
-                                if (episode.id == epid) {
-                                    currentEpisode = episode;
-                                    break;
-                                }
-                            }
-                            if (currentEpisode) {
-                                break;
-                            }
-                        }
-                        getBilibiliPlayUrl(currentEpisode.aid, currentEpisode.cid);
-                    }
-                })
-            }
-        },
-    },
-    {
+        // ✅ https://www.bilibili.com/bangumi/play/ep319063
         // ✅ https://www.bilibili.com/video/BV1Hd4y1k7Vb
         // ✅ https://www.bilibili.com/video/av2
-        name: "B站投稿",
+        // ✅ https://www.bilibili.com/video/BV17Z4y117Qm
+        // ✅ https://www.bilibili.com/list/ml1806211634
+        // ✅ https://www.bilibili.com/festival/2023bnj?bvid=BV17G4y1X7vQ
+        name: "B站视频",
         home: [
             "https://www.bilibili.com"
         ],
-        regex: /^https:\/\/www\.bilibili\.com\/video\/(BV|av).*/g,
+        regex: /^https:\/\/www\.bilibili\.com\/(bangumi\/play|video|list|festival)\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.media.setReferer("https://www.bilibili.com");
             }
-            async parse() {
-                let param = undefined;
-                let videoId = page.url.substring(31);
-                if (videoId.startsWith("BV")) {
-                    param = "bvid=" + videoId.match(/BV([0-9a-zA-Z]+)/)[1];
-                } else {
-                    param = "aid=" + videoId.match(/av([0-9]+)/)[1];
+            initCheck() {
+                if (super.initCheck()) {
+                    return true;
                 }
-                $.ajax({
-                    type: "GET",
-                    url: `https://api.bilibili.com/x/web-interface/view?${param}`,
-                    xhrFields: {
-                        withCredentials: true
-                    },
-                    async: false,
-                    success: function (res) {
-                        let aid = res.data.aid;
-                        let cid = res.data.cid;
-                        let index = page.url.indexOf("?p=");
-                        if (index != -1 && res.data.pages.length > 1) {
-                            let p = page.url.substring(index + 3);
-                            let endIndex = p.indexOf("&");
-                            if (endIndex != -1) {
-                                p = p.substring(0, endIndex);
-                            }
-                            cid = res.data.pages[p - 1].cid;
-                        }
-                        getBilibiliPlayUrl(aid, cid);
-                    }
-                })
+                let oldvideoId = this.videoId;
+                let newvideoId = this.getCurrentvideoId();
+                if (oldvideoId && oldvideoId != newvideoId) {
+                    return true;
+                }
+                return false;
+            }
+            getCurrentvideoId() {
+                if (__INITIAL_STATE__.epInfo) {
+                    return __INITIAL_STATE__.epInfo;
+                }
+                if (__INITIAL_STATE__.videoData) {
+                    return __INITIAL_STATE__.videoData;
+                }
+                if (__INITIAL_STATE__.videoInfo) {
+                    return __INITIAL_STATE__.videoInfo;
+                }
+            }
+            async parse() {
+                this.videoId = this.getCurrentvideoId();
+                if (!this.videoId || !this.videoId.aid || !this.videoId.cid) {
+                    console.log("获取 videoId 失败：" + this.videoId);
+                    return;
+                }
+                let aid = this.videoId.aid;
+                let cid = this.videoId.cid;
+                let p = __INITIAL_STATE__.p;
+                if (p && p > 1) {
+                    cid = __INITIAL_STATE__.cidMap[aid].cids[p];
+                }
+                getBilibiliPlayUrl(aid, cid);
             }
         },
     },
@@ -1818,20 +1772,23 @@ var websiteList = [
         home: [
             "https://live.bilibili.com"
         ],
-        regex: /^https:\/\/live\.bilibili\.com\/.*/g,
+        regex: /^https:\/\/live\.bilibili\.com\/\d+.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                let iframe = document.getElementsByTagName("iframe")[0];
-                if (!iframe) {
+                let iframes = document.getElementsByTagName("iframe");
+                let roomid = undefined;
+                for (let iframe of iframes) {
+                    let roomids = iframe.src.match(/^https:\/\/live\.bilibili\.com.*(roomid=\d+|blanc\/\d+).*/);
+                    if (roomids && roomids[1]) {
+                        roomid = roomids[1].match(/\d+/)[0];
+                        break;
+                    }
+                }
+                if (!roomid) {
+                    console.log("找不到 roomid：" + roomid);
                     return;
                 }
-                let url = iframe.src;
-                let index = url.indexOf("roomid=");
-                if (index == -1) {
-                    return;
-                }
-                let roomid = url.substring(index + 7);
-                roomid = roomid.substring(0, roomid.indexOf("&"));
+
                 let that = this;
                 $.ajax({
                     type: "GET",
@@ -2305,15 +2262,16 @@ var websiteList = [
         ],
         regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
         handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                setInterval(() => {
-                    let oldVideoUrl = handler.media.videoUrl;
-                    let newVideoUrl = handler.videoParser();
-                    if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
-                        init();
-                    }
-                }, TIME.refresh);
+            initCheck() {
+                if (super.initCheck()) {
+                    return true;
+                }
+                let oldVideoUrl = this.media.videoUrl;
+                let newVideoUrl = this.videoParser();
+                if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
+                    return true;
+                }
+                return false;
             }
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
@@ -2469,7 +2427,7 @@ async function init() {
 // 开始执行
 init();
 setInterval(() => {
-    if (window.location.href != page.url) {
+    if ((handler && handler.initCheck()) || window.location.href != page.url) {
         init();
     }
 }, TIME.refresh);
