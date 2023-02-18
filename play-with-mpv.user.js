@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.6
+// @version                 3.2.7
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -69,6 +69,7 @@
 // @include                 *://alist.*
 // @include                 *://*:5244*
 // @match                   https://www.dora-family.com/Resource:TV
+// @match                   https://www.olehdtv.com/*
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://hanime1.me/watch?v=*
@@ -76,6 +77,7 @@
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
+// @require                 https://unpkg.com/md5@2.3.0/dist/md5.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
 // @run-at                  document-end
@@ -2296,6 +2298,81 @@ var websiteList = [
         }
     },
     {
+        // ✅ https://www.olehdtv.com/player/vod/1/43671/1
+        name: "欧乐影院",
+        home: [
+            "https://www.olehdtv.com/"
+        ],
+        regex: /^https:\/\/www\.olehdtv\.com\/player\/vod\/\d+\/\d+\/\d+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                let ids = page.url.match(/^https:\/\/www\.olehdtv\.com\/player\/vod\/(\d+)\/(\d+)\/(\d+)/);
+                let id = ids[2];
+                let index = ids[3];
+                let t = Date.parse(new Date) / 1e3, r = t % 20;
+                let _vv = MD5(t - r + "new.olelive.com");
+                let that = this;
+                $.ajax({
+                    type: "GET",
+                    url: `https://api.olelive.com/v1/pub/vod/detail?id=${id}&play=true&_vv=${_vv}`,
+                    async: false,
+                    success: function (res) {
+                        if(res.code == 0) {
+                            that.media.setVideoUrl(res.data.urls[index - 1].url);
+                        }
+                    }
+                })
+            }
+            play() {
+                this.media.setTitle(document.title);
+                super.play();
+            }
+        }
+    },
+    {
+        // ✅ https://www.olehdtv.com/player/live/tv/CCTV5HD/49
+        name: "欧乐影院直播",
+        home: [
+            "https://www.olehdtv.com/"
+        ],
+        regex: /^https:\/\/www\.olehdtv\.com\/player\/live\/tv\/[^/]+\/\d+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                let ids = page.url.match(/^https:\/\/www\.olehdtv\.com\/player\/live\/tv\/([^/]+)\/(\d+)/);
+                let id = ids[2];
+                let streamId = ids[1];
+                let today = new Date();
+                let year = today.getFullYear();
+                let month = today.getMonth() + 1;
+                if(month < 10){
+                    month = "0" + month;
+                }
+                let day = today.getDate();
+                if(day < 10){
+                    day = "0" + day;
+                }
+                let date = year + "-" + month + "-" + day;
+                let t = Date.parse(today) / 1e3, r = t % 20;
+                let _vv = MD5(t - r + "new.olelive.com");
+                let that = this;
+                $.ajax({
+                    type: "GET",
+                    url: `https://api.olelive.com/v1/pub/live/info?date=${date}&streamId=${streamId}&type=tv&id=${id}&_vv=${_vv}`,
+                    async: false,
+                    success: function (res) {
+                        if(res.code == 0) {
+                            that.media.setVideoUrl(res.data.detail.hls.replace("_360", ""));
+                        }
+                    }
+                })
+            }
+            play() {
+                this.media.setTitle(document.title);
+                super.play();
+            }
+        }
+    },
+    {
         // ✅ https://www.youtube.com/watch?v=IkGuTYaTsLo
         name: "YouTube",
         home: [
@@ -2403,6 +2480,13 @@ async function init() {
         url: window.location.href,
         isFullScreen: false
     };
+    // 清除 handler
+    if(handler) {
+        handler = undefined;
+        if (document.getElementById(ID.buttonDiv)) {
+            document.getElementById(ID.buttonDiv).style.display = "none";
+        }
+    }
     // 生成 handler
     for (let i = 0; i < websiteList.length; i++) {
         if (page.url.match(websiteList[i].regex)) {
