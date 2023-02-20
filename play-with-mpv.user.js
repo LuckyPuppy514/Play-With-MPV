@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.7
+// @version                 3.2.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1648,7 +1648,7 @@ function getBilibiliPlayUrl(avid, cid) {
                 let videoUrl = undefined;
                 let audioUrl = undefined;
                 if (!res.data) {
-                    toast("Play-With-MPV 获取视频失败，如未登录请先登录", TOAST_TYPE.error);
+                    toast("Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面", TOAST_TYPE.error);
                     tryTime = TRY_TIME.maxParse;
                     return;
                 }
@@ -1743,6 +1743,11 @@ var websiteList = [
                 return false;
             }
             getCurrentvideoId() {
+                if(!__INITIAL_STATE__){
+                    toast("Play-With-MPV 读取视频数据失败，请尝试清理B站缓存后刷新重试", TOAST_TYPE.error);
+                    tryTime = TRY_TIME.maxParse;
+                    return;
+                }
                 if (__INITIAL_STATE__.epInfo) {
                     return __INITIAL_STATE__.epInfo;
                 }
