@@ -1726,7 +1726,6 @@ function getBilibiliVideoId() {
         aid: aid,
         cid: cid
     };
-    console.log(videoId);
     return videoId;
 }
 const BEST_QUALITY = {
