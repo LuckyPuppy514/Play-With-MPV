@@ -41,6 +41,20 @@
         "resolution": "高清"
     },
     {
+        "title": "天空影视",
+        "logo": "./website/logo/tkznp.png",
+        "url": [
+            "https://tkznp.com/",
+            "https://www.tkznp1.com/",
+            "https://www.tkznp2.com/",
+            "https://www.tkznp3.com/",
+            "https://www.tkznp4.com/",
+            "https://www.tkznp5.com/"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
         "title": "泥视频",
         "logo": "./website/logo/nivod.png",
         "url": [

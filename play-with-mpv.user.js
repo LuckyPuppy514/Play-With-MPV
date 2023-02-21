@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.8
+// @version                 3.2.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -70,6 +70,15 @@
 // @include                 *://*:5244*
 // @match                   https://www.dora-family.com/Resource:TV
 // @match                   https://www.olehdtv.com/*
+// @match                   *://tkznp.com/vodplay/*
+// @match                   *://www.tkznp.com/vodplay/*
+// @match                   *://www.tkznp1.com/vodplay/*
+// @match                   *://www.tkznp2.com/vodplay/*
+// @match                   *://www.tkznp3.com/vodplay/*
+// @match                   *://www.tkznp4.com/vodplay/*
+// @match                   *://www.tkznp5.com/vodplay/*
+// @match                   *://www.tkznp6.com/vodplay/*
+// @match                   https://vip.ckllk.com/?url=*
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://hanime1.me/watch?v=*
@@ -1408,7 +1417,7 @@ class Media {
                     }
                 });
                 if (m3u8 && m3u8.indexOf("png") != -1) {
-                    console.log("m3u8 链接无法播放：" + videoUrl);
+                    console.log("Play-With-MPV：m3u8 链接无法播放：" + videoUrl);
                     return false;
                 }
             }
@@ -1417,7 +1426,7 @@ class Media {
             }
             return true;
         }
-        console.log(`链接无效：${videoUrl}`);
+        console.log(`Play-With-MPV：链接无效：${videoUrl}`);
         return false;
     }
 }
@@ -1761,7 +1770,7 @@ var websiteList = [
             async parse() {
                 this.videoId = this.getCurrentvideoId();
                 if (!this.videoId || !this.videoId.aid || !this.videoId.cid) {
-                    console.log("获取 videoId 失败：" + this.videoId);
+                    console.log("Play-With-MPV：获取 videoId 失败：" + this.videoId);
                     return;
                 }
                 let aid = this.videoId.aid;
@@ -1793,7 +1802,7 @@ var websiteList = [
                     }
                 }
                 if (!roomid) {
-                    console.log("找不到 roomid：" + roomid);
+                    console.log("Play-With-MPV：找不到 roomid：" + roomid);
                     return;
                 }
 
@@ -2378,6 +2387,40 @@ var websiteList = [
         }
     },
     {
+        // ✅ https://tkznp.com/vodplay/337990-1-2.html
+        name: "天空影视",
+        home: [
+            "https://tkznp.com/",
+            "https://www.tkznp1.com/",
+            "https://www.tkznp2.com/",
+            "https://www.tkznp3.com/",
+            "https://www.tkznp4.com/",
+            "https://www.tkznp5.com/",
+            "https://www.tkznp6.com/",
+        ],
+        regex: /^https?:\/\/(|www\.)tkznp(|1|2|3|4|5|6)\.com\/vodplay\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "天空影视播放器",
+        regex: /^https?:\/\/vip\.ckllk\.com\/\?url=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(config.url);
+                this.media.setTitle(config.title);
+            }
+        }
+    },
+    {
         // ✅ https://www.youtube.com/watch?v=IkGuTYaTsLo
         name: "YouTube",
         home: [
@@ -2508,11 +2551,13 @@ async function init() {
                 try {
                     await handler.parse();
                 } catch (error) {
-                    console.log('解析失败：' + error);
+                    console.log('Play-With-MPV：解析失败：' + error);
                 }
             }
             tryTime++;
         }
+    } else {
+        console.log("Play-With-MPV：暂无此网页解析器");
     }
 }
 // 开始执行
