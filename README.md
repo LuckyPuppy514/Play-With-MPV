@@ -16,7 +16,7 @@
 
 ### 1. 💡 安装播放器
 
-- [mpv.net_CM](https://www.lckp.top/archives/mpvnetcm)
+- [mpv.net_CM](https://kutt.lckp.top/uVaT3U)
 
 > 也可自行安装其他播放器，如 potplayer / vlc 等，但某些功能可能无法使用 🔥
 
