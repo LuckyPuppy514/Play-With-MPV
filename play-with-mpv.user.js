@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.2.9
+// @version                 3.3.0
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1451,7 +1451,7 @@ class BaseHandler {
         }
     }
     initCheck() {
-        return window.location.href != page.url;
+        return false;
     }
     async parse() { }
     pause() {
@@ -1695,6 +1695,40 @@ function getBilibiliPlayUrl(avid, cid) {
         }
     });
 }
+// 获取B站视频 aid 和 cid
+function getBilibiliVideoId() {
+    let hasInitialState = false;
+    try {
+        if (__INITIAL_STATE__) {
+            hasInitialState = true;
+        }
+    } catch (error) {
+        hasInitialState = false;
+    }
+    if (!hasInitialState) {
+        return undefined;
+    }
+    let video = undefined;
+    if (__INITIAL_STATE__.epInfo) {
+        video = __INITIAL_STATE__.epInfo;
+    } else if (__INITIAL_STATE__.videoData) {
+        video = __INITIAL_STATE__.videoData;
+    }else if (__INITIAL_STATE__.videoInfo) {
+        video = __INITIAL_STATE__.videoInfo;
+    }
+    let aid = video.aid;
+    let cid = video.cid;
+    let p = __INITIAL_STATE__.p;
+    if (p && p > 1) {
+        cid = __INITIAL_STATE__.cidMap[aid].cids[p];
+    }
+    let videoId = {
+        aid: aid,
+        cid: cid
+    };
+    console.log(videoId);
+    return videoId;
+}
 const BEST_QUALITY = {
     bilibili: {
         "unlimited": 127,
@@ -1725,61 +1759,159 @@ var websiteList = [
     {
         // ✅ https://www.bilibili.com/bangumi/play/ep508404
         // ✅ https://www.bilibili.com/bangumi/play/ep319063
-        // ✅ https://www.bilibili.com/video/BV1Hd4y1k7Vb
-        // ✅ https://www.bilibili.com/video/av2
-        // ✅ https://www.bilibili.com/video/BV17Z4y117Qm
-        // ✅ https://www.bilibili.com/list/ml1806211634
-        // ✅ https://www.bilibili.com/festival/2023bnj?bvid=BV17G4y1X7vQ
-        name: "B站视频",
+        name: "B站影视",
         home: [
             "https://www.bilibili.com"
         ],
-        regex: /^https:\/\/www\.bilibili\.com\/(bangumi\/play|video|list|festival)\/.*/g,
+        regex: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.media.setReferer("https://www.bilibili.com");
+            }
+            async parse() {
+                // 直接从数据中获取 aid 和 cid
+                let videoId = getBilibiliVideoId();
+                if(videoId && videoId.aid && videoId.cid) {
+                    getBilibiliPlayUrl(videoId.aid, videoId.cid);
+                    return;
+                }
+
+                // 从元素提取 epid 请求接口获取 aid 和 cid
+                let epid = undefined;
+                let epidElement = document.getElementsByClassName("ep-item cursor visited")[0];
+                if (!epidElement) {
+                    epidElement = document.getElementsByClassName('ep-item cursor')[0];
+                }
+                if (epidElement) {
+                    epid = epidElement.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
+                } else {
+                    epidElement = document.getElementsByClassName("squirtle-pagelist-select-item active squirtle-blink")[0];
+                    if (epidElement) {
+                        epid = epidElement.dataset.value;
+                    }
+                }
+                if (!epid) {
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: `https://api.bilibili.com/pgc/view/web/season?ep_id=${epid}`,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    async: false,
+                    success: function (res) {
+                        let currentEpisode;
+                        let section = res.result.section;
+                        if (!section) {
+                            section = new Array();
+                        }
+                        section.push({ episodes: res.result.episodes });
+                        for (let i = section.length - 1; i >= 0; i--) {
+                            let episodes = section[i].episodes;
+                            for (const episode of episodes) {
+                                if (episode.id == epid) {
+                                    currentEpisode = episode;
+                                    break;
+                                }
+                            }
+                            if (currentEpisode) {
+                                break;
+                            }
+                        }
+                        getBilibiliPlayUrl(currentEpisode.aid, currentEpisode.cid);
+                    }
+                })
+            }
+        },
+    },
+    {
+        // ✅ https://www.bilibili.com/video/BV1Hd4y1k7Vb
+        // ✅ https://www.bilibili.com/video/av2
+        // ✅ https://www.bilibili.com/video/BV17Z4y117Qm
+        // ✅ https://www.bilibili.com/list/ml1806211634?oid=822115390&bvid=BV1Fg4y1p7Qe
+        name: "B站投稿",
+        regex: /^https:\/\/www\.bilibili\.com\/(video\/|list.*)(BV|av).*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.media.setReferer("https://www.bilibili.com");
+            }
+            async parse() {
+                // 直接从数据中获取 aid 和 cid
+                let videoId = getBilibiliVideoId();
+                if(videoId && videoId.aid && videoId.cid) {
+                    getBilibiliPlayUrl(videoId.aid, videoId.cid);
+                    return;
+                }
+
+                // 通过 bvid/avid 请求接口获取 aid 和 cid
+                let param = undefined;
+                let bvid = page.url.match(/BV([0-9a-zA-Z]+)/);
+                if(bvid && bvid[1]) {
+                    param = `bvid=${bvid[1]}`;
+                } else {
+                    let avid = page.url.match(/av([0-9]+)/);
+                    if(avid && avid[1]) {
+                        param = `aid=${avid[1]}`;
+                    }
+                }
+                if(!param){
+                    return;
+                }
+                $.ajax({
+                    type: "GET",
+                    url: `https://api.bilibili.com/x/web-interface/view?${param}`,
+                    xhrFields: {
+                        withCredentials: true
+                    },
+                    async: false,
+                    success: function (res) {
+                        let aid = res.data.aid;
+                        let cid = res.data.cid;
+                        let index = page.url.indexOf("?p=");
+                        if (index != -1 && res.data.pages.length > 1) {
+                            let p = page.url.substring(index + 3);
+                            let endIndex = p.indexOf("&");
+                            if (endIndex != -1) {
+                                p = p.substring(0, endIndex);
+                            }
+                            cid = res.data.pages[p - 1].cid;
+                        }
+                        getBilibiliPlayUrl(aid, cid);
+                    }
+                })
+            }
+        },
+    },
+    {
+        // ✅ https://www.bilibili.com/festival/2023bnj?bvid=BV17G4y1X7vQ
+        name: "B站节日",
+        regex: /^https:\/\/www\.bilibili\.com\/festival\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.media.setReferer("https://www.bilibili.com");
             }
             initCheck() {
-                if (super.initCheck()) {
-                    return true;
-                }
                 let oldvideoId = this.videoId;
-                let newvideoId = this.getCurrentvideoId();
-                if (oldvideoId && oldvideoId != newvideoId) {
+                let newvideoId = getBilibiliVideoId();
+                if (oldvideoId && oldvideoId.cid != newvideoId.cid) {
                     return true;
                 }
                 return false;
             }
-            getCurrentvideoId() {
-                if(!__INITIAL_STATE__){
-                    toast("Play-With-MPV 读取视频数据失败，请尝试清理B站缓存后刷新重试", TOAST_TYPE.error);
-                    tryTime = TRY_TIME.maxParse;
-                    return;
-                }
-                if (__INITIAL_STATE__.epInfo) {
-                    return __INITIAL_STATE__.epInfo;
-                }
-                if (__INITIAL_STATE__.videoData) {
-                    return __INITIAL_STATE__.videoData;
-                }
-                if (__INITIAL_STATE__.videoInfo) {
-                    return __INITIAL_STATE__.videoInfo;
-                }
-            }
             async parse() {
-                this.videoId = this.getCurrentvideoId();
-                if (!this.videoId || !this.videoId.aid || !this.videoId.cid) {
-                    console.log("Play-With-MPV：获取 videoId 失败：" + this.videoId);
+                let videoId = getBilibiliVideoId();
+                if(videoId && videoId.aid && videoId.cid) {
+                    this.videoId = videoId;
+                    getBilibiliPlayUrl(videoId.aid, videoId.cid);
                     return;
+                } else {
+                    toast("Play-With-MPV 读取视频数据失败，请尝试清理B站缓存后刷新重试", TOAST_TYPE.error, 5000);
+                    tryTime = TRY_TIME.maxParse;
                 }
-                let aid = this.videoId.aid;
-                let cid = this.videoId.cid;
-                let p = __INITIAL_STATE__.p;
-                if (p && p > 1) {
-                    cid = __INITIAL_STATE__.cidMap[aid].cids[p];
-                }
-                getBilibiliPlayUrl(aid, cid);
             }
         },
     },
@@ -2281,9 +2413,6 @@ var websiteList = [
         regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
         handler: class Handler extends BaseHandler {
             initCheck() {
-                if (super.initCheck()) {
-                    return true;
-                }
                 let oldVideoUrl = this.media.videoUrl;
                 let newVideoUrl = this.videoParser();
                 if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
@@ -2331,7 +2460,7 @@ var websiteList = [
                     url: `https://api.olelive.com/v1/pub/vod/detail?id=${id}&play=true&_vv=${_vv}`,
                     async: false,
                     success: function (res) {
-                        if(res.code == 0) {
+                        if (res.code == 0) {
                             that.media.setVideoUrl(res.data.urls[index - 1].url);
                         }
                     }
@@ -2358,11 +2487,11 @@ var websiteList = [
                 let today = new Date();
                 let year = today.getFullYear();
                 let month = today.getMonth() + 1;
-                if(month < 10){
+                if (month < 10) {
                     month = "0" + month;
                 }
                 let day = today.getDate();
-                if(day < 10){
+                if (day < 10) {
                     day = "0" + day;
                 }
                 let date = year + "-" + month + "-" + day;
@@ -2374,7 +2503,7 @@ var websiteList = [
                     url: `https://api.olelive.com/v1/pub/live/info?date=${date}&streamId=${streamId}&type=tv&id=${id}&_vv=${_vv}`,
                     async: false,
                     success: function (res) {
-                        if(res.code == 0) {
+                        if (res.code == 0) {
                             that.media.setVideoUrl(res.data.detail.hls.replace("_360", ""));
                         }
                     }
@@ -2529,7 +2658,7 @@ async function init() {
         isFullScreen: false
     };
     // 清除 handler
-    if(handler) {
+    if (handler) {
         handler = undefined;
         if (document.getElementById(ID.buttonDiv)) {
             document.getElementById(ID.buttonDiv).style.display = "none";
@@ -2563,7 +2692,7 @@ async function init() {
 // 开始执行
 init();
 setInterval(() => {
-    if ((handler && handler.initCheck()) || window.location.href != page.url) {
+    if (window.location.href != page.url || (handler && tryTime < TRY_TIME.maxParse && handler.initCheck())) {
         init();
     }
 }, TIME.refresh);
