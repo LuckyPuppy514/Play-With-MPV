@@ -1,6 +1,6 @@
 # Play-With-MPV
 
-![bilibili_tuya](https://image.lckp.top/LuckyPuppy514/pic-bed/raw/main/common/bilibili_tuya.jpg)
+![bilibili_tuya](https://github.com/LuckyPuppy514/pic-bed/raw/main/common/bilibili_tuya.jpg)
 
 ## 🌟 简介
 
