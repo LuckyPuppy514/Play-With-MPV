@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.0
+// @version                 3.3.1
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -282,7 +282,7 @@ const CSS = `
     transform: translate(-50%, -50%);
     background-color: rgba(255, 255, 255, 0);
 }
-.spinner {
+#${ID.loadingDiv} .spinner {
     width: 40px;
     height: 40px;
     background-color: rgba(255, 255, 255, 1);
@@ -569,13 +569,13 @@ ${ID.buttonDiv} {
     -webkit-transition: .4s;
     transition: .4s;
 }
-input:checked + .${CLASS.sliderSpan} {
+#${ID.settingDiv} input:checked + .${CLASS.sliderSpan} {
     background-color: rgba(0, 255, 0, .7);
 }
-input:focus + .${CLASS.sliderSpan} {
+#${ID.settingDiv} input:focus + .${CLASS.sliderSpan} {
     box-shadow: 0 0 1px rgba(0, 255, 0, .7);
 }
-input:checked + .${CLASS.sliderSpan}:before {
+#${ID.settingDiv} input:checked + .${CLASS.sliderSpan}:before {
     -webkit-transform: translateX(29px);
     -ms-transform: translateX(29px);
     transform: translateX(29px);
@@ -608,23 +608,23 @@ input:checked + .${CLASS.sliderSpan}:before {
     width: 29px;
     height: 29px;
 }
-.tabs {
+#${ID.settingDiv} .tabs {
     display: flex;
     width: 501px;
     height: 28px;
 }
-.tabs>.tab {
+#${ID.settingDiv} .tabs>.tab {
     flex: 1;
     display: flex;
     border: 1px solid rgb(65,146,247);
 }
-.tab>.tab-input {
+#${ID.settingDiv} .tab>.tab-input {
     width: 0 !important;
     height: 0 !important;
     margin: 0 !important;
     display: none !important;
 }
-.tab>.tab-box {
+#${ID.settingDiv} .tab>.tab-box {
     padding: 4px 0px 0.5px 0px;
     width: 100%;
     height: 22px;
@@ -635,11 +635,11 @@ input:checked + .${CLASS.sliderSpan}:before {
     font-weight: normal !important;
     display: table !important;
 }
-.tab>.tab-box:hover {
+#${ID.settingDiv} .tab>.tab-box:hover {
     opacity: .8;
     cursor: pointer;
 }
-.tab>.tab-input:checked+.tab-box {
+#${ID.settingDiv} .tab>.tab-input:checked+.tab-box {
     color: rgba(255, 255, 255, 1);
     background: rgba(0, 255, 0, .7);
 }
@@ -1451,7 +1451,7 @@ class BaseHandler {
         }
     }
     initCheck() {
-        return false;
+        return window.location.href != page.url;
     }
     async parse() { }
     pause() {
@@ -1713,7 +1713,7 @@ function getBilibiliVideoId() {
         video = __INITIAL_STATE__.epInfo;
     } else if (__INITIAL_STATE__.videoData) {
         video = __INITIAL_STATE__.videoData;
-    }else if (__INITIAL_STATE__.videoInfo) {
+    } else if (__INITIAL_STATE__.videoInfo) {
         video = __INITIAL_STATE__.videoInfo;
     }
     let aid = video.aid;
@@ -1771,7 +1771,7 @@ var websiteList = [
             async parse() {
                 // 直接从数据中获取 aid 和 cid
                 let videoId = getBilibiliVideoId();
-                if(videoId && videoId.aid && videoId.cid) {
+                if (videoId && videoId.aid && videoId.cid) {
                     getBilibiliPlayUrl(videoId.aid, videoId.cid);
                     return;
                 }
@@ -1837,10 +1837,23 @@ var websiteList = [
                 super();
                 this.media.setReferer("https://www.bilibili.com");
             }
+            initCheck() {
+                if(super.initCheck()){
+                    let newPageUrl = window.location.href;
+                    let oldPageUrl = page.url;
+                    let regex = /(&|\?)vd_source=\w+/;
+                    if(regex.test(newPageUrl.replace(oldPageUrl, ""))) {
+                        page.url = newPageUrl;
+                        return false;
+                    }
+                    return true;
+                }
+                return false;
+            }
             async parse() {
                 // 直接从数据中获取 aid 和 cid
                 let videoId = getBilibiliVideoId();
-                if(videoId && videoId.aid && videoId.cid) {
+                if (videoId && videoId.aid && videoId.cid) {
                     getBilibiliPlayUrl(videoId.aid, videoId.cid);
                     return;
                 }
@@ -1848,15 +1861,15 @@ var websiteList = [
                 // 通过 bvid/avid 请求接口获取 aid 和 cid
                 let param = undefined;
                 let bvid = page.url.match(/BV([0-9a-zA-Z]+)/);
-                if(bvid && bvid[1]) {
+                if (bvid && bvid[1]) {
                     param = `bvid=${bvid[1]}`;
                 } else {
                     let avid = page.url.match(/av([0-9]+)/);
-                    if(avid && avid[1]) {
+                    if (avid && avid[1]) {
                         param = `aid=${avid[1]}`;
                     }
                 }
-                if(!param){
+                if (!param) {
                     return;
                 }
                 $.ajax({
@@ -1894,6 +1907,9 @@ var websiteList = [
                 this.media.setReferer("https://www.bilibili.com");
             }
             initCheck() {
+                if(super.initCheck()){
+                    return true;
+                }
                 let oldvideoId = this.videoId;
                 let newvideoId = getBilibiliVideoId();
                 if (oldvideoId && oldvideoId.cid != newvideoId.cid) {
@@ -1903,7 +1919,7 @@ var websiteList = [
             }
             async parse() {
                 let videoId = getBilibiliVideoId();
-                if(videoId && videoId.aid && videoId.cid) {
+                if (videoId && videoId.aid && videoId.cid) {
                     this.videoId = videoId;
                     getBilibiliPlayUrl(videoId.aid, videoId.cid);
                     return;
@@ -2412,6 +2428,9 @@ var websiteList = [
         regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
         handler: class Handler extends BaseHandler {
             initCheck() {
+                if(super.initCheck()){
+                    return true;
+                }
                 let oldVideoUrl = this.media.videoUrl;
                 let newVideoUrl = this.videoParser();
                 if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
@@ -2691,7 +2710,11 @@ async function init() {
 // 开始执行
 init();
 setInterval(() => {
-    if (window.location.href != page.url || (handler && tryTime < TRY_TIME.maxParse && handler.initCheck())) {
+    if (handler) {
+        if (handler.initCheck()) {
+            init();
+        }
+    } else if (window.location.href != page.url) {
         init();
     }
 }, TIME.refresh);
