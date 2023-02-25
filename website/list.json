@@ -55,6 +55,25 @@
         "resolution": "高清"
     },
     {
+        "title": "HDmoli",
+        "logo": "./website/logo/hdmoli.png",
+        "url": [
+            "https://www.hdmoli.com/"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "低端影视",
+        "logo": "./website/logo/ddys.png",
+        "url": [
+            "https://ddys.art",
+            "https://ddys.pro"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
         "title": "泥视频",
         "logo": "./website/logo/nivod.png",
         "url": [
@@ -80,16 +99,6 @@
             "https://www.btnull.to",
             "https://www.btnull.nu",
             "https://www.btnull.in"
-        ],
-        "category": "anime, serial, movie",
-        "resolution": "高清"
-    },
-    {
-        "title": "低端影视",
-        "logo": "./website/logo/ddys.png",
-        "url": [
-            "https://ddys.art",
-            "https://ddys.pro"
         ],
         "category": "anime, serial, movie",
         "resolution": "高清"
