@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.3
+// @version                 3.3.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -66,8 +66,6 @@
 // @match                   https://www.bdys01.com/*
 // @match                   *://*/*.mp4
 // @match                   *://*/*.mkv
-// @include                 *://alist.*
-// @include                 *://*:5244*
 // @match                   https://www.dora-family.com/Resource:TV
 // @match                   https://www.olehdtv.com/*
 // @match                   *://tkznp.com/vodplay/*
@@ -2453,16 +2451,37 @@ var websiteList = [
     },
     {
         name: "AList",
-        regex: /^https?:\/\/(alist[^\/]+|[^\/]+:5244)\/.*\.(mp4|mkv)/g,
+        regex: /^https?:\/\/[^\/]+\/.*\.(mp4|mkv)/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 let url = this.videoParser();
-                let index = url.indexOf("?");
-                if (index != -1) {
-                    url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                if (!url && tryTime < 3) {
+                    $.ajax({
+                        type: "POST",
+                        url: `/api/fs/get`,
+                        data: {
+                            password: "",
+                            path: decodeURIComponent(location.pathname)
+                        },
+                        xhrFields: {
+                            withCredentials: true
+                        },
+                        async: false,
+                        success: function (res) {
+                            if (res.code == 200) {
+                                url = res.data.raw_url;
+                            }
+                        }
+                    });
                 }
-                this.media.setVideoUrl(url);
-                this.media.setTitle(document.title);
+                if (url) {
+                    let index = url.indexOf("?");
+                    if (index != -1) {
+                        url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                    }
+                    this.media.setVideoUrl(url);
+                    this.media.setTitle(document.title);
+                }
             }
         }
     },
