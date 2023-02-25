@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.1
+// @version                 3.3.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -851,15 +851,19 @@ const HTML = `
                 <div class="tabs">
                     <label class="tab">
                         <input type="radio" name="${ID.subtitlePreferRadio}" value="zh-Hans" class="tab-input">
-                        <div class="tab-box" name="${ID.subtitlePreferRadio}">中文（简体）</div>
+                        <div class="tab-box" name="${ID.subtitlePreferRadio}">简体</div>
                     </label>
                     <label class="tab">
                         <input type="radio" name="${ID.subtitlePreferRadio}" value="zh-Hant" class="tab-input">
-                        <div class="tab-box" name="${ID.subtitlePreferRadio}">中文（繁体）</div>
+                        <div class="tab-box" name="${ID.subtitlePreferRadio}">繁体</div>
                     </label>
                     <label class="tab">
                         <input type="radio" name="${ID.subtitlePreferRadio}" value="en-US" class="tab-input"=>
-                        <div class="tab-box" name="${ID.subtitlePreferRadio}">英语（美国）</div>
+                        <div class="tab-box" name="${ID.subtitlePreferRadio}">英语</div>
+                    </label>
+                    <label class="tab">
+                        <input type="radio" name="${ID.subtitlePreferRadio}" value="off" class="tab-input"=>
+                        <div class="tab-box" name="${ID.subtitlePreferRadio}">关闭</div>
                     </label>
                 </div>
             </td>
@@ -1617,33 +1621,35 @@ function getBilibiliPlayUrl(avid, cid) {
         handler.media.setOther(`--script-opts="cid=${cid}"`);
     }
     // 字幕
-    $.ajax({
-        type: "GET",
-        url: `https://api.bilibili.com/x/player/v2?aid=${avid}&cid=${cid}`,
-        xhrFields: {
-            withCredentials: true
-        },
-        async: false,
-        success: function (res) {
-            if (res.code == 0 && res.data.subtitle && res.data.subtitle.subtitles.length > 0) {
-                let subtitles = res.data.subtitle.subtitles;
-                let url = "https:" + subtitles[0].subtitle_url;
-                let lan = subtitles[0].lan;
-                for (const subtitle of subtitles) {
-                    if (currentConfig.subtitlePrefer.startsWith("zh") && subtitle.lan.startsWith("zh")) {
-                        url = "https:" + subtitle.subtitle_url;
-                        lan = subtitle.lan;
+    if (currentConfig.subtitlePrefer != "off") {
+        $.ajax({
+            type: "GET",
+            url: `https://api.bilibili.com/x/player/v2?aid=${avid}&cid=${cid}`,
+            xhrFields: {
+                withCredentials: true
+            },
+            async: false,
+            success: function (res) {
+                if (res.code == 0 && res.data.subtitle && res.data.subtitle.subtitles.length > 0) {
+                    let subtitles = res.data.subtitle.subtitles;
+                    let url = "https:" + subtitles[0].subtitle_url;
+                    let lan = subtitles[0].lan;
+                    for (const subtitle of subtitles) {
+                        if (currentConfig.subtitlePrefer.startsWith("zh") && subtitle.lan.startsWith("zh")) {
+                            url = "https:" + subtitle.subtitle_url;
+                            lan = subtitle.lan;
+                        }
+                        if (subtitle.lan == currentConfig.subtitlePrefer) {
+                            url = "https:" + subtitle.subtitle_url;
+                            lan = subtitle.lan;
+                            break;
+                        }
                     }
-                    if (subtitle.lan == currentConfig.subtitlePrefer) {
-                        url = "https:" + subtitle.subtitle_url;
-                        lan = subtitle.lan;
-                        break;
-                    }
+                    handler.media.setSubtitleUrl(`https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`);
                 }
-                handler.media.setSubtitleUrl(`https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`);
             }
-        }
-    });
+        });
+    }
     // 视频 + 音频
     $.ajax({
         type: "GET",
@@ -1838,11 +1844,11 @@ var websiteList = [
                 this.media.setReferer("https://www.bilibili.com");
             }
             initCheck() {
-                if(super.initCheck()){
+                if (super.initCheck()) {
                     let newPageUrl = window.location.href;
                     let oldPageUrl = page.url;
                     let regex = /(&|\?)vd_source=\w+/;
-                    if(regex.test(newPageUrl.replace(oldPageUrl, ""))) {
+                    if (regex.test(newPageUrl.replace(oldPageUrl, ""))) {
                         page.url = newPageUrl;
                         return false;
                     }
@@ -1907,7 +1913,7 @@ var websiteList = [
                 this.media.setReferer("https://www.bilibili.com");
             }
             initCheck() {
-                if(super.initCheck()){
+                if (super.initCheck()) {
                     return true;
                 }
                 let oldvideoId = this.videoId;
@@ -2428,7 +2434,7 @@ var websiteList = [
         regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
         handler: class Handler extends BaseHandler {
             initCheck() {
-                if(super.initCheck()){
+                if (super.initCheck()) {
                     return true;
                 }
                 let oldVideoUrl = this.media.videoUrl;
