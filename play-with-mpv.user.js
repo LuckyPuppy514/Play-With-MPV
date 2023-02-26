@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.4
+// @version                 3.3.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1173,8 +1173,8 @@ function addListener() {
         let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
         currentConfig[playerChecked].regVersion = DEFAULT_CONFIG[playerChecked].regVersion;
         GM_setValue(KEY.config, currentConfig);
-        let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path.replaceAll(/(\s+)/g, '\\"$1\\"'));
-        reg = reg.replaceAll("${PLAYER_NAME}", playerChecked);
+        let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path.replace(/(\s+)/g, '\\"$1\\"'));
+        reg = reg.replace(/\$\{PLAYER_NAME\}/g, playerChecked);
         let a = document.createElement('a');
         let blob = new Blob([reg], { 'type': 'application/octet-stream' });
         a.href = window.URL.createObjectURL(blob);
@@ -2095,7 +2095,12 @@ var websiteList = [
                 this.addTopListener();
             }
             async parse() {
-                this.media.setVideoUrl(urls);
+                let url = urls;
+                let index = url.indexOf("?");
+                if (index != -1) {
+                    url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                }
+                this.media.setVideoUrl(url);
             }
         }
     },
