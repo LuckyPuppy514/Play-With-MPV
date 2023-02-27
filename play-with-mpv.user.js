@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.5
+// @version                 3.3.6
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -79,6 +79,8 @@
 // @match                   https://vip.ckllk.com/?url=*
 // @match                   https://www.hdmoli.com/*
 // @match                   https://play.qwertwe.top/xplay/?url=*
+// @match                   https://www.anfuns.cc/play/*
+// @match                   https://www.anfuns.cc/vapi/A0EPlayer/?url=*
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://hanime1.me/watch?v=*
@@ -2676,6 +2678,40 @@ var websiteList = [
                         }
                     }
                 });
+            }
+        }
+    },
+    {
+        // ✅ https://www.anfuns.cc/play/1572-1-1.html
+        name: "AnFuns",
+        home: [
+            "https://www.anfuns.cc"
+        ],
+        regex: /^https:\/\/www\.anfuns\.cc\/play\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "AnFuns播放器",
+        regex: /^https:\/\/www\.anfuns\.cc\/vapi\/A0EPlayer\/\?url=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                let url = config.url;
+                if (url) {
+                    if (!url.startsWith("https://fata.peizq.online/cache/")) {
+                        this.media.setVideoUrl(config.url);
+                    } else {
+                        tryTime = TRY_TIME.maxParse;
+                    }
+                }
             }
         }
     },

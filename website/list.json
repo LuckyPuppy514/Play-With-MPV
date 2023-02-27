@@ -74,6 +74,15 @@
         "resolution": "高清"
     },
     {
+        "title": "AnFuns",
+        "logo": "./website/logo/anfuns.png",
+        "url": [
+            "https://www.anfuns.cc"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "泥视频",
         "logo": "./website/logo/nivod.png",
         "url": [
