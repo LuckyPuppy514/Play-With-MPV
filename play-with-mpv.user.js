@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.6
+// @version                 3.3.7
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -64,6 +64,8 @@
 // @match                   https://1080zyk5.com/?m=*
 // @match                   https://vip.zykbf.com/?url=*
 // @match                   https://www.bdys01.com/*
+// @include                 *://*alist*
+// @include                 *://*:5244*
 // @match                   *://*/*.mp4
 // @match                   *://*/*.mkv
 // @match                   https://www.dora-family.com/Resource:TV
@@ -84,6 +86,8 @@
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://hanime1.me/watch?v=*
+// @match                   https://ok.ru/*
+// @match                   https://tver.jp/*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
@@ -794,7 +798,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特和H站">代理设置</td>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特，H站，OK，TVer">代理设置</td>
             <td colspan="3">
                 <div>
                     <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
@@ -802,7 +806,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅适用于油管和B站">最高画质</td>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，OK，TVer，B站">最高画质</td>
             <td colspan="3">
                 <div class="tabs">
                     <label class="tab">
@@ -2796,6 +2800,38 @@ var websiteList = [
                     url = this.iframeParser();
                 }
                 this.media.setVideoUrl(url);
+            }
+        },
+    },
+    {
+        // ✅ https://ok.ru/video/2035990725937
+        name: "OK",
+        home: [
+            "https://ok.ru/video"
+        ],
+        regex: /^https:\/\/ok\.ru\/video\/\d+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setTitle("");
+                this.media.setProxy(currentConfig.proxy);
+                this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
+            }
+        },
+    },
+    {
+        // ✅ https://tver.jp/episodes/epsta1xs0z
+        name: "TVer",
+        home: [
+            "https://tver.jp"
+        ],
+        regex: /^https:\/\/tver\.jp\/episodes\/\w+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setTitle("");
+                this.media.setProxy(currentConfig.proxy);
+                this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
             }
         },
     },

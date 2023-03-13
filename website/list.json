@@ -233,5 +233,23 @@
         ],
         "category": "anime, serial, movie, user, show",
         "resolution": "超高清"
+    },
+    {
+        "title": "OK",
+        "logo": "./website/logo/okru.png",
+        "url": [
+            "https://ok.ru/video"
+        ],
+        "category": "user",
+        "resolution": "高清"
+    },
+    {
+        "title": "TVer",
+        "logo": "./website/logo/tver.png",
+        "url": [
+            "https://tver.jp"
+        ],
+        "category": "anime, serial, movie, user, show",
+        "resolution": "高清"
     }
 ]
