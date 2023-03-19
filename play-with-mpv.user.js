@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.7
+// @version                 3.3.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -2728,10 +2728,10 @@ var websiteList = [
         regex: /^https:\/\/www\.youtube\.com\/(watch|playlist)\?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setTitle("");
                 this.media.setProxy(currentConfig.proxy);
                 this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
             }
         },
     },
@@ -2812,10 +2812,10 @@ var websiteList = [
         regex: /^https:\/\/ok\.ru\/video\/\d+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setTitle("");
                 this.media.setProxy(currentConfig.proxy);
                 this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
             }
         },
     },
@@ -2828,10 +2828,10 @@ var websiteList = [
         regex: /^https:\/\/tver\.jp\/episodes\/\w+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setTitle("");
                 this.media.setProxy(currentConfig.proxy);
                 this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
             }
         },
     },
@@ -2844,9 +2844,9 @@ var websiteList = [
         regex: /^https?:\/\/(www.lckp.top\/play-with-mpv|127.0.0.1:5502\/web\/tampermonkey\/Play-With-MPV)\/index.html/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setTitle("");
                 this.media.setVideoUrl(localStorage.iptvUrl);
                 localStorage.player = JSON.stringify(this.player);
+                this.media.setTitle("");
             }
         },
     }
