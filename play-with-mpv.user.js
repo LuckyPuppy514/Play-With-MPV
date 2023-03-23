@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.8
+// @version                 3.3.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -86,6 +86,7 @@
 // @match                   https://www.youtube.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://hanime1.me/watch?v=*
+// @match                   https://jable.tv/videos/*
 // @match                   https://ok.ru/*
 // @match                   https://tver.jp/*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
@@ -798,7 +799,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特，H站，OK，TVer">代理设置</td>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特，H站，OK，TVer，J站">代理设置</td>
             <td colspan="3">
                 <div>
                     <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
@@ -2799,6 +2800,23 @@ var websiteList = [
                 if (!url) {
                     url = this.iframeParser();
                 }
+                this.media.setVideoUrl(url);
+            }
+        },
+    },
+    {
+        // ✅ https://jable.tv/videos/fsdss-484/
+        name: "Jable.TV",
+        home: [
+            "https://jable.tv"
+        ],
+        regex: /^https:\/\/jable\.tv\/videos\/.*/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setProxy(currentConfig.proxy);
+                let url = hls.url;
+                url = url ? url : hlsUrl;
+                url = url ? url : page.url;
                 this.media.setVideoUrl(url);
             }
         },
