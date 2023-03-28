@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.3.9
+// @version                 3.4.0
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -2085,7 +2085,7 @@ var websiteList = [
             "https://libvio.me",
             "https://www.libvio.me"
         ],
-        regex: /^https:\/\/(tv\.libvio\.cc|libvio\.fun|libvio\.me|www\.libvio\.me)\/play\/.*/g,
+        regex: /^https:\/\/(tv\.libvio\.cc|libvio\.fun|libvio\.me|www\.libvio\.me)\/play.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
