@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.0
+// @version                 3.4.1
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -25,7 +25,7 @@
 // @match                   https://libvio.me/play/*
 // @match                   https://www.libvio.me/play/*
 // @match                   https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
-// @match                   https://p.cfnode1.xyz/*?url=*
+// @match                   https://*.cfnode1.xyz/*?url=*
 // @match                   https://www.nivod.tv/*
 // @match                   https://www.pkmp4.com/py/*
 // @match                   https://www.pkmp4.com/addons/dplayer/?url=*
@@ -33,7 +33,7 @@
 // @match                   https://www.btnull.to/py/*
 // @match                   https://www.btnull.nu/py/*
 // @match                   https://www.btnull.in/py/*
-// @match                   *://www.996dm.com/play/*
+// @match                   *://www.986dm.com/play/*
 // @match                   *://www.dmlaa.com/play/*
 // @match                   *://www.qdmsh.com/play/*
 // @match                   https://danmu.yhdmjx.com/*?url=*
@@ -2095,7 +2095,7 @@ var websiteList = [
     },
     {
         name: "LIBVIO播放器",
-        regex: /^https:\/\/(sh-data-s02\.chinaeast2\.cloudapp\.chinacloudapi\.cn|p\.cfnode1\.xyz)\/.*php\?url=.*/g,
+        regex: /^https:\/\/(sh-data-s02\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*.cfnode1.xyz)\/.*php\?url=.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -2169,18 +2169,18 @@ var websiteList = [
         }
     },
     {
-        // ✅ https://www.996dm.com/play/6792-1-91.html
-        // ✅ http://www.996dm.com/play/7800-1-10.html
+        // ✅ https://www.986dm.com/play/6792-1-91.html
+        // ✅ http://www.986dm.com/play/7800-1-10.html
         // ✅ http://www.dmlaa.com/play/7696-1-10.html
         // ✅ http://www.qdmsh.com/play/7663-1-10.html
         name: "樱花动漫网",
         home: [
-            "https://www.996dm.com",
-            "http://www.996dm.com",
+            "https://www.986dm.com",
+            "http://www.986dm.com",
             "http://www.dmlaa.com",
             "http://www.qdmsh.com"
         ],
-        regex: /^https?:\/\/(www\.996dm\.com|www\.dmlaa\.com|www\.qdmsh\.com)\/play\/.*/g,
+        regex: /^https?:\/\/(www\.986dm\.com|www\.dmlaa\.com|www\.qdmsh\.com)\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
