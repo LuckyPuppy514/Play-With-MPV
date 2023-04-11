@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.1
+// @version                 3.4.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1096,6 +1096,13 @@ function addListener() {
             console.log(error);
         }
         loading(false);
+    }
+    // 播放快捷键 CTRL + P
+    window.onkeydown = async function () {
+        if (event.ctrlKey && event.keyCode === 80 && !event.shiftKey) {
+            event.preventDefault();
+            playButton.click();
+        }
     }
     // 设置按钮
     settingButton.onclick = function () {
