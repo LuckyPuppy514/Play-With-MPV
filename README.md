@@ -1,6 +1,6 @@
 # Play-With-MPV
 
-![20230225005322](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-02-25/20230225005322.webp)
+![20230414193858](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-04-14/20230414193858.gif)
 
 ## 🌟 简介
 
@@ -10,7 +10,7 @@
 - 支持浏览器：Edge，Chrome，Firefox，[查看更多 👆](https://www.tampermonkey.net/index.php)
 - 支持的网站：[Bilibili](https://www.bilibli.com)，[YouTube](https://www.youtube.com)，[巴哈姆特](https://ani.gamer.com.tw)，[低端影视](https://ddys.art)，[查看更多 👆](https://www.lckp.top/play-with-mpv/index.html)
 
-[![20230225005428](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-02-25/20230225005428.webp)](https://www.lckp.top/play-with-mpv/index.html)
+[![20230414194209](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-04-14/20230414194209.webp)](https://www.lckp.top/play-with-mpv/index.html)
 
 ## 🐳 安装
 
