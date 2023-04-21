@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.4
+// @version                 3.4.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1800,17 +1800,23 @@ var websiteList = [
                 }
 
                 // 从元素提取 epid 请求接口获取 aid 和 cid
-                let epid = undefined;
-                let epidElement = document.getElementsByClassName("ep-item cursor visited")[0];
-                if (!epidElement) {
-                    epidElement = document.getElementsByClassName('ep-item cursor')[0];
-                }
-                if (epidElement) {
-                    epid = epidElement.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
+                let epid = page.url.match(/ep(\d+)/);
+                if (epid && epid[1]) {
+                    epid = epid[1];
                 } else {
-                    epidElement = document.getElementsByClassName("squirtle-pagelist-select-item active squirtle-blink")[0];
+                    let epidElement = document.getElementsByClassName("ep-item cursor visited")[0];
+                    if (!epidElement) {
+                        epidElement = document.getElementsByClassName('ep-item cursor')[0];
+                    }
                     if (epidElement) {
-                        epid = epidElement.dataset.value;
+                        epid = epidElement.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
+                    } else {
+                        // 等待页面刷新，避免抓取到旧页面数据
+                        await sleep(TIME.refresh);
+                        epidElement = document.getElementsByClassName("squirtle-pagelist-select-item active squirtle-blink")[0];
+                        if (epidElement) {
+                            epid = epidElement.dataset.value;
+                        }
                     }
                 }
                 if (!epid) {
