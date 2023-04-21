@@ -2851,7 +2851,7 @@ var websiteList = [
         home: [
             "https://www.douyin.com/"
         ],
-        regex: /^https?:\/\/www\.douyin\.com\//g,
+        regex: /^https?:\/\/www\.douyin\.com\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
