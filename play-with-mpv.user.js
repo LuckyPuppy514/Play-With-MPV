@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.3
+// @version                 3.4.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -90,6 +90,9 @@
 // @match                   https://ok.ru/*
 // @match                   https://tver.jp/*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
+// @match                   https://www.douyin.com/
+// @match                   https://www.douyin.com/video/*
+// @match                   https://www.douyin.com/discover?modal_id=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -2839,6 +2842,44 @@ var websiteList = [
                 this.media.setVideoUrl(localStorage.iptvUrl);
                 localStorage.player = JSON.stringify(this.player);
                 this.media.setTitle("");
+            }
+        },
+    },
+    {
+        // ✅ https://www.douyin.com/
+        name: "抖音",
+        home: [
+            "https://www.douyin.com/"
+        ],
+        regex: /^https?:\/\/www\.douyin\.com\//g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.index = 0;
+            }
+            initCheck() {
+                if (super.initCheck()) {
+                    return true;
+                }
+                let oldVideoUrl = this.media.videoUrl;
+                let newVideoUrl = this.videoParser();
+                if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
+                    return true;
+                }
+                return false;
+            }
+            async parse() {
+                this.media.setVideoUrl(this.videoParser());
+            }
+            videoParser() {
+                let videos = document.getElementsByTagName("video");
+                if (videos && videos.length > 0) {
+                    this.index = videos.length > 2 ? 1 : 0;
+                }
+                let url = document.getElementsByTagName("video")[this.index].getElementsByTagName("source")[0].src;
+                if (url) {
+                    return url;
+                }
             }
         },
     },
