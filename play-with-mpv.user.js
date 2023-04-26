@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.6
+// @version                 3.4.7
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -20,7 +20,7 @@
 // @match                   https://yun.nxflv.com/?url=*
 // @match                   https://ddys.art/*
 // @match                   https://ddys.pro/*
-// @match                   https://tv.libvio.cc/*
+// @match                   https://www.libvio.cc/*
 // @match                   https://libvio.fun/play/*
 // @match                   https://libvio.me/play/*
 // @match                   https://www.libvio.me/play/*
@@ -2095,15 +2095,15 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://libvio.fun/play/714634-1-11.html
+        // ✅ https://www.libvio.cc/play/714634-1-11.html
         name: "LIBVIO",
         home: [
-            "https://tv.libvio.cc",
+            "https://www.libvio.cc",
             "https://libvio.fun",
             "https://libvio.me",
             "https://www.libvio.me"
         ],
-        regex: /^https:\/\/(tv\.libvio\.cc|libvio\.fun|libvio\.me|www\.libvio\.me)\/play.*/g,
+        regex: /^https:\/\/(www\.libvio\.cc|libvio\.fun|libvio\.me|www\.libvio\.me)\/play.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
