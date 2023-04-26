@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.5
+// @version                 3.4.6
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -93,6 +93,8 @@
 // @match                   https://www.douyin.com/
 // @match                   https://www.douyin.com/video/*
 // @match                   https://www.douyin.com/discover?modal_id=*
+// @match                   https://www.mfan.tv/play/*
+// @match                   https://video1.beijcloud.com/player/?url=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -156,7 +158,7 @@ const DEFAULT_CONFIG = {
 };
 var currentConfig;
 // 视频链接匹配正则
-const VIDEO_URL_REGEX = /https?:\/\/(?![^"^']*http)[^"^']+(\.|%2e)(m3u8|m3u|mp4|mkv|flv|avi)(|\?[\w&]+)/g;
+const VIDEO_URL_REGEX = /https?:\/\/(?![^"^']*http)[^"^']+(\.|%2e)(m3u8|m3u|mp4|mkv|flv|avi)(\?[\w&=-]+|)/g;
 // 父子页面方法名
 const METHOD = {
     pause: "PAUSE",
@@ -2888,6 +2890,33 @@ var websiteList = [
                 }
             }
         },
+    },
+    {
+        // ✅ https://www.mfan.tv/play/kx666U/1/3/
+        name: "萌番",
+        home: [
+            "https://www.mfan.tv"
+        ],
+        regex: /^https:\/\/www\.mfan\.tv\/play\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "萌番播放器",
+        regex: /^https:\/\/video1\.beijcloud\.com\/player\/\?url=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.scriptParser());
+            }
+        }
     },
     {
         name: "AList",

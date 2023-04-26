@@ -41,6 +41,15 @@
         "resolution": "高清"
     },
     {
+        "title": "萌番",
+        "logo": "./website/logo/mfan.png",
+        "url": [
+            "https://www.mfan.tv/"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "天空影视",
         "logo": "./website/logo/tkznp.png",
         "url": [
