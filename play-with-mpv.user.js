@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.7
+// @version                 3.4.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -20,11 +20,8 @@
 // @match                   https://yun.nxflv.com/?url=*
 // @match                   https://ddys.art/*
 // @match                   https://ddys.pro/*
-// @match                   https://www.libvio.cc/*
-// @match                   https://libvio.fun/play/*
-// @match                   https://libvio.me/play/*
-// @match                   https://www.libvio.me/play/*
-// @match                   https://sh-data-s02.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
+// @include                 *://*.libvio.*
+// @match                   https://*.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
 // @match                   https://*.cfnode1.xyz/*?url=*
 // @match                   https://www.nivod.tv/*
 // @match                   https://www.pkmp4.com/py/*
@@ -2103,7 +2100,7 @@ var websiteList = [
             "https://libvio.me",
             "https://www.libvio.me"
         ],
-        regex: /^https:\/\/(www\.libvio\.cc|libvio\.fun|libvio\.me|www\.libvio\.me)\/play.*/g,
+        regex: /^https?:\/\/.*\.libvio\..*\/play.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -2113,7 +2110,7 @@ var websiteList = [
     },
     {
         name: "LIBVIO播放器",
-        regex: /^https:\/\/(sh-data-s02\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*.cfnode1.xyz)\/.*php\?url=.*/g,
+        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)\/.*php\?url=.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
