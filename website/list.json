@@ -217,6 +217,15 @@
         "resolution": "高清"
     },
     {
+        "title": "海兔影院",
+        "logo": "./website/logo/haitu.webp",
+        "url": [
+            "https://www.haitu.tv"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
         "title": "西瓜视频",
         "logo": "./website/logo/ixigua.svg",
         "url": [

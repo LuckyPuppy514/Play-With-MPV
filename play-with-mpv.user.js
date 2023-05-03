@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.8
+// @version                 3.4.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -61,6 +61,7 @@
 // @match                   https://1080zyk5.com/?m=*
 // @match                   https://vip.zykbf.com/?url=*
 // @match                   https://www.bdys01.com/*
+// @match                   https://www.haitu.tv/*
 // @include                 *://*alist*
 // @include                 *://*:5244*
 // @match                   *://*/*.mp4
@@ -801,7 +802,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特，H站，OK，TVer，J站">代理设置</td>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特，H站，OK，TVer，J站，海兔影院">代理设置</td>
             <td colspan="3">
                 <div>
                     <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
@@ -2912,6 +2913,35 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(this.scriptParser());
+            }
+        }
+    },
+    {
+        // ✅ https://www.haitu.tv/vod/play/id/47100/sid/1/nid/4.html
+        name: "海兔影院",
+        home: [
+            "https://www.haitu.tv"
+        ],
+        regex: /^https:\/\/www\.haitu\.tv\/vod\/play\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.media.setProxy(currentConfig.proxy);
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "海兔影院播放器",
+        regex: /^https:\/\/www\.haitu\.tv\/static\/dmku\/player\/index\.php/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setProxy(currentConfig.proxy);
+                this.media.setVideoUrl(config.url);
             }
         }
     },
