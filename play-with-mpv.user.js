@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.4.9
+// @version                 3.5.0
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -182,26 +182,26 @@ const PLAYER = {
         name: "mpv",
         params: {
             videoUrl: 'mpv://"${videoUrl}"',
-            audioUrl: '--audio-file="${audioUrl}"',
-            subtitleUrl: '--sub-file="${subtitleUrl}"',
-            title: '--force-media-title="${title}"',
-            startTime: '--start=${startTime}',
-            referer: '--http-header-fields="referer: ${referer}"',
-            origin: '--http-header-fields="origin: ${origin}"',
-            proxy: '--http-proxy=${proxy} --ytdl-raw-options=proxy=[${proxy}]',
-            other: '${other}'
+            audioUrl: ' --audio-file="${audioUrl}"',
+            subtitleUrl: ' --sub-file="${subtitleUrl}"',
+            title: ' --force-media-title="${title}"',
+            startTime: ' --start=${startTime}',
+            referer: ' --http-header-fields="referer: ${referer}"',
+            origin: ' --http-header-fields="origin: ${origin}"',
+            proxy: ' --http-proxy=${proxy} --ytdl-raw-options=proxy=[${proxy}]',
+            other: ' ${other}'
         }
     },
     potplayer: {
         name: "potplayer",
         params: {
             videoUrl: 'potplayer://${videoUrl} /current',
-            subtitleUrl: '/sub="${subtitleUrl}"',
-            title: '/title="${title}"',
-            startTime: '/seek=${startTime}',
-            referer: '/referer="${referer}"',
-            origin: '/headers="origin: ${origin}"',
-            proxy: '/user_agent="${proxy}"'
+            subtitleUrl: ' /sub="${subtitleUrl}"',
+            title: ' /title="${title}"',
+            startTime: ' /seek=${startTime}',
+            referer: ' /referer="${referer}"',
+            origin: ' /headers="origin: ${origin}"',
+            proxy: ' /user_agent="${proxy}"'
         }
     },
     custom: {
@@ -1522,7 +1522,7 @@ class BaseHandler {
                 while (param.indexOf(matchKey) != -1) {
                     param = param.replace(matchKey, decodeURIComponent(value));
                 }
-                link = link + " " + param;
+                link = link + param;
             }
         }
         if (this.media.title) {
@@ -1533,7 +1533,7 @@ class BaseHandler {
             }
             let param = this.player.params.title;
             param = param.replace('${title}', title);
-            link = link + " " + param;
+            link = link + param;
         }
         window.open(link, "_self");
     }
