@@ -263,6 +263,33 @@
         "resolution": "高清"
     },
     {
+        "title": "Odysee",
+        "logo": "./website/logo/odysee.png",
+        "url": [
+            "https://odysee.com"
+        ],
+        "category": "user",
+        "resolution": "高清"
+    },
+    {
+        "title": "Rumble",
+        "logo": "./website/logo/rumble.svg",
+        "url": [
+            "https://rumble.com"
+        ],
+        "category": "user",
+        "resolution": "高清"
+    },
+    {
+        "title": "BitChute",
+        "logo": "./website/logo/bitchute.webp",
+        "url": [
+            "https://www.bitchute.com"
+        ],
+        "category": "user",
+        "resolution": "高清"
+    },
+    {
         "title": "TVer",
         "logo": "./website/logo/tver.png",
         "url": [

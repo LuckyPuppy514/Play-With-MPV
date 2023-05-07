@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.1
+// @version                 3.5.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -83,6 +83,9 @@
 // @match                   https://www.anfuns.cc/play/*
 // @match                   https://www.anfuns.cc/vapi/A0EPlayer/?url=*
 // @match                   https://www.youtube.com/*
+// @match                   https://odysee.com/*
+// @match                   https://rumble.com/*
+// @match                   https://www.bitchute.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
 // @match                   https://hanime1.me/watch?v=*
 // @match                   https://jable.tv/videos/*
@@ -440,8 +443,8 @@ ${ID.buttonDiv} {
     padding-top: 16.5px !important;
 }
 .${CLASS.titleSpan} {
-    padding-top: 12.5px;
-    padding-bottom: 12.5px;
+    padding-top: 12.5px !important;;
+    padding-bottom: 12.5px !important;;
     font-size: 16px;
     font-weight: bold;
     color: rgba(255, 255, 255, 1) !important;
@@ -500,6 +503,14 @@ ${ID.buttonDiv} {
     margin-bottom: 1px !important;
     border-collapse: unset !important;
 }
+#${ID.infoTable} input:hover,
+#${ID.settingTable} input:hover,
+#${ID.customPlayerTable} input:hover,
+#${ID.infoTable} input:focus-visible,
+#${ID.settingTable} input:focus-visible,
+#${ID.customPlayerTable} input:focus-visible {
+    box-shadow: none;
+}
 #${ID.settingTable} input::placeholder,
 #${ID.customPlayerTable} input::placeholder {
     font-size: 12px;
@@ -532,8 +543,8 @@ ${ID.buttonDiv} {
     cursor: pointer;
 }
 .${CLASS.footerSpan} {
-    margin-top: 8px;
-    margin-bottom: 8px;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
     color: rgba(255, 255, 255, 1);
 }
 #${ID.infoDiv} a,
@@ -628,6 +639,11 @@ ${ID.buttonDiv} {
     flex: 1;
     display: flex;
     border: 1px solid rgb(65,146,247);
+    margin: 0;
+}
+#${ID.settingDiv} .tabs>.tab:after {
+    background: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0) !important;
 }
 #${ID.settingDiv} .tab>.tab-input {
     width: 0 !important;
@@ -645,6 +661,7 @@ ${ID.buttonDiv} {
     font-size: 12px;
     font-weight: normal !important;
     display: table !important;
+    color: #000000B3;
 }
 #${ID.settingDiv} .tab>.tab-box:hover {
     opacity: .8;
@@ -803,7 +820,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，巴哈姆特，H站，OK，TVer，J站，海兔影院">代理设置</td>
+            <td class="${CLASS.titleTd}"  data-tip="旁路由网关实现代理一般不需要设置">代理设置</td>
             <td colspan="3">
                 <div>
                     <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
@@ -811,7 +828,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="仅适用于油管，OK，TVer，B站">最高画质</td>
+            <td class="${CLASS.titleTd}" data-tip="仅适用于B站或使用 yt-dlp 解析的网站，例如：油管，OK，TVer 等">最高画质</td>
             <td colspan="3">
                 <div class="tabs">
                     <label class="tab">
@@ -919,7 +936,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则不支持最高画质和视频编码）">音频参数</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.audioUrlParamInput}" type=text placeholder='请输入音频参数，例如：--audio-file="$\{audioUrl\}"'>
+                    <input id="${ID.audioUrlParamInput}" type=text placeholder='请输入音频参数，例如： --audio-file="$\{audioUrl\}"'>
                 </div>
             </td>
         </tr>
@@ -927,7 +944,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法加载B站外挂字幕）">字幕参数</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.subtitleUrlParamInput}" type=text placeholder='请输入字幕参数，例如：--sub-file="$\{subtitleUrl\}"'>
+                    <input id="${ID.subtitleUrlParamInput}" type=text placeholder='请输入字幕参数，例如： --sub-file="$\{subtitleUrl\}"'>
                 </div>
             </td>
         </tr>
@@ -935,7 +952,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法传递标题）">标题参数</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.titleParamInput}" type=text placeholder='请输入标题参数，例如：--force-media-title="$\{title\}"'>
+                    <input id="${ID.titleParamInput}" type=text placeholder='请输入标题参数，例如： --force-media-title="$\{title\}"'>
                 </div>
             </td>
         </tr>
@@ -943,7 +960,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则不支持同步时间）">时间参数</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.startTimeParamInput}" type=text placeholder='请输入时间参数，例如：--start=$\{startTime\}'>
+                    <input id="${ID.startTimeParamInput}" type=text placeholder='请输入时间参数，例如： --start=$\{startTime\}'>
                 </div>
             </td>
         </tr>
@@ -951,7 +968,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则不支持代理设置）">代理参数</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.proxyParamInput}" type=text placeholder='请输入代理参数，例如：--http-proxy=$\{proxy\} --ytdl-raw-options=proxy=[$\{proxy\}]'>
+                    <input id="${ID.proxyParamInput}" type=text placeholder='请输入代理参数，例如： --http-proxy=$\{proxy\} --ytdl-raw-options=proxy=[$\{proxy\}]'>
                 </div>
             </td>
         </tr>
@@ -959,7 +976,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法观看B站和橘子动漫）">referer</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.refererParamInput}" type=text placeholder='请输入 referer，例如：--http-header-fields="referer: $\{referer\}"'>
+                    <input id="${ID.refererParamInput}" type=text placeholder='请输入 referer，例如： --http-header-fields="referer: $\{referer\}"'>
                 </div>
             </td>
         </tr>
@@ -967,7 +984,7 @@ const HTML = `
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法观看巴哈姆特）">origin</td>
             <td colspan="3">
                 <div>
-                    <input id="${ID.originParamInput}" type=text placeholder='请输入 origin，例如：--http-header-fields="origin: $\{origin\}" '>
+                    <input id="${ID.originParamInput}" type=text placeholder='请输入 origin，例如： --http-header-fields="origin: $\{origin\}" '>
                 </div>
             </td>
         </tr>
@@ -1456,6 +1473,7 @@ class BaseHandler {
     constructor() {
         loadConfig();
         this.media = new Media();
+        this.media.setProxy(currentConfig.proxy);
         for (const key in PLAYER) {
             if (PLAYER[key].name == currentConfig.player) {
                 this.player = PLAYER[key];
@@ -1769,7 +1787,7 @@ const BEST_QUALITY = {
         "720p": 3,
         "480p": 2
     },
-    youtube: {
+    ytdlp: {
         "unlimited": "",
         "2160p": "--ytdl-format=bestvideo[height<=?2160]%2Bbestaudio/best",
         "1440p": "--ytdl-format=bestvideo[height<=?1440]%2Bbestaudio/best",
@@ -2712,8 +2730,52 @@ var websiteList = [
         regex: /^https:\/\/www\.youtube\.com\/(watch|playlist)\?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setProxy(currentConfig.proxy);
-                this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
+            }
+        },
+    },
+    {
+        // ✅ https://odysee.com/@jjlin:8/%E6%9E%97%E4%BF%8A%E5%82%91-jj-lin%E3%80%8Ajj20%E4%B8%96%E7%95%8C%E5%B7%A1%E8%BF%B4%E6%BC%94%E5%94%B1%E6%9C%83%E3%80%8B-2:8
+        name: "Odysee",
+        home: [
+            "https://odysee.com"
+        ],
+        regex: /^https:\/\/odysee\.com\/[^$].+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
+            }
+        },
+    },
+    {
+        // ✅ https://rumble.com/v2mfr78-valheim-viking-survival-w-chaos-tricks-you-can-affect-my-game-chat-opinions.html
+        name: "Rumble",
+        home: [
+            "https://rumble.com"
+        ],
+        regex: /^https:\/\/rumble\.com\/v.+\.html/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
+            }
+        },
+    },
+    {
+        // ✅ https://www.bitchute.com/video/NoodZjmfKHXS/
+        name: "BitChute",
+        home: [
+            "https://www.bitchute.com"
+        ],
+        regex: /^https:\/\/www\.bitchute\.com\/video\/.+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -2778,7 +2840,6 @@ var websiteList = [
         regex: /^https:\/\/hanime1\.me\/watch\?v=.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setProxy(currentConfig.proxy);
                 let url = this.videoParser();
                 if (!url) {
                     url = this.iframeParser();
@@ -2799,7 +2860,6 @@ var websiteList = [
         regex: /^https:\/\/jable\.tv\/videos\/.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setProxy(currentConfig.proxy);
                 let url = hls.url;
                 url = url ? url : hlsUrl;
                 url = url ? url : page.url;
@@ -2816,8 +2876,7 @@ var websiteList = [
         regex: /^https:\/\/ok\.ru\/video\/\d+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setProxy(currentConfig.proxy);
-                this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -2832,8 +2891,7 @@ var websiteList = [
         regex: /^https:\/\/tver\.jp\/episodes\/\w+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setProxy(currentConfig.proxy);
-                this.media.setOther(BEST_QUALITY.youtube[currentConfig.bestQuality]);
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -2929,7 +2987,6 @@ var websiteList = [
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
-                this.media.setProxy(currentConfig.proxy);
                 this.addIframeListener();
             }
         }
@@ -2943,7 +3000,6 @@ var websiteList = [
                 this.addTopListener();
             }
             async parse() {
-                this.media.setProxy(currentConfig.proxy);
                 this.media.setVideoUrl(config.url);
             }
         }
