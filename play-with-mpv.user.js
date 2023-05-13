@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.2
+// @version                 3.5.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -130,11 +130,11 @@ const DEFAULT_CONFIG = {
     player: "mpv",
     mpv: {
         path: "",
-        regVersion: "20230118",
+        regVersion: "20230513",
     },
     potplayer: {
         path: "",
-        regVersion: "20230118",
+        regVersion: "20230513",
     },
     proxy: "",
     bestQuality: "2160p",
@@ -1018,7 +1018,7 @@ const REG =
 @=""
 
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
-@="powershell -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$XXX=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \${SOFTWARE_PATH} -ArgumentList $XXX}\\""
+@="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \${SOFTWARE_PATH} -ArgumentList $PARAMS}\\""
 `
 function appendCSS() {
     let css = document.createElement("style");
