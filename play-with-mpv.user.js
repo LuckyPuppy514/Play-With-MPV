@@ -1018,7 +1018,7 @@ const REG =
 @=""
 
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
-@="powershell -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$XXX=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \${SOFTWARE_PATH} -ArgumentList $XXX}\\"
+@="powershell -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$XXX=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \${SOFTWARE_PATH} -ArgumentList $XXX}\\""
 `
 function appendCSS() {
     let css = document.createElement("style");
