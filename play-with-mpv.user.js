@@ -1018,7 +1018,7 @@ const REG =
 @=""
 
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
-@="cmd /V:ON /C \\"FOR /F \\"tokens=* USEBACKQ\\" %%F IN (\`C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -command \\"Add-Type -AssemblyName System.Web;[System.Web.HTTPUtility]::UrlDecode('%1')\\"\`) DO (SET param=%%F) & SET param=!param:\${PLAYER_NAME}://=! & start /min \${SOFTWARE_PATH} !param!\\""
+@="powershell -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$XXX=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \${SOFTWARE_PATH} -ArgumentList $XXX}\\"
 `
 function appendCSS() {
     let css = document.createElement("style");
