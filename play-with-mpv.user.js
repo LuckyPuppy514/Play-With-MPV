@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.4
+// @version                 3.5.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1710,7 +1710,7 @@ function getBilibiliPlayUrl(avid, cid) {
                     audioUrl = hiRes.audio.baseUrl;
                 } else if (dolby && dolby.audio) {
                     audioUrl = dolby.audio[0].base_url;
-                } else {
+                } else if (dash.audio) {
                     audioUrl = dash.audio[0].baseUrl;
                 }
                 let i = 0;
