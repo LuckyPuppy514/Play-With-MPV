@@ -1555,6 +1555,20 @@ class BaseHandler {
             link = link + param;
         }
         window.open(link, "_self");
+        fetch("http://localhost:1234", {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain",
+          },
+          body: link,
+        }).then((res) => {
+            if (res.ok) {
+              console.log(res.text());
+            }
+            throw new Error("Error response");
+        }).catch((err) => {
+            console.error(err.message);
+        });
     }
     // 监听子页面事件
     addIframeListener() {
