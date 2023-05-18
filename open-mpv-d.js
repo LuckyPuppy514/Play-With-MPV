@@ -23,7 +23,7 @@ async function get_exec(path, fallback) {
           `No executable at ${path} or hava no permission to access.`
         );
       } else {
-        console.log(`Using ${path}`);
+        console.log(`[INFO] Using ${path}`);
         return path;
       }
     });
@@ -33,7 +33,7 @@ async function get_exec(path, fallback) {
 }
 
 function open_mpv(args) {
-  console.log(`args is ${args}`)
+  console.log(`[INFO] Passed in ${args}`)
   exec(
     mpv_exec + " " + args.substring("mpv://".length),
     (error, stdout, stderr) => {
@@ -56,7 +56,11 @@ async function main() {
       body += chunk;
     });
     req.on("end", () => {
-      open_mpv(body);
+      if (body.startsWith("mpv://")) {
+        open_mpv(body);
+      } else {
+        console.log(`[WARN] Sorry, but only 'mpv://' is supported now. Current request: ${body}`)
+      }
     });
 
     res.writeHead(200, { "Content-Type": "text/plain" });
@@ -79,7 +83,7 @@ async function main() {
   });
 
   server.on("listening", () => {
-    console.log(`Listening on localhost:${port}`);
+    console.log(`[INFO] Listening on localhost:${port}`);
   });
 
   server.listen(port);

@@ -34,7 +34,7 @@
 
 #### 4.1. mpv
 
-输入软件路径，保存设置后，下载注册表到本地并打开
+输入软件路径，保存设置后，下载注册表到本地并打开 (或采用本地服务端进行通信)
 
 ![20230225005437](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-02-25/20230225005437.webp)
 
@@ -80,6 +80,36 @@
 
 - v2rayN 默认：`http://127.0.0.1:10809`
 - clash 默认：`http://127.0.0.1:7890`
+
+### 5.   本地服务端
+
+目前仅仅支持`mpv`。原理是本地的守护进程监听某个端口，而浏览器端向该端口发送信息，该守护进程再按照相关信息打开`mpv`。本地服务端能够提供更操作系统兼容的解决方案，**windows系统用户依然推荐直接修改注册表**，不推荐没接触过开发的用户使用（不过用小众系统了，应该都挺能折腾的吧...）。
+
+#### 5.1. 使用
+
+为保证项目语言的统一性，该服务端采用`node`开发。你可以在[这里](https://nodejs.org/en/download)下载。
+
+1. 通过以下代码运行服务端
+```bash
+node open-mpv-d
+```
+（可用`nohup node open-mpv-d &`挂在后台。）标准输出的第一行显示了正在监听的端口号，例如1234。
+
+2. 在`mpv`设置处的`更多选项`中，填写上面获得的本地监听端口号，例如1234。
+
+
+#### 5.2. 服务端配置
+
+修改`open-mpv-d.js`中的全局变量。
+```js
+////////////////////// Variables that you can adjust ///////////////////////////
+// First attempted port to listen to. If it has been in use, try the next port
+// until the first available one.
+const start_port = 1234;
+// Automatically search when left null
+const path_to_mpv = null;
+/////////////////////////////////  End   ///////////////////////////////////////
+
 
 ## ✅ 效果展示
 

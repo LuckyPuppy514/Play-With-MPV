@@ -258,7 +258,8 @@ const ID = {
     proxyParamInput: `${PREFIX}-proxy-param-input`,
     refererParamInput: `${PREFIX}-referer-param-input`,
     originParamInput: `${PREFIX}-origin-param-input`,
-    nxParserIframe: `${PREFIX}-nx-parser-iframe`
+    nxParserIframe: `${PREFIX}-nx-parser-iframe`,
+    localhostPort: `${PREFIX}-localhost-port`
 }
 // 组件 class
 const CLASS = {
@@ -488,7 +489,7 @@ ${ID.buttonDiv} {
 #${ID.settingTable} input,
 #${ID.customPlayerTable} input {
     font-size: 12px !important;
-    width: 500px;
+    width: 100%;
     height: 26px;
     border: none;
     outline: none;
@@ -897,23 +898,20 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td class="${CLASS.titleTd}" data-tip="解析成功自动播放">自动播放</td>
-            <td>
-                <div>
-                    <label class="${CLASS.switchLabel}">
-                        <input type="checkbox" id="${ID.playAutoInput}">
-                        <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
-                    </label>
-                </div>
-            </td>
-            <td class="${CLASS.titleTd}" data-tip="同步网页播放时间">同步时间</td>
-            <td>
-                <div>
-                    <label class="${CLASS.switchLabel}">
-                        <input type="checkbox" id="${ID.syncStartTimeInput}">
-                        <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}" id="${ID.syncStartTimeSpan}"></span>
-                    </label>
-                </div>
+            <td class="${CLASS.titleTd}" data-tip="详情见README">  更多选项</td>
+            <td colspan="3" style="display: flex">
+                <div class="${CLASS.titleTd}" data-tip="解析成功自动播放">自动播放</div>
+                <label class="${CLASS.switchLabel}" style="margin-right: 10px">
+                    <input type="checkbox" id="${ID.playAutoInput}">
+                    <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
+                </label>
+                <div class="${CLASS.titleTd}" data-tip="同步网页播放时间">同步时间</div>
+                <label class="${CLASS.switchLabel}" style="margin-right: 10px">
+                    <input type="checkbox" id="${ID.syncStartTimeInput}">
+                    <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}" id="${ID.syncStartTimeSpan}"></span>
+                </label>
+                <div class="${CLASS.titleTd}" data-tip="发送请求至本地服务端，不填则不发送，详情见README">本地监听端口</div>
+                <input id="${ID.localhostPort}" style="width: 50px" type=text placeholder="端口号，例如：1234">
             </td>
         </tr>
         <tr>
@@ -1088,6 +1086,7 @@ function addListener() {
     let refererParamInput = document.getElementById(ID.refererParamInput);
     let originParamInput = document.getElementById(ID.originParamInput);
     let infoInputs = document.getElementsByClassName(CLASS.infoInput);
+    let localhostPort = document.getElementById(ID.localhostPort);
     switchStatus(downloadButton, false);
     // 播放按钮
     playButton.onclick = function () {
@@ -1136,6 +1135,7 @@ function addListener() {
             // 加载配置
             softwarePathInput.value = currentConfig[currentConfig.player].path;
             proxyInput.value = currentConfig.proxy;
+            localhostPort.value = currentConfig.localhostPort;
             $(`input:radio[name="${ID.bestQualityRadio}"][value="${currentConfig.bestQuality}"]`).prop('checked', true);
             $(`input:radio[name="${ID.bilibiliCodecsRadio}"][value="${currentConfig.bilibiliCodecs}"]`).prop('checked', true);
             $(`input:radio[name="${ID.playerRadio}"][value="${currentConfig.player}"]`).prop('checked', true);
@@ -1192,6 +1192,7 @@ function addListener() {
         currentConfig.subtitlePrefer = $(`input:radio[name="${ID.subtitlePreferRadio}"]:checked`).val();
         currentConfig.playAuto = playAutoInput.checked ? 1 : 0;
         currentConfig.syncStartTime = syncStartTimeInput.checked ? 1 : 0;
+        currentConfig.localhostPort = localhostPort.value
         GM_setValue(KEY.config, currentConfig);
         toast("保存成功");
         if (currentConfig.playAuto == 1) {
@@ -1554,21 +1555,24 @@ class BaseHandler {
             param = param.replace('${title}', title);
             link = link + param;
         }
-        window.open(link, "_self");
-        fetch("http://localhost:1234", {
-          method: "POST",
-          headers: {
-            "Content-Type": "text/plain",
-          },
-          body: link,
-        }).then((res) => {
-            if (res.ok) {
-              console.log(res.text());
-            }
-            throw new Error("Error response");
-        }).catch((err) => {
-            console.error(err.message);
-        });
+        if(currentConfig.localhostPort == null){
+            window.open(link, "_self");
+        }else{
+            fetch("http://localhost:1234", {
+              method: "POST",
+              headers: {
+                "Content-Type": "text/plain",
+              },
+              body: link,
+            }).then((res) => {
+                if (res.ok) {
+                  console.log(res.text());
+                }
+                throw new Error("Error response");
+            }).catch((err) => {
+                console.error(err.message);
+            });
+        }
     }
     // 监听子页面事件
     addIframeListener() {
