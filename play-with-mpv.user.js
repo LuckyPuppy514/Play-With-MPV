@@ -1567,8 +1567,9 @@ class BaseHandler {
             }).then((res) => {
                 if (res.ok) {
                   console.log(res.text());
+                }else{
+                  throw new Error("Error response");
                 }
-                throw new Error("Error response");
             }).catch((err) => {
                 console.error(err.message);
             });
