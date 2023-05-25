@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.5
+// @version                 3.5.6
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -172,7 +172,8 @@ const TIME = {
     toast: 3500,
     refresh: 600,
     reportInterval: 600,
-    pauseInterval: 2000
+    pauseInterval: 2000,
+    showButton: 5000,
 }
 // 尝试次数
 var tryTime = 0;
@@ -353,8 +354,18 @@ const CSS = `
     font-weight: blod;
 }
 /* 按钮 */
-${ID.buttonDiv} {
+#${ID.buttonDiv} {
     display: none;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    cursor: pointer;
+    z-index: 99999;
+    width: 90px;
+    height: 90px;
+}
+#${ID.buttonDiv}:hover .${CLASS.button} {
+    visibility: visible !important;
 }
 .${CLASS.button} {
     position: fixed;
@@ -717,7 +728,7 @@ const HTML = `
 </div>
 <div id="${ID.toastDiv}"></div>
 
-<div id="${ID.buttonDiv}" class="${CLASS.button}">
+<div id="${ID.buttonDiv}">
     <button id="${ID.infoButton}" class="${CLASS.button}"></button>
     <button id="${ID.playButton}" class="${CLASS.button}"></button>
     <button id="${ID.settingButton}" class="${CLASS.button}"></button>
@@ -1418,6 +1429,11 @@ class Media {
                 if (currentConfig.playAuto == 1) {
                     document.getElementById(ID.playButton).click();
                 }
+                setTimeout(() => {
+                    document.getElementById(ID.infoButton).style.visibility = "hidden";
+                    document.getElementById(ID.settingButton).style.visibility = "hidden";
+                    document.getElementById(ID.playButton).style.visibility = "hidden";
+                }, TIME.showButton);
             }
         }
     }
@@ -1520,9 +1536,12 @@ class BaseHandler {
                 if (currentConfig.syncStartTime != 1) {
                     continue;
                 } else {
-                    let video = document.getElementsByTagName("video")[0];
-                    if (video) {
-                        this.media.setStartTime(video.currentTime);
+                    let videos = document.getElementsByTagName("video");
+                    for (let i = 0; i < videos.length; i++) {
+                        if (videos[i].currentTime != 0) {
+                            this.media.setStartTime(videos[i].currentTime);
+                            break;
+                        }
                     }
                 }
             }
@@ -1648,91 +1667,117 @@ class BaseHandler {
     }
 }
 // 获取B站视频播放链接
-function getBilibiliPlayUrl(avid, cid) {
-    let fnval = 128;
-    if (handler.player.params.audioUrl) {
-        fnval = 4048;
-    }
+async function getBilibiliPlayUrl(avid, cid) {
     if (handler.player.name == PLAYER.mpv.name) {
         handler.media.setOther(`--script-opts="cid=${cid}"`);
     }
-    // 字幕
-    if (currentConfig.subtitlePrefer != "off") {
-        $.ajax({
-            type: "GET",
-            url: `https://api.bilibili.com/x/player/v2?aid=${avid}&cid=${cid}`,
-            xhrFields: {
-                withCredentials: true
-            },
-            async: false,
-            success: function (res) {
-                if (res.code == 0 && res.data.subtitle && res.data.subtitle.subtitles.length > 0) {
-                    let subtitles = res.data.subtitle.subtitles;
-                    let url = "https:" + subtitles[0].subtitle_url;
-                    let lan = subtitles[0].lan;
-                    for (const subtitle of subtitles) {
-                        if (currentConfig.subtitlePrefer.startsWith("zh") && subtitle.lan.startsWith("zh")) {
-                            url = "https:" + subtitle.subtitle_url;
-                            lan = subtitle.lan;
-                        }
-                        if (subtitle.lan == currentConfig.subtitlePrefer) {
-                            url = "https:" + subtitle.subtitle_url;
-                            lan = subtitle.lan;
-                            break;
-                        }
-                    }
-                    handler.media.setSubtitleUrl(`https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`);
-                }
-            }
-        });
+    if (!handler.player.params.audioUrl || await getBilibiliVideoDash(avid, cid) == -1) {
+        getBilibiliVideoDurl(avid, cid);
     }
-    // 视频 + 音频
-    $.ajax({
+    if (currentConfig.subtitlePrefer != "off") {
+        getBilibiliVideoSubtitle(avid, cid);
+    }
+}
+// 获取B站 DASH 格式视频
+async function getBilibiliVideoDash(avid, cid) {
+    let result = 0;
+    await $.ajax({
         type: "GET",
-        url: `https://api.bilibili.com/x/player/playurl?qn=120&otype=json&fourk=1&fnver=0&fnval=${fnval}&avid=${avid}&cid=${cid}`,
+        url: `https://api.bilibili.com/x/player/playurl?qn=120&otype=json&fourk=1&fnver=0&fnval=4048&avid=${avid}&cid=${cid}`,
         xhrFields: {
             withCredentials: true
         },
         async: false,
         success: function (res) {
-            if (handler.player.params.audioUrl) {
-                let videoUrl = undefined;
-                let audioUrl = undefined;
-                if (!res.data) {
-                    toast("Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面", TOAST_TYPE.error);
-                    tryTime = TRY_TIME.maxParse;
-                    return;
+            if (!res.data) {
+                toast("Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面", TOAST_TYPE.error);
+                tryTime = TRY_TIME.maxParse;
+                return;
+            }
+            let videoUrl = undefined;
+            let audioUrl = undefined;
+            let dash = res.data.dash;
+            if (!dash) {
+                result = -1;
+                return;
+            }
+            let hiRes = dash.flac;
+            let dolby = dash.dolby;
+            if (hiRes && hiRes.audio) {
+                audioUrl = hiRes.audio.baseUrl;
+            } else if (dolby && dolby.audio) {
+                audioUrl = dolby.audio[0].base_url;
+            } else if (dash.audio) {
+                audioUrl = dash.audio[0].baseUrl;
+            }
+            let i = 0;
+            while (i < dash.video.length && dash.video[i].id > BEST_QUALITY.bilibili[currentConfig.bestQuality]) {
+                i++;
+            }
+            videoUrl = dash.video[i].baseUrl;
+            let id = dash.video[i].id;
+            while (i < dash.video.length) {
+                if (dash.video[i].id != id) {
+                    break;
                 }
-                let dash = res.data.dash;
-                let hiRes = dash.flac;
-                let dolby = dash.dolby;
-                if (hiRes && hiRes.audio) {
-                    audioUrl = hiRes.audio.baseUrl;
-                } else if (dolby && dolby.audio) {
-                    audioUrl = dolby.audio[0].base_url;
-                } else if (dash.audio) {
-                    audioUrl = dash.audio[0].baseUrl;
+                if (dash.video[i].codecid == currentConfig.bilibiliCodecs) {
+                    videoUrl = dash.video[i].baseUrl;
+                    break;
                 }
-                let i = 0;
-                while (i < dash.video.length && dash.video[i].id > BEST_QUALITY.bilibili[currentConfig.bestQuality]) {
-                    i++;
-                }
-                videoUrl = dash.video[i].baseUrl;
-                let id = dash.video[i].id;
-                while (i < dash.video.length) {
-                    if (dash.video[i].id != id) {
+                i++;
+            }
+            handler.media.setAudioUrl(audioUrl);
+            handler.media.setVideoUrl(videoUrl);
+            result = 1;
+        }
+    });
+    return result;
+}
+// 获取B站 FLV / MP4 格式视频
+function getBilibiliVideoDurl(avid, cid) {
+    $.ajax({
+        type: "GET",
+        url: `https://api.bilibili.com/x/player/playurl?qn=120&otype=json&fourk=1&fnver=0&fnval=128&avid=${avid}&cid=${cid}`,
+        xhrFields: {
+            withCredentials: true
+        },
+        async: false,
+        success: function (res) {
+            if (!res.data) {
+                toast("Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面", TOAST_TYPE.error);
+                tryTime = TRY_TIME.maxParse;
+                return;
+            }
+            handler.media.setVideoUrl(res.data.durl[0].url);
+        }
+    });
+}
+// 获取B站视频字幕
+function getBilibiliVideoSubtitle(avid, cid) {
+    $.ajax({
+        type: "GET",
+        url: `https://api.bilibili.com/x/player/v2?aid=${avid}&cid=${cid}`,
+        xhrFields: {
+            withCredentials: true
+        },
+        async: false,
+        success: function (res) {
+            if (res.code == 0 && res.data.subtitle && res.data.subtitle.subtitles.length > 0) {
+                let subtitles = res.data.subtitle.subtitles;
+                let url = "https:" + subtitles[0].subtitle_url;
+                let lan = subtitles[0].lan;
+                for (const subtitle of subtitles) {
+                    if (currentConfig.subtitlePrefer.startsWith("zh") && subtitle.lan.startsWith("zh")) {
+                        url = "https:" + subtitle.subtitle_url;
+                        lan = subtitle.lan;
+                    }
+                    if (subtitle.lan == currentConfig.subtitlePrefer) {
+                        url = "https:" + subtitle.subtitle_url;
+                        lan = subtitle.lan;
                         break;
                     }
-                    if (dash.video[i].codecid == currentConfig.bilibiliCodecs) {
-                        videoUrl = dash.video[i].baseUrl;
-                        break;
-                    }
-                    i++;
                 }
-                handler.media.setAudioUrl(audioUrl);
-                handler.media.setVideoUrl(videoUrl);
-            } else {
-                handler.media.setVideoUrl(res.data.durl[0].url);
+                handler.media.setSubtitleUrl(`https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`);
             }
         }
     });
