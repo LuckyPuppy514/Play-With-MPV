@@ -1429,6 +1429,9 @@ class Media {
                 if (currentConfig.playAuto == 1) {
                     document.getElementById(ID.playButton).click();
                 }
+                document.getElementById(ID.infoButton).style.visibility = "visible";
+                document.getElementById(ID.settingButton).style.visibility = "visible";
+                document.getElementById(ID.playButton).style.visibility = "visible";
                 setTimeout(() => {
                     document.getElementById(ID.infoButton).style.visibility = "hidden";
                     document.getElementById(ID.settingButton).style.visibility = "hidden";
