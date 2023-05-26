@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.7
+// @version                 3.5.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -97,6 +97,7 @@
 // @match                   https://www.douyin.com/discover?modal_id=*
 // @match                   https://www.mfan.tv/play/*
 // @match                   https://video1.beijcloud.com/player/?url=*
+// @match                   https://www.tucao.cam/play/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -356,7 +357,7 @@ const CSS = `
 /* 按钮 */
 #${ID.buttonDiv} {
     display: none;
-    position: absolute;
+    position: fixed;
     bottom: 0;
     left: 0;
     cursor: pointer;
@@ -3049,6 +3050,16 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(config.url);
+            }
+        }
+    },
+    {
+        // ✅ https://www.tucao.cam/play/h4092670/#1
+        name: "吐槽弹幕网",
+        regex: /^https:\/\/www\.tucao\.cam\/play\/.*/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setVideoUrl(this.videoParser());
             }
         }
     },

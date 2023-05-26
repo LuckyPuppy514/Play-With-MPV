@@ -177,6 +177,15 @@
         "resolution": "标清"
     },
     {
+        "title": "吐槽弹幕网",
+        "logo": "./website/logo/tucao.png",
+        "url": [
+            "https://www.tucao.cam"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "动漫之家",
         "logo": "./website/logo/kk151.png",
         "url": [
