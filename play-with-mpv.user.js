@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.8
+// @version                 3.5.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -30,7 +30,7 @@
 // @match                   https://www.btnull.to/py/*
 // @match                   https://www.btnull.nu/py/*
 // @match                   https://www.btnull.in/py/*
-// @match                   *://www.986dm.com/play/*
+// @match                   *://www.956dm.com/play/*
 // @match                   *://www.dmlaa.com/play/*
 // @match                   *://www.qdmsh.com/play/*
 // @match                   *://www.ntdm8.com/play/*
@@ -2253,20 +2253,20 @@ var websiteList = [
         }
     },
     {
-        // ✅ https://www.986dm.com/play/6792-1-91.html
-        // ✅ http://www.986dm.com/play/7800-1-10.html
+        // ✅ https://www.956dm.com/play/6792-1-91.html
+        // ✅ http://www.956dm.com/play/7800-1-10.html
         // ✅ http://www.dmlaa.com/play/7696-1-10.html
         // ✅ http://www.qdmsh.com/play/7663-1-10.html
         // ✅ http://www.ntdm8.com/play/4973-1-1.html
         name: "樱花动漫网",
         home: [
-            "https://www.986dm.com",
-            "http://www.986dm.com",
+            "https://www.956dm.com",
+            "http://www.956dm.com",
             "http://www.dmlaa.com",
             "http://www.qdmsh.com",
             "http://www.ntdm8.com"
         ],
-        regex: /^https?:\/\/www\.(986dm|dmlaa|qdmsh|ntdm8)\.com\/play\/.*/g,
+        regex: /^https?:\/\/www\.(956dm|dmlaa|qdmsh|ntdm8)\.com\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
