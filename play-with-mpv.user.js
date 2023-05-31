@@ -244,6 +244,7 @@ const ID = {
     bilibiliCodecsRadio: `${PREFIX}-bilibili-codecs-radio`,
     saveButton: `${PREFIX}-save-button`,
     downloadButton: `${PREFIX}-download-button`,
+    deleteButton: `${PREFIX}-delete-button`,
     playAutoInput: `${PREFIX}-play-auto-input`,
     syncStartTimeInput: `${PREFIX}-sync-start-time-input`,
     syncStartTimeSpan: `${PREFIX}-sync-start-time-span`,
@@ -530,7 +531,7 @@ const CSS = `
 }
 #${ID.saveButton} {
     font-size: 14px;
-    margin-left: 150px;
+    margin-left: 83px;
     width: 300px;
     height: 30px;
     border: none;
@@ -541,17 +542,32 @@ const CSS = `
 #${ID.downloadButton} {
     font-size: x-small;
     margin-left: 10px;
-    width: 80px;
+    width: 100px;
     height: 30px;
     border: none;
     border-radius: 3px;
     color: rgba(255, 255, 255, 1);
     background-color: rgba(0, 255, 0, .7);
 }
+#${ID.deleteButton} {
+    text-decoration: underline;
+    font-size: x-small;
+    width: 80px;
+    height: 30px;
+    border: none;
+    border-radius: 3px;
+    color: rgba(255, 255, 255, 1);
+    background-color: rgba(0,0,0,0);
+}
 #${ID.saveButton}:hover,
 #${ID.downloadButton}:hover {
     opacity: .8;
     background-color: rgba(0, 255, 0, .8);
+    cursor: pointer;
+}
+#${ID.deleteButton}:hover {
+    opacity: .8;
+    background-color: rgba(0,0,0,0);
     cursor: pointer;
 }
 .${CLASS.footerSpan} {
@@ -932,6 +948,7 @@ const HTML = `
             <td colspan="4">
                 <button id="${ID.saveButton}">保存设置</button>
                 <button id="${ID.downloadButton}">下载注册表</button>
+                <button id="${ID.deleteButton}">删除注册表</button>
             </td>
         </tr>
     </table>
@@ -1032,6 +1049,10 @@ const REG =
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
 @="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \\\\\\\"\${SOFTWARE_PATH}\\\\\\\" -ArgumentList $PARAMS}\\""
 `
+const REG_DELETE =
+      `Windows Registry Editor Version 5.00
+[-HKEY_CLASSES_ROOT\\\${PLAYER_NAME}]
+`
 function appendCSS() {
     let css = document.createElement("style");
     css.innerHTML = CSS.trim();
@@ -1085,6 +1106,7 @@ function addListener() {
     let syncStartTimeInput = document.getElementById(ID.syncStartTimeInput);
     let syncStartTimeSpan = document.getElementById(ID.syncStartTimeSpan);
     let downloadButton = document.getElementById(ID.downloadButton);
+    let deleteButton = document.getElementById(ID.deleteButton);
     let saveButton = document.getElementById(ID.saveButton);
     let closeButtons = document.getElementsByClassName(CLASS.closeButton);
     let infoButton = document.getElementById(ID.infoButton);
@@ -1222,6 +1244,15 @@ function addListener() {
         GM_setValue(KEY.config, currentConfig);
         let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path);
         reg = reg.replace(/\$\{PLAYER_NAME\}/g, playerChecked);
+        let a = document.createElement('a');
+        let blob = new Blob([reg], { 'type': 'application/octet-stream' });
+        a.href = window.URL.createObjectURL(blob);
+        a.download = `${playerChecked}.reg`;
+        a.click();
+    }
+    deleteButton.onclick = function () {
+        let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        let reg = REG_DELETE.replace(/\$\{PLAYER_NAME\}/g, playerChecked);
         let a = document.createElement('a');
         let blob = new Blob([reg], { 'type': 'application/octet-stream' });
         a.href = window.URL.createObjectURL(blob);
