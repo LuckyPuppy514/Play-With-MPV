@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.5.9
+// @version                 3.6.0
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -60,7 +60,8 @@
 // @match                   https://1080zyk3.com/?m=*
 // @match                   https://1080zyk4.com/?m=*
 // @match                   https://1080zyk5.com/?m=*
-// @match                   https://vip.zykbf.com/?url=*
+// @match                   https://*.yzzy-tv1.com/*
+// @match                   https://*.yzzy-tv-cdn.com/*
 // @match                   https://www.bdys01.com/*
 // @match                   https://www.haitu.tv/*
 // @include                 *://*alist*
@@ -2493,14 +2494,14 @@ var websiteList = [
     },
     {
         name: "优质资源库播放器",
-        regex: /^https:\/\/vip\.zykbf\.com\/\?url=.*/g,
+        regex: /^https:\/\/.*\.(yzzy-tv1|yzzy-tv-cdn)\.com\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addTopListener();
             }
             async parse() {
-                this.media.setVideoUrl(this.urlParser());
+                this.media.setVideoUrl("https://" + location.host + main);
             }
         }
     },
