@@ -60,6 +60,7 @@
 // @match                   https://1080zyk3.com/?m=*
 // @match                   https://1080zyk4.com/?m=*
 // @match                   https://1080zyk5.com/?m=*
+// @match                   https://vip.zykbf.com/?url=*
 // @match                   https://*.yzzy-tv1.com/*
 // @match                   https://*.yzzy-tv-cdn.com/*
 // @match                   https://www.bdys01.com/*
@@ -2489,6 +2490,19 @@ var websiteList = [
             constructor() {
                 super();
                 this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "优质资源库播放器",
+        regex: /^https:\/\/vip\.zykbf\.com\/\?url=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.urlParser());
             }
         }
     },
