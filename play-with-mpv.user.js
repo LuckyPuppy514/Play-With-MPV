@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.0
+// @version                 3.6.1
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -552,7 +552,7 @@ const CSS = `
     background-color: rgba(0, 255, 0, .7);
 }
 #${ID.deleteButton} {
-    text-decoration: underline;
+    text-decoration: none;
     font-size: x-small;
     width: 80px;
     height: 30px;
@@ -1052,7 +1052,7 @@ const REG =
 @="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \\\\\\\"\${SOFTWARE_PATH}\\\\\\\" -ArgumentList $PARAMS}\\""
 `
 const REG_DELETE =
-      `Windows Registry Editor Version 5.00
+    `Windows Registry Editor Version 5.00
 [-HKEY_CLASSES_ROOT\\\${PLAYER_NAME}]
 `
 function appendCSS() {
@@ -1249,16 +1249,18 @@ function addListener() {
         let a = document.createElement('a');
         let blob = new Blob([reg], { 'type': 'application/octet-stream' });
         a.href = window.URL.createObjectURL(blob);
-        a.download = `${playerChecked}.reg`;
+        a.download = `${playerChecked}-install.reg`;
         a.click();
     }
     deleteButton.onclick = function () {
         let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        currentConfig[playerChecked].regVersion = "00000000";
+        GM_setValue(KEY.config, currentConfig);
         let reg = REG_DELETE.replace(/\$\{PLAYER_NAME\}/g, playerChecked);
         let a = document.createElement('a');
         let blob = new Blob([reg], { 'type': 'application/octet-stream' });
         a.href = window.URL.createObjectURL(blob);
-        a.download = `${playerChecked}.reg`;
+        a.download = `${playerChecked}-delete.reg`;
         a.click();
     }
     // 关闭按钮
