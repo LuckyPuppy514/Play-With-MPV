@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.2
+// @version                 3.6.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -100,6 +100,7 @@
 // @match                   https://www.mengfan.tv/play/*
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
+// @match                   https://mypikpak.com/drive/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -2590,6 +2591,34 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
+            }
+        }
+    },
+    {
+        // ✅ https://mypikpak.com/drive/all
+        name: "PikPak",
+        home: [
+            "https://mypikpak.com/drive/all"
+        ],
+        regex: /^https:\/\/mypikpak\.com\/drive\/.*/g,
+        handler: class Handler extends BaseHandler {
+            initCheck() {
+                if (super.initCheck()) {
+                    return true;
+                }
+                let oldVideoUrl = this.media.videoUrl;
+                let newVideoUrl = this.videoParser();
+                if (oldVideoUrl && oldVideoUrl != newVideoUrl) {
+                    return true;
+                }
+                return false;
+            }
+            async parse() {
+                while (document.getElementsByTagName("video").length == 0) {
+                    await sleep(1000);
+                }
+                this.media.setVideoUrl(this.videoParser());
+                this.media.setTitle(document.getElementsByClassName("player-title")[0].textContent);
             }
         }
     },
