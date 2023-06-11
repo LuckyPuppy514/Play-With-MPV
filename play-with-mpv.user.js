@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.1
+// @version                 3.6.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -83,7 +83,7 @@
 // @match                   https://www.hdmoli.com/*
 // @match                   https://play.qwertwe.top/xplay/?url=*
 // @match                   https://www.anfuns.cc/play/*
-// @match                   https://www.anfuns.cc/vapi/A0EPlayer/?url=*
+// @match                   https://www.anfuns.cc/vapi/*
 // @match                   https://www.youtube.com/*
 // @match                   https://odysee.com/*
 // @match                   https://rumble.com/*
@@ -97,7 +97,7 @@
 // @match                   https://www.douyin.com/
 // @match                   https://www.douyin.com/video/*
 // @match                   https://www.douyin.com/discover?modal_id=*
-// @match                   https://www.mfan.tv/play/*
+// @match                   https://www.mengfan.tv/play/*
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
 // @connect                 api.bilibili.com
@@ -1914,8 +1914,6 @@ var websiteList = [
                     if (epidElement) {
                         epid = epidElement.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
                     } else {
-                        // 等待页面刷新，避免抓取到旧页面数据
-                        await sleep(TIME.refresh);
                         epidElement = document.getElementsByClassName("squirtle-pagelist-select-item active squirtle-blink")[0];
                         if (epidElement) {
                             epid = epidElement.dataset.value;
@@ -2375,7 +2373,7 @@ var websiteList = [
             constructor() {
                 super();
                 this.addIframeListener();
-                this.media.setReferer("https://play.mknacg.top:8585");
+                this.media.setReferer("https://play.mknacg.top:8585/");
             }
         }
     },
@@ -2388,7 +2386,7 @@ var websiteList = [
                 this.addTopListener();
             }
             async parse() {
-                this.media.setVideoUrl(this.urlParser());
+                this.media.setVideoUrl(art.option.url);
             }
         }
     },
@@ -2800,7 +2798,7 @@ var websiteList = [
     },
     {
         name: "AnFuns播放器",
-        regex: /^https:\/\/www\.anfuns\.cc\/vapi\/A0EPlayer\/\?url=.*/g,
+        regex: /^https:\/\/www\.anfuns\.cc\/vapi\/(A0EPlayer|eden)\/\?url=.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -2809,7 +2807,7 @@ var websiteList = [
             async parse() {
                 let url = config.url;
                 if (url) {
-                    if (!url.startsWith("https://fata.peizq.online/cache/")) {
+                    if (!url.startsWith("https://fata.peizq.online/cache/") && !url.startsWith("https://media-oss.anfuns.cn/m3u8/")) {
                         this.media.setVideoUrl(config.url);
                     } else {
                         tryTime = TRY_TIME.maxParse;
@@ -3048,12 +3046,12 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://www.mfan.tv/play/kx666U/1/3/
+        // ✅ https://www.mengfan.tv/play/kx666U/1/3/
         name: "萌番",
         home: [
-            "https://www.mfan.tv"
+            "https://www.mengfan.tv"
         ],
-        regex: /^https:\/\/www\.mfan\.tv\/play\/.*/g,
+        regex: /^https:\/\/www\.mengfan\.tv\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -3149,7 +3147,7 @@ var websiteList = [
     }
 ];
 // 初始化
-async function init() {
+async function init(flag) {
     // 加载页面信息
     page = {
         host: window.location.host,
@@ -3169,6 +3167,9 @@ async function init() {
             handler = new websiteList[i].handler();
             break;
         }
+    }
+    if (flag && window.location.host.indexOf('bilibili') != -1) {
+        await sleep(1000);
     }
     // 尝试解析页面视频
     if (handler) {
@@ -3193,7 +3194,7 @@ init();
 setInterval(() => {
     if (handler) {
         if (handler.initCheck()) {
-            init();
+            init(true);
         }
     } else if (window.location.href != page.url) {
         init();

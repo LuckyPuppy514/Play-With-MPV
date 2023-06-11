@@ -43,9 +43,9 @@
     },
     {
         "title": "萌番",
-        "logo": "./website/logo/mfan.png",
+        "logo": "./website/logo/mengfan.png",
         "url": [
-            "https://www.mfan.tv/"
+            "https://www.mengfan.tv/"
         ],
         "category": "anime",
         "resolution": "高清"
@@ -81,15 +81,6 @@
             "https://ddys.pro"
         ],
         "category": "anime, serial, movie",
-        "resolution": "高清"
-    },
-    {
-        "title": "AnFuns",
-        "logo": "./website/logo/anfuns.png",
-        "url": [
-            "https://www.anfuns.cc"
-        ],
-        "category": "anime",
         "resolution": "高清"
     },
     {
@@ -154,6 +145,15 @@
         "logo": "./website/logo/xfani.png",
         "url": [
             "https://dick.xfani.com"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
+        "title": "AnFuns",
+        "logo": "./website/logo/anfuns.png",
+        "url": [
+            "https://www.anfuns.cc"
         ],
         "category": "anime",
         "resolution": "高清"
