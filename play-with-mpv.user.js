@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.3
+// @version                 3.6.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -24,8 +24,8 @@
 // @match                   https://*.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
 // @match                   https://*.cfnode1.xyz/*?url=*
 // @match                   https://www.nivod.tv/*
-// @match                   https://www.pkmp4.com/py/*
-// @match                   https://www.pkmp4.com/addons/dplayer/?url=*
+// @match                   https://www.pkmkv.com/py/*
+// @match                   https://www.pkmkv.com/addons/dplayer/?url=*
 // @match                   https://www.btnull.org/py/*
 // @match                   https://www.btnull.to/py/*
 // @match                   https://www.btnull.nu/py/*
@@ -63,7 +63,7 @@
 // @match                   https://vip.zykbf.com/?url=*
 // @match                   https://*.yzzy-tv1.com/*
 // @match                   https://*.yzzy-tv-cdn.com/*
-// @match                   https://www.bdys01.com/*
+// @match                   https://www.bdys10.com/*
 // @match                   https://www.haitu.tv/*
 // @include                 *://*alist*
 // @include                 *://*:5244*
@@ -2244,12 +2244,12 @@ var websiteList = [
         }
     },
     {
-        // ✅ https://www.pkmp4.com/py/268677-2-11.html
+        // ✅ https://www.pkmkv.com/py/268677-2-11.html
         name: "片库",
         home: [
-            "https://www.pkmp4.com",
+            "https://www.pkmkv.com",
         ],
-        regex: /^https:\/\/www\.pkmp4\.com\/py\/.*/g,
+        regex: /^https:\/\/www\.pkmkv\.com\/py\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -2262,7 +2262,7 @@ var websiteList = [
     },
     {
         name: "片库播放器",
-        regex: /^https:\/\/www\.pkmp4\.com\/addons\/dplayer\/\?url=.*/g,
+        regex: /^https:\/\/www\.pkmkv\.com\/addons\/dplayer\/\?url=.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -2552,12 +2552,12 @@ var websiteList = [
         }
     },
     {
-        // ✅ https://www.bdys01.com/play/22729-8.htm
+        // ✅ https://www.bdys10.com/play/22729-8.htm
         name: "哔嘀影视",
         home: [
-            "https://www.bdys01.com"
+            "https://www.bdys10.com"
         ],
-        regex: /^https:\/\/www\.bdys01\.com\/.*play\/.*/g,
+        regex: /^https:\/\/www\.bdys10\.com\/.*play\/.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
