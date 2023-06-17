@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.5
+// @version                 3.6.6
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -37,6 +37,7 @@
 // @match                   https://danmu.yhdmjx.com/*?url=*
 // @match                   https://dick.xfani.com/watch/*
 // @match                   https://dick.xfani.com/addons/dp/player/*
+// @match                   https://player.moedot.net/player/*
 // @match                   https://m3.moedot.net/muiplayer/?url=*
 // @match                   https://www.mgnacg.com/bangumi/*
 // @match                   https://play.mknacg.top:8585/*
@@ -2360,6 +2361,19 @@ var websiteList = [
                         }
                     });
                 }
+            }
+        }
+    },
+    {
+        name: "稀饭动漫播放器",
+        regex: /^https:\/\/player\.moedot\.net\/player\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.urlParser());
             }
         }
     },
