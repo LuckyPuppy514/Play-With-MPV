@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.6
+// @version                 3.6.7
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -2184,12 +2184,19 @@ var websiteList = [
                 if (video.paused) {
                     document.getElementsByClassName('vjs-big-play-button')[0].click();
                 }
-                this.media.setVideoUrl(this.videoParser());
-                let playing = document.getElementsByClassName("wp-playlist-playing")[0];
-                if (playing) {
-                    let episode = playing.textContent.replace(/(\n|\t|\d\.)/g, "");
-                    if (episode != " 全") {
-                        this.media.title = document.getElementsByClassName("post-title")[0].textContent + episode + " - 低端影视";
+                let url = this.videoParser();
+                if (url) {
+                    let index = url.indexOf("?");
+                    if (index != -1) {
+                        url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                    }
+                    this.media.setVideoUrl(url);
+                    let playing = document.getElementsByClassName("wp-playlist-playing")[0];
+                    if (playing) {
+                        let episode = playing.textContent.replace(/(\n|\t|\d\.)/g, "");
+                        if (episode != " 全") {
+                            this.media.title = document.getElementsByClassName("post-title")[0].textContent + episode + " - 低端影视";
+                        }
                     }
                 }
             }
