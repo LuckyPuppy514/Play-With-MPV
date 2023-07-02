@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.7
+// @version                 3.6.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -145,6 +145,7 @@ const DEFAULT_CONFIG = {
     bestQuality: "2160p",
     bilibiliCodecs: 12,
     playAuto: 0,
+    closeAuto: 0,
     syncStartTime: 0,
     subtitlePrefer: "zh-Hans",
     customPlayer: {
@@ -161,7 +162,7 @@ const DEFAULT_CONFIG = {
             other: ''
         }
     },
-    version: "20230118"
+    version: "20230702"
 };
 var currentConfig;
 // 视频链接匹配正则
@@ -250,6 +251,7 @@ const ID = {
     downloadButton: `${PREFIX}-download-button`,
     deleteButton: `${PREFIX}-delete-button`,
     playAutoInput: `${PREFIX}-play-auto-input`,
+    closeAutoInput: `${PREFIX}-close-auto-input`,
     syncStartTimeInput: `${PREFIX}-sync-start-time-input`,
     syncStartTimeSpan: `${PREFIX}-sync-start-time-span`,
     infoDiv: `${PREFIX}-info-div`,
@@ -763,37 +765,37 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}">视频标题</td>
-            <td colspan="3">
+            <td colspan="8">
                 <input type="text" readonly class="${CLASS.infoInput}">
             </td>
         </tr>
         <tr>
             <td class="${CLASS.titleTd}">视频链接</td>
-            <td colspan="3">
+            <td colspan="8">
                 <input type="text" readonly class="${CLASS.infoInput}">
             </td>
         </tr>
         <tr>
             <td class="${CLASS.titleTd}">音频链接</td>
-            <td colspan="3">
+            <td colspan="8">
                 <input type="text" readonly class="${CLASS.infoInput}">
             </td>
         </tr>
         <tr>
             <td class="${CLASS.titleTd}">字幕链接</td>
-            <td colspan="3">
+            <td colspan="8">
                 <input type="text" readonly class="${CLASS.infoInput}">
             </td>
         </tr>
         <tr>
             <td class="${CLASS.titleTd}">referer</td>
-            <td colspan="3">
+            <td colspan="8">
                 <input type="text" readonly class="${CLASS.infoInput}">
             </td>
         </tr>
         <tr>
             <td class="${CLASS.titleTd}">origin</td>
-            <td colspan="3">
+            <td colspan="8">
                 <input type="text" readonly class="${CLASS.infoInput}">
             </td>
         </tr>
@@ -826,7 +828,7 @@ const HTML = `
     <table id="${ID.settingTable}">
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选择 mpv 以外播放器时，部分功能无效">播放软件</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div class="tabs">
                     <label class="tab">
                         <input type="radio" name="${ID.playerRadio}" value="${PLAYER.mpv.name}" class="tab-input">
@@ -845,7 +847,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="mpv.exe 或 PotPlayerMini64.exe 的完整路径">软件路径</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.softwarePathInput}" type=text placeholder="请输入软件路径，例如：D://mpvnet//mpvnet.exe">
                 </div>
@@ -853,7 +855,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}"  data-tip="旁路由网关实现代理一般不需要设置">代理设置</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.proxyInput}" type=text placeholder="请输入代理地址，例如：http://127.0.0.1:10809">
                 </div>
@@ -861,7 +863,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="仅适用于B站或使用 yt-dlp 解析的网站，例如：油管，OK，TVer 等">最高画质</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div class="tabs">
                     <label class="tab">
                         <input type="radio" name="${ID.bestQualityRadio}" value="unlimited" class="tab-input">
@@ -888,7 +890,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="仅适用于B站">视频编码</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div class="tabs">
                     <label class="tab">
                         <input type="radio" name="${ID.bilibiliCodecsRadio}" value="12" class="tab-input">
@@ -907,7 +909,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="仅适用于B站">首选字幕</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div class="tabs">
                     <label class="tab">
                         <input type="radio" name="${ID.subtitlePreferRadio}" value="zh-Hans" class="tab-input">
@@ -930,7 +932,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="解析成功自动播放">自动播放</td>
-            <td>
+            <td colspan="2">
                 <div>
                     <label class="${CLASS.switchLabel}">
                         <input type="checkbox" id="${ID.playAutoInput}">
@@ -938,8 +940,17 @@ const HTML = `
                     </label>
                 </div>
             </td>
+            <td class="${CLASS.titleTd}" data-tip="播放时自动关闭页面（和自动播放一起开启时修改配置请前往导航页）">自动关闭</td>
+            <td colspan="2">
+                <div>
+                    <label class="${CLASS.switchLabel}">
+                        <input type="checkbox" id="${ID.closeAutoInput}">
+                        <span class="${CLASS.sliderSpan} ${CLASS.roundSpan}"></span>
+                    </label>
+                </div>
+            </td>
             <td class="${CLASS.titleTd}" data-tip="同步网页播放时间">同步时间</td>
-            <td>
+            <td colspan="2">
                 <div>
                     <label class="${CLASS.switchLabel}">
                         <input type="checkbox" id="${ID.syncStartTimeInput}">
@@ -949,7 +960,7 @@ const HTML = `
             </td>
         </tr>
         <tr>
-            <td colspan="4">
+            <td colspan="9">
                 <button id="${ID.saveButton}">保存设置</button>
                 <button id="${ID.downloadButton}">下载注册表</button>
                 <button id="${ID.deleteButton}">删除注册表</button>
@@ -959,7 +970,7 @@ const HTML = `
     <table id="${ID.customPlayerTable}">
         <tr>
             <td class="${CLASS.titleTd}" data-tip="必填（视频格式：yt-dlp / m3u8 / flv / m4s / mp4 / mkv ... 播放器不支持则无法播放对应格式视频）">视频参数</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.videoUrlParamInput}" type=text placeholder='请输入视频参数，例如：mpv://"$\{videoUrl\}"'>
                 </div>
@@ -967,7 +978,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则不支持最高画质和视频编码）">音频参数</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.audioUrlParamInput}" type=text placeholder='请输入音频参数，例如： --audio-file="$\{audioUrl\}"'>
                 </div>
@@ -975,7 +986,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法加载B站外挂字幕）">字幕参数</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.subtitleUrlParamInput}" type=text placeholder='请输入字幕参数，例如： --sub-file="$\{subtitleUrl\}"'>
                 </div>
@@ -983,7 +994,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法传递标题）">标题参数</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.titleParamInput}" type=text placeholder='请输入标题参数，例如： --force-media-title="$\{title\}"'>
                 </div>
@@ -991,7 +1002,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则不支持同步时间）">时间参数</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.startTimeParamInput}" type=text placeholder='请输入时间参数，例如： --start=$\{startTime\}'>
                 </div>
@@ -999,7 +1010,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则不支持代理设置）">代理参数</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.proxyParamInput}" type=text placeholder='请输入代理参数，例如： --http-proxy=$\{proxy\} --ytdl-raw-options=proxy=[$\{proxy\}]'>
                 </div>
@@ -1007,7 +1018,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法观看B站和橘子动漫）">referer</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.refererParamInput}" type=text placeholder='请输入 referer，例如： --http-header-fields="referer: $\{referer\}"'>
                 </div>
@@ -1015,7 +1026,7 @@ const HTML = `
         </tr>
         <tr>
             <td class="${CLASS.titleTd}" data-tip="选填（为空则无法观看巴哈姆特）">origin</td>
-            <td colspan="3">
+            <td colspan="8">
                 <div>
                     <input id="${ID.originParamInput}" type=text placeholder='请输入 origin，例如： --http-header-fields="origin: $\{origin\}" '>
                 </div>
@@ -1107,6 +1118,7 @@ function addListener() {
     let softwarePathInput = document.getElementById(ID.softwarePathInput);
     let proxyInput = document.getElementById(ID.proxyInput);
     let playAutoInput = document.getElementById(ID.playAutoInput);
+    let closeAutoInput = document.getElementById(ID.closeAutoInput);
     let syncStartTimeInput = document.getElementById(ID.syncStartTimeInput);
     let syncStartTimeSpan = document.getElementById(ID.syncStartTimeSpan);
     let downloadButton = document.getElementById(ID.downloadButton);
@@ -1149,7 +1161,14 @@ function addListener() {
         try {
             playButtonClickLimit();
             handler.play();
-            handler.pause();
+            if (currentConfig.closeAuto == 1 && page.url !== "https://www.lckp.top/play-with-mpv/index.html") {
+                setTimeout(() => {
+                    window.location.href = "about:blank";
+                    window.top.close();
+                }, 1000);
+            } else {
+                handler.pause();
+            }
         } catch (error) {
             toast("出错辣 ...... 😓", TOAST_TYPE.error);
             console.log(error);
@@ -1178,6 +1197,7 @@ function addListener() {
             $(`input:radio[name="${ID.bilibiliCodecsRadio}"][value="${currentConfig.bilibiliCodecs}"]`).prop('checked', true);
             $(`input:radio[name="${ID.playerRadio}"][value="${currentConfig.player}"]`).prop('checked', true);
             playAutoInput.checked = currentConfig.playAuto == 1 ? true : false;
+            closeAutoInput.checked = currentConfig.closeAuto == 1 ? true : false;
             syncStartTimeInput.checked = currentConfig.syncStartTime == 1 ? true : false;
             $(`input:radio[name="${ID.subtitlePreferRadio}"][value="${currentConfig.subtitlePrefer}"]`).prop('checked', true);
             switchPlayer($(`input:radio[name="${ID.playerRadio}"]:checked`).val());
@@ -1229,9 +1249,14 @@ function addListener() {
         currentConfig.player = playerChecked;
         currentConfig.subtitlePrefer = $(`input:radio[name="${ID.subtitlePreferRadio}"]:checked`).val();
         currentConfig.playAuto = playAutoInput.checked ? 1 : 0;
+        currentConfig.closeAuto = closeAutoInput.checked ? 1 : 0;
         currentConfig.syncStartTime = syncStartTimeInput.checked ? 1 : 0;
         GM_setValue(KEY.config, currentConfig);
-        toast("保存成功");
+        if (playAutoInput.checked && closeAutoInput.checked) {
+            toast("保存成功，如需修改配置请前往导航页");
+        } else {
+            toast("保存成功");
+        }
         if (currentConfig.playAuto == 1) {
             playButtonClickLimit();
         }
