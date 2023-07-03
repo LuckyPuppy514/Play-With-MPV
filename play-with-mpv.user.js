@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.8
+// @version                 3.6.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1163,8 +1163,12 @@ function addListener() {
             handler.play();
             if (currentConfig.closeAuto == 1 && page.url !== "https://www.lckp.top/play-with-mpv/index.html") {
                 setTimeout(() => {
-                    window.location.href = "about:blank";
-                    window.top.close();
+                    if (history.length === 1) {
+                        window.location.href = "about:blank";
+                        window.top.close();
+                    } else {
+                        history.back();
+                    }
                 }, 1000);
             } else {
                 handler.pause();
