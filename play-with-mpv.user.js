@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.6.9
+// @version                 3.7.0
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -2250,7 +2250,7 @@ var websiteList = [
     },
     {
         name: "LIBVIO播放器",
-        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)\/.*php\?url=.*/g,
+        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)\/.*\?url=.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
