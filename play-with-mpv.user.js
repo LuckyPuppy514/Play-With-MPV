@@ -3183,6 +3183,7 @@ var websiteList = [
         }
     },
     {
+        // ✅ https://e.huawei.com/cn/talent/outPage/#/sxz-course/home?courseId=jodyiWfJayN-0e0yGCcwYHXkQus
         name: "华为人才在线",
         regex: /^https:\/\/e\.huawei\.com\/.+\/talent\/outPage\/#\/.+\/home\?courseId=.+/g,
         handler: class Handler extends BaseHandler {
