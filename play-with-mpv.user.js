@@ -1655,10 +1655,10 @@ class BaseHandler {
                 that.pause();
             } else if (event.data.method == METHOD.report) {
                 that.media.setStartTime(event.data.media.startTime);
-                if (!that.media.videoUrl) {
+                if (!that.media.videoUrl || (event.data.media.videoUrl && event.data.media.videoUrl != that.media.videoUrl) ) {
                     that.media.setVideoUrl(event.data.media.videoUrl);
                 }
-                if (!that.media.title || event.data.media.title) {
+                if (!that.media.title || (event.data.media.title && event.data.media.title != that.media.title)) {
                     that.media.setTitle(event.data.media.title);
                 }
             }
