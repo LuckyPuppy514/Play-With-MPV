@@ -3207,6 +3207,11 @@ var websiteList = [
                         that.currentUrl = url;
                     }
                 };
+                window.addEventListener("message", function (event) {
+                    if (event.data.method == METHOD.pause) {
+                        that.pause();
+                    }
+                }, false);
             }
             async parse() {
                 if(this.currentUrl){
