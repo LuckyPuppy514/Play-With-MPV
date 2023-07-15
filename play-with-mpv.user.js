@@ -102,6 +102,7 @@
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
 // @match                   https://mypikpak.com/drive/*
+// @match                   https://*.huawei.com/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -1657,6 +1658,9 @@ class BaseHandler {
                 if (!that.media.videoUrl) {
                     that.media.setVideoUrl(event.data.media.videoUrl);
                 }
+                if (!that.media.title || event.data.media.title) {
+                    that.media.setTitle(event.data.media.title);
+                }
             }
         }, false);
     }
@@ -3175,6 +3179,47 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(config.url);
+            }
+        }
+    },
+    {
+        name: "华为人才在线",
+        regex: /^https:\/\/e\.huawei\.com\/.+\/talent\/outPage\/#\/.+\/home\?courseId=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "华为人才在线播放器",
+        regex: /^https:\/\/talent\.shixizhi\.huawei\.com\/course\/.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                let that = this;
+                this.currentUrl = "";
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (method, url, async, user, password){
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = url;
+                    }
+                };
+            }
+            async parse() {
+                if(this.currentUrl){
+                    setInterval(() => {
+                        this.media.setVideoUrl(this.currentUrl);
+                        this.media.setTitle(document.querySelector(".is-current > p").innerText);
+                        let video = document.getElementsByTagName("video");
+                        if (video && video[0]) {
+                            this.media.setStartTime(video[0].currentTime);
+                        }
+                        window.top.postMessage({ method: METHOD.report, media: this.media }, "*");
+                    }, TIME.reportInterval);
+                }
             }
         }
     },
