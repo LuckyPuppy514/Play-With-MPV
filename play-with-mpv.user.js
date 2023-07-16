@@ -3185,7 +3185,10 @@ var websiteList = [
         regex: /^https:\/\/www\.icourse163\.org\/learn\/.*\/learn\/content\?type=detail.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setVideoUrl(this.htmlParser());
+                let res = this.htmlParser();
+                if(!res) return;
+                this.media.setVideoUrl(res);
+                this.media.setTitle(document.querySelector('.current > .unit-name').innerText);
             }
         }
     },
