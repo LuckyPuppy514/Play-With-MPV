@@ -1655,11 +1655,8 @@ class BaseHandler {
                 that.pause();
             } else if (event.data.method == METHOD.report) {
                 that.media.setStartTime(event.data.media.startTime);
-                if (!that.media.videoUrl || (event.data.media.videoUrl && event.data.media.videoUrl != that.media.videoUrl) ) {
+                if (!that.media.videoUrl) {
                     that.media.setVideoUrl(event.data.media.videoUrl);
-                }
-                if (!that.media.title || (event.data.media.title && event.data.media.title != that.media.title)) {
-                    that.media.setTitle(event.data.media.title);
                 }
             }
         }, false);
@@ -3187,6 +3184,23 @@ var websiteList = [
         name: "华为人才在线",
         regex: /^https:\/\/e\.huawei\.com\/.+\/talent\/outPage\/#\/.+\/home\?courseId=.+/g,
         handler: class Handler extends BaseHandler {
+            addIframeListener() {
+                let that = this;
+                window.addEventListener("message", function (event) {
+                    that.iframe = event.source;
+                    if (event.data.method == METHOD.pause) {
+                        that.pause();
+                    } else if (event.data.method == METHOD.report) {
+                        that.media.setStartTime(event.data.media.startTime);
+                        //避免仅更新时间信息时，窗体反复闪烁
+                        if (event.data.media.videoUrl != that.media.videoUrl){
+                            that.media.setVideoUrl(event.data.media.videoUrl);
+                        }
+                        //同步为子窗口发送的标题
+                        that.media.setTitle(event.data.media.title);
+                    }
+                }, false);
+            }
             constructor() {
                 super();
                 this.addIframeListener();
@@ -3197,10 +3211,16 @@ var websiteList = [
         name: "华为人才在线播放器",
         regex: /^https:\/\/talent\.shixizhi\.huawei\.com\/course\/.+/g,
         handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
+            addTopListener() {
+                //接收顶层窗口的暂停消息
+                window.addEventListener("message", function (event) {
+                    if (event.data.method == METHOD.pause) {
+                        that.pause();
+                    }
+                }, false);
                 let that = this;
                 this.currentUrl = "";
+                //拦截请求以更新Url
                 const originOpen = XMLHttpRequest.prototype.open;
                 XMLHttpRequest.prototype.open = function (method, url, async, user, password){
                     originOpen.apply(this, arguments);
@@ -3208,24 +3228,24 @@ var websiteList = [
                         that.currentUrl = url;
                     }
                 };
-                window.addEventListener("message", function (event) {
-                    if (event.data.method == METHOD.pause) {
-                        that.pause();
+                // 定时上报当前视频信息
+                setInterval(() => {
+                    //如果未发现视频链接则不上报
+                    if (!that.currentUrl) return;
+                    that.media.setVideoUrl(that.currentUrl);
+                    that.media.setTitle(document.querySelector(".is-current > p").innerText);
+                    let video = document.getElementsByTagName("video")[0];
+                    if (video) {
+                        that.media.setStartTime(video.currentTime);
                     }
-                }, false);
+                    window.top.postMessage({ method: METHOD.report, media: that.media }, "*");
+                }, TIME.reportInterval);
+            }
+            constructor() {
+                super();
+                this.addTopListener();
             }
             async parse() {
-                if(this.currentUrl){
-                    setInterval(() => {
-                        this.media.setVideoUrl(this.currentUrl);
-                        this.media.setTitle(document.querySelector(".is-current > p").innerText);
-                        let video = document.getElementsByTagName("video");
-                        if (video && video[0]) {
-                            this.media.setStartTime(video[0].currentTime);
-                        }
-                        window.top.postMessage({ method: METHOD.report, media: this.media }, "*");
-                    }, TIME.reportInterval);
-                }
             }
         }
     },
