@@ -102,6 +102,7 @@
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
 // @match                   https://mypikpak.com/drive/*
+// @match                   https://www.iole.tv/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3175,6 +3176,30 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(config.url);
+            }
+        }
+    },
+    {
+        // ✅ https://www.iole.tv/vodplay/23711-1-1.html
+        name: "ioleTV",
+        regex: /^https:\/\/www\.iole\.tv\/vodplay\/.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "ioleTV播放器",
+        regex: /^https:\/\/www\.iole\.tv\/static\/player\/.*\.html/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(parent.MacPlayer.PlayUrl);
             }
         }
     },
