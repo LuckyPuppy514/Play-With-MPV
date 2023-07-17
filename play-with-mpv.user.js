@@ -102,6 +102,7 @@
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
 // @match                   https://mypikpak.com/drive/*
+// @match                   https://www.icourse163.org/learn/*
 // @match                   https://www.iole.tv/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
@@ -3176,6 +3177,19 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(config.url);
+            }
+        }
+    },
+    {
+        // ✅ https://www.icourse163.org/learn/ZJU-200001?tid=1470096517#/learn/content?type=detail&id=1254347726&cid=1285600901
+        name: "中国大学MOOC",
+        regex: /^https:\/\/www\.icourse163\.org\/learn\/.*\/learn\/content\?type=detail.*/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                let res = this.htmlParser();
+                if(!res) return;
+                this.media.setVideoUrl(res);
+                this.media.setTitle(document.querySelector('.current > .unit-name').innerText);
             }
         }
     },
