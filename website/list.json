@@ -84,6 +84,15 @@
         "resolution": "高清"
     },
     {
+        "title": "ioleTV",
+        "logo": "./website/logo/iole.png",
+        "url": [
+            "https://www.iole.tv"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
         "title": "泥视频",
         "logo": "./website/logo/nivod.png",
         "url": [
