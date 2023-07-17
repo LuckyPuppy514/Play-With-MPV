@@ -104,6 +104,7 @@
 // @match                   https://mypikpak.com/drive/*
 // @match                   https://www.icourse163.org/learn/*
 // @match                   https://www.iole.tv/*
+// @match                   https://www.zhihu.com/zvideo/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3214,6 +3215,43 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(parent.MacPlayer.PlayUrl);
+            }
+        }
+    },
+    {
+        // ✅ https://www.zhihu.com/zvideo/1650574385558937600
+        name: "知乎视频",
+        regex: /^https:\/\/www\.zhihu\.com\/zvideo\/.+/,
+        handler: class Handler extends BaseHandler {
+            addXHRListener() {
+                let that = this;
+                this.currentUrl = "";
+                //拦截请求以更新Url
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (method, url, async, user, password){
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = url;
+                    }
+                };
+            }
+            addCurrentTimeUpdater() {
+                setInterval(() => {
+                    let video = document.getElementsByTagName("video")[0];
+                    if (video) {
+                        this.media.setStartTime(video.currentTime);
+                    }
+                }, TIME.reportInterval);
+            }
+            constructor() {
+                super();
+                this.addXHRListener();
+                this.addCurrentTimeUpdater();
+            }
+            async parse() {
+                if(this.currentUrl) {
+                    this.media.setVideoUrl(this.currentUrl);
+                }
             }
         }
     },
