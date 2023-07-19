@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.7.2
+// @version                 3.7.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -420,8 +420,7 @@ const CSS = `
     top: 40%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 99999;
-
+    z-index: 999999999;
     width: 900px;
     height: 520px;
     background-color: rgb(65, 146, 247);
@@ -3188,7 +3187,7 @@ var websiteList = [
         handler: class Handler extends BaseHandler {
             async parse() {
                 let res = this.htmlParser();
-                if(!res) return;
+                if (!res) return;
                 this.media.setVideoUrl(res);
                 this.media.setTitle(document.querySelector('.current > .unit-name').innerText);
             }
@@ -3221,37 +3220,23 @@ var websiteList = [
     {
         // ✅ https://www.zhihu.com/zvideo/1650574385558937600
         name: "知乎视频",
-        regex: /^https:\/\/www\.zhihu\.com\/zvideo\/.+/,
+        regex: /^https:\/\/www\.zhihu\.com\/zvideo\/.+/g,
         handler: class Handler extends BaseHandler {
-            addXHRListener() {
+            constructor() {
+                super();
                 let that = this;
                 this.currentUrl = "";
                 //拦截请求以更新Url
                 const originOpen = XMLHttpRequest.prototype.open;
-                XMLHttpRequest.prototype.open = function (method, url, async, user, password){
+                XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
                     originOpen.apply(this, arguments);
                     if (url.match(VIDEO_URL_REGEX)) {
                         that.currentUrl = url;
                     }
                 };
             }
-            addCurrentTimeUpdater() {
-                setInterval(() => {
-                    let video = document.getElementsByTagName("video")[0];
-                    if (video) {
-                        this.media.setStartTime(video.currentTime);
-                    }
-                }, TIME.reportInterval);
-            }
-            constructor() {
-                super();
-                this.addXHRListener();
-                this.addCurrentTimeUpdater();
-            }
             async parse() {
-                if(this.currentUrl) {
-                    this.media.setVideoUrl(this.currentUrl);
-                }
+                this.media.setVideoUrl(this.currentUrl);
             }
         }
     },
