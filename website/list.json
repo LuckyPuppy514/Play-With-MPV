@@ -123,6 +123,17 @@
         "resolution": "高清"
     },
     {
+        "title": "速速电影院",
+        "logo": "./website/logo/susudyy.png",
+        "url": [
+            "https://www.susudm8.com",
+            "http://www.susudm8.com",
+            "http://susudyy.com"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
         "title": "橘子动漫",
         "logo": "./website/logo/mgnacg.png",
         "url": [

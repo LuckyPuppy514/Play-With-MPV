@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.7.3
+// @version                 3.7.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -105,6 +105,11 @@
 // @match                   https://www.icourse163.org/learn/*
 // @match                   https://www.iole.tv/*
 // @match                   https://www.zhihu.com/zvideo/*
+// @match                   *://www.susudm8.com/*
+// @match                   *://susudyy.com/*
+// @match                   https://v2.shenjw.com:4438/wap.php?url=*
+// @match                   https://u88.xigua88ok.com:2053/wap.php?url=*
+// @match                   https://test3.gqyy8.com:4438/f/aliplayer.php?url=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3247,6 +3252,43 @@ var websiteList = [
         handler: class Handler extends BaseHandler {
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
+            }
+        }
+    },
+    {
+        // ✅ http://www.susudm8.com/acg/69815/3.html
+        name: "速速电影院",
+        regex: /^https?:\/\/(www\.susudm8\.com|susudyy\.com)\/.+\.html/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "速速电影院播放器",
+        regex: /^https:\/\/(v2\.shenjw\.com:4438|u88\.xigua88ok\.com:2053)\/wap\.php\?url=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.videoParser());
+            }
+        }
+    },
+    {
+        name: "速速电影院播放器",
+        regex: /^https:\/\/test3\.gqyy8\.com:4438\/f\/aliplayer\.php\?url=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.scriptParser());
             }
         }
     },
