@@ -123,11 +123,12 @@
         "resolution": "高清"
     },
     {
-        "title": "速速电影院",
-        "logo": "./website/logo/susudyy.png",
+        "title": "布丁动画",
+        "logo": "./website/logo/buding.png",
         "url": [
+            "https://buding3.com",
+            "https://buding6.com",
             "https://www.susudm8.com",
-            "http://www.susudm8.com",
             "http://susudyy.com"
         ],
         "category": "anime, serial, movie, show",

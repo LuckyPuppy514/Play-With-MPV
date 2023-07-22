@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.7.4
+// @version                 3.7.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -107,6 +107,8 @@
 // @match                   https://www.zhihu.com/zvideo/*
 // @match                   *://www.susudm8.com/*
 // @match                   *://susudyy.com/*
+// @match                   *://buding3.com/*
+// @match                   *://buding6.com/*
 // @match                   https://v2.shenjw.com:4438/wap.php?url=*
 // @match                   https://u88.xigua88ok.com:2053/wap.php?url=*
 // @match                   https://test3.gqyy8.com:4438/f/aliplayer.php?url=*
@@ -3258,7 +3260,7 @@ var websiteList = [
     {
         // ✅ http://www.susudm8.com/acg/69815/3.html
         name: "速速电影院",
-        regex: /^https?:\/\/(www\.susudm8\.com|susudyy\.com)\/.+\.html/g,
+        regex: /^https?:\/\/(www\.susudm8\.com|susudyy\.com|buding3\.com|buding6\.com)\/.+\.html/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
