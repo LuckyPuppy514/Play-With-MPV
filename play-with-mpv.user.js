@@ -109,9 +109,9 @@
 // @match                   *://susudyy.com/*
 // @match                   *://buding3.com/*
 // @match                   *://buding6.com/*
-// @match                   https://v2.shenjw.com:4438/wap.php?url=*
-// @match                   https://u88.xigua88ok.com:2053/wap.php?url=*
-// @match                   https://test3.gqyy8.com:4438/f/aliplayer.php?url=*
+// @match                   *://v2.shenjw.com:*/wap.php?url=*
+// @match                   *://u88.xigua88ok.com:*/wap.php?url=*
+// @match                   *://test3.gqyy8.com:*/f/aliplayer.php?url=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3270,7 +3270,7 @@ var websiteList = [
     },
     {
         name: "速速电影院播放器",
-        regex: /^https:\/\/(v2\.shenjw\.com:4438|u88\.xigua88ok\.com:2053)\/wap\.php\?url=.+/g,
+        regex: /^https?:\/\/(v2\.shenjw\.com:\d+|u88\.xigua88ok\.com:\d+)\/wap\.php\?url=.+/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -3283,7 +3283,7 @@ var websiteList = [
     },
     {
         name: "速速电影院播放器",
-        regex: /^https:\/\/test3\.gqyy8\.com:4438\/f\/aliplayer\.php\?url=.+/g,
+        regex: /^https?:\/\/test3\.gqyy8\.com:\d+\/f\/aliplayer\.php\?url=.+/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
