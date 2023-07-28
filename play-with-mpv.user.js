@@ -1,8 +1,8 @@
-// ==UserScript==
+7.// ==UserScript==
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.7.7
+// @version                 3.7.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -113,6 +113,7 @@
 // @match                   *://u88.xigua88ok.com:*/wap.php?url=*
 // @match                   *://test3.gqyy8.com:*/f/aliplayer.php?url=*
 // @match                   *://v.mksec.cn/*
+// @include                 *://*dsh*.com/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3312,6 +3313,33 @@ var websiteList = [
     {
         name: "小见子的视频站播放器",
         regex: /^https?:\/\/v\.mksec\.cn\/static\/player\/dplayer\.html/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                tryTime = TRY_TIME.maxParse;
+            }
+        }
+    },
+    {
+        // ✅ https://jh642t.dshryadqp.com/index.php/vod/play/id/51434/sid/1/nid/1.html
+        name: "大师兄电影网",
+        regex: /^https?:\/\/.*dsh.*\.com\/index\.php\/vod\/play\/.+\.html/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(player_aaaa.url);
+            }
+        }
+    },
+    {
+        name: "大师兄电影网播放器",
+        regex: /^https?:\/\/.*dsh.*\.com\/static\/player\/dplayer\.html/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();

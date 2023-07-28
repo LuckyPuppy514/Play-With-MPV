@@ -93,6 +93,18 @@
         "resolution": "高清"
     },
     {
+        "title": "大师兄电影网",
+        "logo": "./website/logo/dashixiong.png",
+        "url": [
+            "https://dashixiong00.com",
+            "https://dashixiong09.com",
+            "https://dashixiong90.com",
+            "https://dashixiong99.com"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
         "title": "泥视频",
         "logo": "./website/logo/nivod.png",
         "url": [
