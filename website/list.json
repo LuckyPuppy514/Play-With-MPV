@@ -339,5 +339,14 @@
         ],
         "category": "anime, serial, movie, user, show",
         "resolution": "高清"
+    },
+    {
+        "title": "Twitch",
+        "logo": "./website/logo/twitch.png",
+        "url": [
+            "https://www.twitch.tv"
+        ],
+        "category": "user",
+        "resolution": "高清"
     }
 ]

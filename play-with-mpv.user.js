@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.7.8
+// @version                 3.7.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -114,6 +114,7 @@
 // @match                   *://test3.gqyy8.com:*/f/aliplayer.php?url=*
 // @match                   *://v.mksec.cn/*
 // @include                 *://*dsh*.com/*
+// @match                   https://www.twitch.tv/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3349,6 +3350,25 @@ var websiteList = [
                 tryTime = TRY_TIME.maxParse;
             }
         }
+    },
+    {
+        // ✅ https://www.twitch.tv/yulihong22
+        name: "OK",
+        home: [
+            "https://www.twitch.tv"
+        ],
+        regex: /^https:\/\/www\.twitch\.tv\/\w+/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                if (page.url.indexOf("/directory") != -1) {
+                    tryTime = TRY_TIME.maxParse;
+                    return;
+                }
+                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setVideoUrl(this.ytDlpParser());
+                this.media.setTitle("");
+            }
+        },
     },
     {
         name: "AList",
