@@ -1,4 +1,4 @@
-7.// ==UserScript==
+// ==UserScript==
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
