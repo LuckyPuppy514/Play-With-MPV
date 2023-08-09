@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.1
+// @version                 3.8.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1939,11 +1939,11 @@ var websiteList = [
             }
             async parse() {
                 // 直接从数据中获取 aid 和 cid
-                let videoId = getBilibiliVideoId();
-                if (videoId && videoId.aid && videoId.cid) {
-                    getBilibiliPlayUrl(videoId.aid, videoId.cid);
-                    return;
-                }
+                // let videoId = getBilibiliVideoId();
+                // if (videoId && videoId.aid && videoId.cid) {
+                //     getBilibiliPlayUrl(videoId.aid, videoId.cid);
+                //     return;
+                // }
 
                 // 从元素提取 epid 请求接口获取 aid 和 cid
                 let epid = page.url.match(/ep(\d+)/);
@@ -2025,11 +2025,11 @@ var websiteList = [
             }
             async parse() {
                 // 直接从数据中获取 aid 和 cid
-                let videoId = getBilibiliVideoId();
-                if (videoId && videoId.aid && videoId.cid) {
-                    getBilibiliPlayUrl(videoId.aid, videoId.cid);
-                    return;
-                }
+                // let videoId = getBilibiliVideoId();
+                // if (videoId && videoId.aid && videoId.cid) {
+                //     getBilibiliPlayUrl(videoId.aid, videoId.cid);
+                //     return;
+                // }
 
                 // 通过 bvid/avid 请求接口获取 aid 和 cid
                 let param = undefined;
@@ -3429,8 +3429,8 @@ async function init(flag) {
             break;
         }
     }
-    if (flag && window.location.host.indexOf('bilibili') != -1) {
-        await sleep(1000);
+    if (flag && page.url.startsWith("https://www.bilibili.com/festival/")) {
+        await sleep(1500);
     }
     // 尝试解析页面视频
     if (handler) {
