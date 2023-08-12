@@ -51,29 +51,6 @@
         "resolution": "高清"
     },
     {
-        "title": "天空影视",
-        "logo": "./website/logo/tkznp.png",
-        "url": [
-            "https://tkznp.com/",
-            "https://www.tkznp1.com/",
-            "https://www.tkznp2.com/",
-            "https://www.tkznp3.com/",
-            "https://www.tkznp4.com/",
-            "https://www.tkznp5.com/"
-        ],
-        "category": "anime, serial, movie, show",
-        "resolution": "高清"
-    },
-    {
-        "title": "HDmoli",
-        "logo": "./website/logo/hdmoli.png",
-        "url": [
-            "https://www.hdmoli.com/"
-        ],
-        "category": "anime, serial, movie",
-        "resolution": "高清"
-    },
-    {
         "title": "低端影视",
         "logo": "./website/logo/ddys.png",
         "url": [
@@ -88,6 +65,15 @@
         "logo": "./website/logo/iole.png",
         "url": [
             "https://www.iole.tv"
+        ],
+        "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "JOJO",
+        "logo": "./website/logo/jojo.ico",
+        "url": [
+            "https://jojo.bdys.top"
         ],
         "category": "anime, serial, movie",
         "resolution": "高清"
@@ -347,6 +333,29 @@
             "https://www.twitch.tv"
         ],
         "category": "user",
+        "resolution": "高清"
+    },
+    {
+        "title": "天空影视",
+        "logo": "./website/logo/tkznp.png",
+        "url": [
+            "https://tkznp.com/",
+            "https://www.tkznp1.com/",
+            "https://www.tkznp2.com/",
+            "https://www.tkznp3.com/",
+            "https://www.tkznp4.com/",
+            "https://www.tkznp5.com/"
+        ],
+        "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
+        "title": "HDmoli",
+        "logo": "./website/logo/hdmoli.png",
+        "url": [
+            "https://www.hdmoli.com/"
+        ],
+        "category": "anime, serial, movie",
         "resolution": "高清"
     }
 ]

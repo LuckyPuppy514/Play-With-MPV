@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.2
+// @version                 3.8.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -115,6 +115,7 @@
 // @match                   *://v.mksec.cn/*
 // @include                 *://*dsh*.com/*
 // @match                   https://www.twitch.tv/*
+// @match                   https://jojo.bdys.top/watch/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3367,6 +3368,19 @@ var websiteList = [
                 this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
+            }
+        },
+    },
+    {
+        // ✅ https://jojo.bdys.top/watch/264
+        name: "JOJO",
+        home: [
+            "https://jojo.bdys.top"
+        ],
+        regex: /^https:\/\/jojo\.bdys\.top\/watch\/.*/g,
+        handler: class Handler extends BaseHandler {
+            async parse() {
+                this.media.setVideoUrl(this.videoParser());
             }
         },
     },
