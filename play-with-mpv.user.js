@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.3
+// @version                 3.8.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -116,6 +116,8 @@
 // @include                 *://*dsh*.com/*
 // @match                   https://www.twitch.tv/*
 // @match                   https://jojo.bdys.top/watch/*
+// @match                   https://www.agemys.org/play/*
+// @include                 https://vip.sp-flv.com:*?url=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3385,6 +3387,30 @@ var websiteList = [
         },
     },
     {
+        // ✅ https://www.agemys.org/play/20220403/1/1
+        name: "AGE动漫",
+        regex: /^https?:\/\/www\.agemys\.org\/play\/.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "AGE动漫播放器",
+        regex: /^https?:\/\/vip\.sp-flv\.com:\d+\/\?url=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.videoParser());
+            }
+        }
+    },
+    {
         name: "AList",
         regex: /^https?:\/\/[^\/]+\/.*\.(mp4|mkv)/g,
         handler: class Handler extends BaseHandler {
@@ -3461,7 +3487,7 @@ async function init(flag) {
             tryTime++;
         }
     } else {
-        console.log("Play-With-MPV：暂无此网页解析器");
+        console.log("Play-With-MPV：暂无此网页解析器（" + page.url + "）");
     }
 }
 // 开始执行
