@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.4
+// @version                 3.8.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -3416,18 +3416,24 @@ var websiteList = [
         handler: class Handler extends BaseHandler {
             async parse() {
                 let url = this.videoParser();
+                let data = {
+                    path: decodeURIComponent(location.pathname),
+                    password: ""
+                };
                 if (!url && tryTime < 3) {
                     $.ajax({
                         type: "POST",
                         url: `/api/fs/get`,
-                        data: {
-                            password: "",
-                            path: decodeURIComponent(location.pathname)
-                        },
+                        dataType: "json",
+                        data: JSON.stringify(data),
                         xhrFields: {
                             withCredentials: true
                         },
+                        headers: {
+                            "Authorization": localStorage.getItem("token")
+                        },
                         async: false,
+                        contentType: "application/json",
                         success: function (res) {
                             if (res.code == 200) {
                                 url = res.data.raw_url;
