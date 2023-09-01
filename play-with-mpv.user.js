@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.5
+// @version                 3.8.6
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -118,6 +118,7 @@
 // @match                   https://jojo.bdys.top/watch/*
 // @match                   https://www.agemys.org/play/*
 // @include                 https://vip.sp-flv.com:*?url=*
+// @match                   https://anime.girigirilove.com/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -3407,6 +3408,30 @@ var websiteList = [
             }
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
+            }
+        }
+    },
+    {
+        // ✅ https://anime.girigirilove.com/playGV25353-1-1/
+        name: "girigiri爱动漫",
+        regex: /^https:\/\/anime\.girigirilove\.com\/play.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        name: "girigiri爱动漫播放器",
+        regex: /^https:\/\/anime\.girigirilove\.com\/addons\/dp\/player\/dp\.php\?.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(config.url);
             }
         }
     },

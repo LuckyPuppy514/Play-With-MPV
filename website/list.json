@@ -51,6 +51,15 @@
         "resolution": "高清"
     },
     {
+        "title": "girigiri爱动漫",
+        "logo": "./website/logo/girigirilove.png",
+        "url": [
+            "https://anime.girigirilove.com/"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "低端影视",
         "logo": "./website/logo/ddys.png",
         "url": [
