@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.8
+// @version                 3.8.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -70,6 +70,7 @@
 // @include                 *://*:5244*
 // @match                   *://*/*.mp4
 // @match                   *://*/*.mkv
+// @match                   *://*/*.flv
 // @match                   https://www.dora-family.com/Resource:TV
 // @match                   https://www.olehdtv.com/*
 // @match                   *://tkznp.com/vodplay/*
@@ -3499,7 +3500,7 @@ var websiteList = [
     },
     {
         name: "AList",
-        regex: /^https?:\/\/[^\/]+\/.*\.(mp4|mkv)/g,
+        regex: /^https?:\/\/[^\/]+\/.*\.(mp4|mkv|flv)/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 let url = this.videoParser();
