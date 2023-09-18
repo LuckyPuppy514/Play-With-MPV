@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.8.9
+// @version                 3.9.0
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -116,7 +116,7 @@
 // @match                   *://v.mksec.cn/*
 // @include                 *://*dsh*.com/*
 // @match                   https://www.twitch.tv/*
-// @match                   https://jojo.bdys.top/watch/*
+// @match                   https://jiohub.top/watch/*
 // @match                   https://www.agemys.org/play/*
 // @include                 https://vip.sp-flv.com:*?url=*
 // @match                   https://anime.girigirilove.com/*
@@ -3438,12 +3438,12 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://jojo.bdys.top/watch/264
+        // ✅ https://jiohub.top/watch/264
         name: "JOJO",
         home: [
-            "https://jojo.bdys.top"
+            "https://jiohub.top"
         ],
-        regex: /^https:\/\/jojo\.bdys\.top\/watch\/.*/g,
+        regex: /^https:\/\/jiohub\.top\/watch\/.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
