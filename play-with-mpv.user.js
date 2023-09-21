@@ -182,6 +182,10 @@ const DEFAULT_CONFIG = {
             other: ''
         }
     },
+    transform: {
+        xOffset: 0,
+        yOffset: 0
+    },
     version: "20230902"
 };
 var currentConfig;
@@ -398,7 +402,7 @@ const CSS = `
     visibility: visible !important;
 }
 .${CLASS.button} {
-    position: fixed;
+    position: absolute;
     cursor: pointer;
     z-index: 99999;
     border: none;
@@ -645,7 +649,7 @@ const CSS = `
     height: 21px;
     margin-top: 3px;
 }
-.${CLASS.switchLabel} input { 
+.${CLASS.switchLabel} input {
     opacity: 0;
     width: 0 !important;
     height: 0 !important;
@@ -1220,6 +1224,13 @@ function playLimit() {
         playDisabled = false;
     }, TIME.pauseInterval);
 }
+//拖动状态
+let isDragging = false;
+//设置悬浮窗位置
+function setPosOffset(xOffset, yOffset, el) {
+    el.style.left = xOffset + "px";
+    el.style.bottom = -yOffset + "px";
+}
 function addListener() {
     let buttonDiv = document.getElementById(ID.buttonDiv);
     let mpvPlayButton = document.getElementById(ID.mpvPlayButton);
@@ -1252,6 +1263,43 @@ function addListener() {
     let originParamInput = document.getElementById(ID.originParamInput);
     let infoInputs = document.getElementsByClassName(CLASS.infoInput);
     switchStatus(downloadButton, false);
+    //处理窗口拖动事件
+    let currentX;
+    let currentY;
+    let initialX;
+    let initialY;
+    let xOffset = currentConfig.transform.xOffset;
+    let yOffset = currentConfig.transform.yOffset;
+    buttonDiv.onmousedown = (e) => {
+        initialX = e.clientX - xOffset;
+        initialY = e.clientY - yOffset;
+        isDragging = true;
+        console.log("开始拖动")
+    }
+    buttonDiv.onmouseup = (e) => {
+        if (isDragging) {
+            initialX = currentX;
+            initialY = currentY;
+            currentConfig.transform = {
+                xOffset: currentX,
+                yOffset: currentY
+            }
+            GM_setValue(KEY.config, currentConfig);
+            console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset)
+            isDragging = false;
+        }
+    }
+    buttonDiv.onmousemove = (e) => {
+        if (isDragging) {
+            e.preventDefault();
+            currentX = e.clientX - initialX;
+            currentY = e.clientY - initialY;
+            xOffset = currentX;
+            yOffset = currentY;
+            setPosOffset(currentX, currentY, buttonDiv);
+            //console.log("拖动中，",currentX, currentY)
+        }
+    }
     // 播放按钮
     mpvPlayButton.onclick = function () {
         playButtonClick(PLAYER.mpv.name);
@@ -1577,12 +1625,15 @@ class Media {
                 document.getElementById(ID.mpvPlayButton).style.visibility = "visible";
                 document.getElementById(ID.potplayerPlayButton).style.visibility = "visible";
                 document.getElementById(ID.customplayerPlayButton).style.visibility = "visible";
-                setTimeout(() => {
-                    document.getElementById(ID.infoButton).style.visibility = "hidden";
-                    document.getElementById(ID.settingButton).style.visibility = "hidden";
-                    document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
-                    document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
-                    document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
+                var hiddenInterval = setInterval(() => {
+                    if(!isDragging){ //拖动时不隐藏
+                        clearInterval(hiddenInterval)
+                        document.getElementById(ID.infoButton).style.visibility = "hidden";
+                        document.getElementById(ID.settingButton).style.visibility = "hidden";
+                        document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
+                        document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
+                        document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
+                    }
                 }, TIME.showButton);
             }
         }
@@ -1651,6 +1702,16 @@ class BaseHandler {
                 console.log(INFO);
                 appendCSS();
                 appendHTML();
+                if (currentConfig.transform) {
+                    console.log("加载偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset);
+                    setPosOffset(currentConfig.transform.xOffset, currentConfig.transform.yOffset, document.getElementById(ID.buttonDiv));
+                } else {
+                    //兼容旧版配置
+                    currentConfig.transform = {
+                        xOffset: 0,
+                        yOffset: 0
+                    }
+                }
                 addListener();
             }
             document.getElementById(ID.buttonDiv).style.display = "none";
