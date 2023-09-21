@@ -114,6 +114,7 @@
 // @match                   *://u88.xigua88ok.com:*/wap.php?url=*
 // @match                   *://test3.gqyy8.com:*/f/aliplayer.php?url=*
 // @match                   *://v.mksec.cn/*
+// @match                   https://tgbook.coolkv.com/*play*
 // @include                 *://*dsh*.com/*
 // @match                   https://www.twitch.tv/*
 // @match                   https://jiohub.top/watch/*
@@ -2383,6 +2384,46 @@ var websiteList = [
             constructor() {
                 super();
                 this.addTopListener();
+            }
+        }
+    },
+    {
+        // ✅ https://tgbook.coolkv.com/play/1048-0-4.html
+        name: "韩剧看看",
+        regex: /^https:\/\/tgbook\.coolkv\.com\/play\/.*\.html/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+                this.media.setReferer("https://tgbook.coolkv.com/");
+            }
+        }
+    },
+    {
+        // https://tgbook.coolkv.com/js/player/dm.html
+        name: "韩剧看看播放器外层",
+        regex: /^https:\/\/tgbook\.coolkv\.com\/js\/player\/dm\.html/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+                this.addIframeListener();
+            }
+        }
+    },
+    {
+        // https://tgbook.coolkv.com/js/player/dmplayer/player/index.php?url=https://99vv.yandex.com/file/bz2022/2021/yyyx/yyyx05/playlist.m3u8&next=/play/1048-0-5.html&vid=1048-0-4&nextdz=https://99vv.yandex.com/file/bz2022/2021/yyyx/yyyx06/playlist.m3u8
+        name: "韩剧看看播放器",
+        regex: /^https:\/\/tgbook\.coolkv\.com\/js\/player\/dmplayer\/player\/index\.php\?url=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                if (config.url.indexOf(".m3u8") > 0 || config.url.indexOf(".mp4") > 0 || config.url.indexOf(".flv") > 0) {
+                    this.media.setVideoUrl(config.url);
+                }
             }
         }
     },
