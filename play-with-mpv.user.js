@@ -1270,13 +1270,13 @@ function addListener() {
     let initialY;
     let xOffset = currentConfig.transform.xOffset;
     let yOffset = currentConfig.transform.yOffset;
-    buttonDiv.onmousedown = (e) => {
+    let dragStart = (e) => {
         initialX = e.clientX - xOffset;
         initialY = e.clientY - yOffset;
         isDragging = true;
         console.log("开始拖动")
     }
-    buttonDiv.onmouseup = (e) => {
+    let dragEnd = (e) => {
         if (isDragging) {
             initialX = currentX;
             initialY = currentY;
@@ -1289,7 +1289,7 @@ function addListener() {
             isDragging = false;
         }
     }
-    buttonDiv.onmousemove = (e) => {
+    let dragging = (e) => {
         if (isDragging) {
             e.preventDefault();
             currentX = e.clientX - initialX;
@@ -1300,6 +1300,10 @@ function addListener() {
             //console.log("拖动中，",currentX, currentY)
         }
     }
+    buttonDiv.onmousedown = dragStart;
+    buttonDiv.onmouseup = dragEnd;
+    buttonDiv.onmouseout = dragEnd;
+    buttonDiv.onmousemove = dragging;
     // 播放按钮
     mpvPlayButton.onclick = function () {
         playButtonClick(PLAYER.mpv.name);
