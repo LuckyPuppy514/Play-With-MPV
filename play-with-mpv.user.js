@@ -1263,6 +1263,7 @@ function addListener() {
     let originParamInput = document.getElementById(ID.originParamInput);
     let infoInputs = document.getElementsByClassName(CLASS.infoInput);
     switchStatus(downloadButton, false);
+
     //处理窗口拖动事件
     let currentX;
     let currentY;
@@ -1272,26 +1273,26 @@ function addListener() {
         initialX = e.offsetX;
         initialY = e.offsetY;
         isDragging = true;
+        // 拖动过程中不隐藏面板
+        showPanelForDuration();
         console.log("开始拖动");
     }
     let dragEnd = (e) => {
-        if (isDragging) {
-            currentX = e.clientX - initialX;
-            currentY = document.body.clientHeight - (e.clientY - initialY) - buttonDiv.clientHeight;
-            setPosOffset(currentX, currentY, buttonDiv);
-            currentConfig.transform = {
-                xOffset: currentX,
-                yOffset: currentY
-            }
-            GM_setValue(KEY.config, currentConfig);
-            console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset)
-            isDragging = false;
+        currentX = e.clientX - initialX;
+        currentY = document.body.clientHeight - (e.clientY - initialY) - buttonDiv.clientHeight;
+        setPosOffset(currentX, currentY, buttonDiv);
+        currentConfig.transform = {
+            xOffset: currentX,
+            yOffset: currentY
         }
+        GM_setValue(KEY.config, currentConfig);
+        console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset)
+        isDragging = false;
     }
     //修改拖动过程中的光标为可放置的样式，但可能会破坏原有的交互
-//     document.addEventListener('dragover', (event) => {
-//         event.preventDefault();
-//     });
+    //document.addEventListener('dragover', (event) => {
+    //    event.preventDefault();
+    //});
     buttonDiv.addEventListener('dragstart', dragStart);
     buttonDiv.addEventListener('dragend', dragEnd);
 
@@ -1585,6 +1586,23 @@ function loadConfig() {
     }
     PLAYER.customplayer = currentConfig.customplayer;
 }
+function showPanelForDuration() {
+    document.getElementById(ID.infoButton).style.visibility = "visible";
+    document.getElementById(ID.settingButton).style.visibility = "visible";
+    document.getElementById(ID.mpvPlayButton).style.visibility = "visible";
+    document.getElementById(ID.potplayerPlayButton).style.visibility = "visible";
+    document.getElementById(ID.customplayerPlayButton).style.visibility = "visible";
+    var hiddenInterval = setInterval(() => {
+        if(!isDragging){ //拖动时不隐藏
+            clearInterval(hiddenInterval)
+            document.getElementById(ID.infoButton).style.visibility = "hidden";
+            document.getElementById(ID.settingButton).style.visibility = "hidden";
+            document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
+            document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
+            document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
+        }
+    }, TIME.showButton);
+}
 class Media {
     constructor() {
         this.title = "";
@@ -1615,21 +1633,7 @@ class Media {
                 if (currentConfig.playAuto == 1 && page.url !== "https://www.lckp.top/play-with-mpv/index.html") {
                     playButtonClick(currentConfig.player);
                 }
-                document.getElementById(ID.infoButton).style.visibility = "visible";
-                document.getElementById(ID.settingButton).style.visibility = "visible";
-                document.getElementById(ID.mpvPlayButton).style.visibility = "visible";
-                document.getElementById(ID.potplayerPlayButton).style.visibility = "visible";
-                document.getElementById(ID.customplayerPlayButton).style.visibility = "visible";
-                var hiddenInterval = setInterval(() => {
-                    if(!isDragging){ //拖动时不隐藏
-                        clearInterval(hiddenInterval)
-                        document.getElementById(ID.infoButton).style.visibility = "hidden";
-                        document.getElementById(ID.settingButton).style.visibility = "hidden";
-                        document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
-                        document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
-                        document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
-                    }
-                }, TIME.showButton);
+                showPanelForDuration();
             }
         }
     }
