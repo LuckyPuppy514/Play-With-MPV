@@ -393,7 +393,7 @@ const CSS = `
     position: fixed;
     bottom: 0;
     left: 0;
-    cursor:move;
+    cursor: move;
     z-index: 99999;
     width: 190px;
     height: 90px;
