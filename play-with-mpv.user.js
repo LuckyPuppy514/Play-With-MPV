@@ -186,7 +186,7 @@ const DEFAULT_CONFIG = {
         xOffset: 0,
         yOffset: 0
     },
-    version: "20230902"
+    version: "20230922"
 };
 var currentConfig;
 // 视频链接匹配正则
@@ -393,7 +393,7 @@ const CSS = `
     position: fixed;
     bottom: 0;
     left: 0;
-    cursor: pointer;
+    cursor:move;
     z-index: 99999;
     width: 190px;
     height: 90px;
@@ -1702,16 +1702,8 @@ class BaseHandler {
                 console.log(INFO);
                 appendCSS();
                 appendHTML();
-                if (currentConfig.transform) {
-                    console.log("加载偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset);
-                    setPosOffset(currentConfig.transform.xOffset, currentConfig.transform.yOffset, document.getElementById(ID.buttonDiv));
-                } else {
-                    //兼容旧版配置
-                    currentConfig.transform = {
-                        xOffset: 0,
-                        yOffset: 0
-                    }
-                }
+                console.log("加载偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset);
+                setPosOffset(currentConfig.transform.xOffset, currentConfig.transform.yOffset, document.getElementById(ID.buttonDiv));
                 addListener();
             }
             document.getElementById(ID.buttonDiv).style.display = "none";
