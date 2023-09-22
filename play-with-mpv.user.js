@@ -401,6 +401,9 @@ const CSS = `
 #${ID.buttonDiv}:hover .${CLASS.button} {
     visibility: visible !important;
 }
+#${ID.buttonDiv}:active {
+    border:5px dashed #666c;
+}
 .${CLASS.button} {
     position: absolute;
     cursor: pointer;
@@ -1291,6 +1294,7 @@ function addListener() {
     }
     let dragging = (e) => {
         if (isDragging) {
+            e.stopPropagation()
             e.preventDefault();
             currentX = e.clientX - initialX;
             currentY = e.clientY - initialY;
