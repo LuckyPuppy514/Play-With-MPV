@@ -397,12 +397,13 @@ const CSS = `
     z-index: 99999;
     width: 190px;
     height: 90px;
+    border:5px dashed #6660;
 }
 #${ID.buttonDiv}:hover .${CLASS.button} {
     visibility: visible !important;
 }
 #${ID.buttonDiv}:active {
-    border:5px dashed #666c;
+    border:5px dashed #6666;
 }
 .${CLASS.button} {
     position: absolute;
