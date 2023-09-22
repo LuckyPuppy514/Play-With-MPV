@@ -397,13 +397,9 @@ const CSS = `
     z-index: 99999;
     width: 190px;
     height: 90px;
-    border:5px dashed #6660;
 }
 #${ID.buttonDiv}:hover .${CLASS.button} {
     visibility: visible !important;
-}
-#${ID.buttonDiv}:active {
-    border:5px dashed #6666;
 }
 .${CLASS.button} {
     position: absolute;
@@ -806,7 +802,7 @@ const HTML = `
 </div>
 <div id="${ID.toastDiv}"></div>
 
-<div id="${ID.buttonDiv}">
+<div id="${ID.buttonDiv}" draggable="true">
     <button id="${ID.infoButton}" class="${CLASS.button}"></button>
     <button id="${ID.potplayerPlayButton}" class="${CLASS.button}"></button>
     <button id="${ID.mpvPlayButton}" class="${CLASS.button}"></button>
@@ -1233,7 +1229,7 @@ let isDragging = false;
 //设置悬浮窗位置
 function setPosOffset(xOffset, yOffset, el) {
     el.style.left = xOffset + "px";
-    el.style.bottom = -yOffset + "px";
+    el.style.bottom = yOffset + "px";
 }
 function addListener() {
     let buttonDiv = document.getElementById(ID.buttonDiv);
@@ -1267,48 +1263,39 @@ function addListener() {
     let originParamInput = document.getElementById(ID.originParamInput);
     let infoInputs = document.getElementsByClassName(CLASS.infoInput);
     switchStatus(downloadButton, false);
+
     //处理窗口拖动事件
     let currentX;
     let currentY;
     let initialX;
     let initialY;
-    let xOffset = currentConfig.transform.xOffset;
-    let yOffset = currentConfig.transform.yOffset;
     let dragStart = (e) => {
-        initialX = e.clientX - xOffset;
-        initialY = e.clientY - yOffset;
+        initialX = e.offsetX;
+        initialY = e.offsetY;
         isDragging = true;
-        console.log("开始拖动")
+        // 拖动过程中不隐藏面板
+        showPanelForDuration();
+        console.log("开始拖动");
     }
     let dragEnd = (e) => {
-        if (isDragging) {
-            initialX = currentX;
-            initialY = currentY;
-            currentConfig.transform = {
-                xOffset: currentX,
-                yOffset: currentY
-            }
-            GM_setValue(KEY.config, currentConfig);
-            console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset)
-            isDragging = false;
+        currentX = e.clientX - initialX;
+        currentY = document.body.clientHeight - (e.clientY - initialY) - buttonDiv.clientHeight;
+        setPosOffset(currentX, currentY, buttonDiv);
+        currentConfig.transform = {
+            xOffset: currentX,
+            yOffset: currentY
         }
+        GM_setValue(KEY.config, currentConfig);
+        console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset)
+        isDragging = false;
     }
-    let dragging = (e) => {
-        if (isDragging) {
-            e.stopPropagation()
-            e.preventDefault();
-            currentX = e.clientX - initialX;
-            currentY = e.clientY - initialY;
-            xOffset = currentX;
-            yOffset = currentY;
-            setPosOffset(currentX, currentY, buttonDiv);
-            //console.log("拖动中，",currentX, currentY)
-        }
-    }
-    buttonDiv.onmousedown = dragStart;
-    buttonDiv.onmouseup = dragEnd;
-    buttonDiv.onmouseout = dragEnd;
-    buttonDiv.onmousemove = dragging;
+    //修改拖动过程中的光标为可放置的样式，但可能会破坏原有的交互
+    //document.addEventListener('dragover', (event) => {
+    //    event.preventDefault();
+    //});
+    buttonDiv.addEventListener('dragstart', dragStart);
+    buttonDiv.addEventListener('dragend', dragEnd);
+
     // 播放按钮
     mpvPlayButton.onclick = function () {
         playButtonClick(PLAYER.mpv.name);
@@ -1599,6 +1586,23 @@ function loadConfig() {
     }
     PLAYER.customplayer = currentConfig.customplayer;
 }
+function showPanelForDuration() {
+    document.getElementById(ID.infoButton).style.visibility = "visible";
+    document.getElementById(ID.settingButton).style.visibility = "visible";
+    document.getElementById(ID.mpvPlayButton).style.visibility = "visible";
+    document.getElementById(ID.potplayerPlayButton).style.visibility = "visible";
+    document.getElementById(ID.customplayerPlayButton).style.visibility = "visible";
+    var hiddenInterval = setInterval(() => {
+        if(!isDragging){ //拖动时不隐藏
+            clearInterval(hiddenInterval)
+            document.getElementById(ID.infoButton).style.visibility = "hidden";
+            document.getElementById(ID.settingButton).style.visibility = "hidden";
+            document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
+            document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
+            document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
+        }
+    }, TIME.showButton);
+}
 class Media {
     constructor() {
         this.title = "";
@@ -1629,21 +1633,7 @@ class Media {
                 if (currentConfig.playAuto == 1 && page.url !== "https://www.lckp.top/play-with-mpv/index.html") {
                     playButtonClick(currentConfig.player);
                 }
-                document.getElementById(ID.infoButton).style.visibility = "visible";
-                document.getElementById(ID.settingButton).style.visibility = "visible";
-                document.getElementById(ID.mpvPlayButton).style.visibility = "visible";
-                document.getElementById(ID.potplayerPlayButton).style.visibility = "visible";
-                document.getElementById(ID.customplayerPlayButton).style.visibility = "visible";
-                var hiddenInterval = setInterval(() => {
-                    if(!isDragging){ //拖动时不隐藏
-                        clearInterval(hiddenInterval)
-                        document.getElementById(ID.infoButton).style.visibility = "hidden";
-                        document.getElementById(ID.settingButton).style.visibility = "hidden";
-                        document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
-                        document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
-                        document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
-                    }
-                }, TIME.showButton);
+                showPanelForDuration();
             }
         }
     }
