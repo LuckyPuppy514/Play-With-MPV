@@ -2983,7 +2983,14 @@ var websiteList = [
                 }, TIME.refresh);
             }
             async parse() {
-                this.media.setVideoUrl(this.videoParser());
+                let urls = page.url.split(',');
+                for (let item of urls){
+                    let matches = item.match(VIDEO_URL_REGEX);
+                    if (matches && matches.length > 0) {
+                        this.media.setVideoUrl(matches[0]);
+                        break;
+                    }
+                }
             }
         }
     },
