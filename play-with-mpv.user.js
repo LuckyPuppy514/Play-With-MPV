@@ -3461,16 +3461,34 @@ var websiteList = [
     },
     {
         // ✅ https://jiohub.top/watch/264
+	// ✅ https://jiohub.top/watch/27686
         name: "JOJO",
         home: [
             "https://jiohub.top"
         ],
         regex: /^https:\/\/jiohub\.top\/watch\/.*/g,
         handler: class Handler extends BaseHandler {
-            async parse() {
-                this.media.setVideoUrl(this.videoParser());
+            constructor() {
+                super();
+                let that = this;
+                this.currentUrl = "";
+                //拦截请求以更新Url
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = url;
+                    }
+                };
             }
-        },
+            async parse() {
+                if(this.currentUrl){
+                    this.media.setVideoUrl(this.currentUrl);
+                } else {
+                    this.media.setVideoUrl(this.videoParser());
+                }
+            }
+        }
     },
     {
         // ✅ https://www.agemys.org/play/20220403/1/1
