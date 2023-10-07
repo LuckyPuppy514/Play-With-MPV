@@ -357,14 +357,5 @@
         ],
         "category": "anime, serial, movie, show",
         "resolution": "高清"
-    },
-    {
-        "title": "HDmoli",
-        "logo": "./website/logo/hdmoli.png",
-        "url": [
-            "https://www.hdmoli.com/"
-        ],
-        "category": "anime, serial, movie",
-        "resolution": "高清"
     }
 ]

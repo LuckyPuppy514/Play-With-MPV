@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.9.2
+// @version                 3.9.3
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -82,8 +82,6 @@
 // @match                   *://www.tkznp5.com/vodplay/*
 // @match                   *://www.tkznp6.com/vodplay/*
 // @match                   https://vip.ckllk.com/?url=*
-// @match                   https://www.hdmoli.com/*
-// @match                   https://play.qwertwe.top/xplay/?url=*
 // @match                   https://www.anfuns.cc/play/*
 // @match                   https://www.anfuns.cc/vapi/*
 // @match                   https://www.youtube.com/*
@@ -2950,93 +2948,6 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(config.url);
                 this.media.setTitle(config.title);
-            }
-        }
-    },
-    {
-        // ✅ https://www.hdmoli.com/play/1630-1-0.html
-        // ✅ https://www.hdmoli.com/play/1630-0-0.html
-        name: "HDmoli",
-        home: [
-            "https://www.hdmoli.com"
-        ],
-        regex: /^https:\/\/www\.hdmoli\.com\/play\/.*/g,
-        handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                this.addIframeListener();
-            }
-        }
-    },
-    {
-        name: "HDmoli 线路1",
-        regex: /^https:\/\/www\.hdmoli\.com\/js\/player\/dplayer\/dplayer\.html\?.*/g,
-        handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                this.addTopListener();
-                setTimeout(() => {
-                    let closeclick = document.getElementsByClassName("closeclick")[0];
-                    if (closeclick) {
-                        closeclick.click();
-                    }
-                }, TIME.refresh);
-            }
-            async parse() {
-                let urls = page.url.split(',');
-                for (let item of urls){
-                    let matches = item.match(VIDEO_URL_REGEX);
-                    if (matches && matches.length > 0) {
-                        this.media.setVideoUrl(matches[0]);
-                        break;
-                    }
-                }
-            }
-        }
-    },
-    {
-        name: "HDmoli 线路2",
-        regex: /^https:\/\/www\.hdmoli\.com\/js\/player\/duoduozy.html\?v=[\d\.]+/g,
-        handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                setTimeout(() => {
-                    let closeclick = document.getElementsByClassName("closeclick")[0];
-                    if (closeclick) {
-                        closeclick.click();
-                    }
-                }, TIME.refresh);
-            }
-        }
-    },
-    {
-        name: "HDmoli 线路2",
-        regex: /^https:\/\/play\.qwertwe\.top\/xplay\/\?url=.*/g,
-        handler: class Handler extends BaseHandler {
-            constructor() {
-                super();
-                this.addTopListener();
-            }
-            async parse() {
-                let that = this;
-                $.ajax({
-                    url: '555tZ4pvzHE3BpiO838.php',
-                    type: 'GET',
-                    dataType: 'JSON',
-                    timeout: 3000,
-                    data: {
-                        tm: (new Date().getTime()),
-                        url: config.url,
-                        vkey: config.vkey,
-                        token: config.token,
-                        sign: 'F4penExTGogdt6U8'
-                    },
-                    success: function (data) {
-                        if (data.code === 200) {
-                            that.media.setVideoUrl(getVideoInfo(data.url));
-                        }
-                    }
-                });
             }
         }
     },
