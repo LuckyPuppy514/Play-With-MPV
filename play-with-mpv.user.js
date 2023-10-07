@@ -1263,28 +1263,39 @@ function addListener() {
     switchStatus(downloadButton, false);
 
     //处理窗口拖动事件
-    let currentX;
-    let currentY;
-    let initialX;
-    let initialY;
+    let currentX, currentY;
+    let initialX, initialY;
+    let lastXOffset, lastYOffset;
+
+    // 在dragStart中存储初始的偏移量
     let dragStart = (e) => {
         initialX = e.offsetX;
         initialY = e.offsetY;
+
+        lastXOffset = e.clientX - e.offsetX;
+        lastYOffset = e.clientY - e.offsetY;
         isDragging = true;
         // 拖动过程中不隐藏面板
         showPanelForDuration();
         console.log("开始拖动");
     }
+
     let dragEnd = (e) => {
         currentX = e.clientX - initialX;
-        currentY = document.body.clientHeight - (e.clientY - initialY) - buttonDiv.clientHeight;
-        setPosOffset(currentX, currentY, buttonDiv);
-        currentConfig.transform = {
-            xOffset: currentX,
-            yOffset: currentY
-        }
+        currentY = e.clientY - initialY;
+
+        // 计算相对上一次偏移量的变化值
+        let xOffset = currentX - lastXOffset;
+        let yOffset = currentY - lastYOffset;
+
+        // 根据变化值更新配置
+        currentConfig.transform.xOffset += xOffset;
+        currentConfig.transform.yOffset -= yOffset;
+
+        setPosOffset(currentConfig.transform.xOffset, currentConfig.transform.yOffset, buttonDiv);
         GM_setValue(KEY.config, currentConfig);
-        console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset)
+        console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset);
+
         isDragging = false;
     }
     //修改拖动过程中的光标为可放置的样式，但可能会破坏原有的交互
