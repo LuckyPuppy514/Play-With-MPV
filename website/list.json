@@ -70,6 +70,15 @@
         "resolution": "高清"
     },
     {
+        "title": "次元城动漫",
+        "logo": "./website/logo/cycdm.webp",
+        "url": [
+            "https://www.cycdm01.top"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "ioleTV",
         "logo": "./website/logo/iole.png",
         "url": [

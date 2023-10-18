@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.9.3
+// @version                 3.9.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -119,6 +119,8 @@
 // @match                   https://www.agemys.org/play/*
 // @include                 https://vip.sp-flv.com:*?url=*
 // @match                   https://anime.girigirilove.com/*
+// @match                   https://www.cycdm01.top/*
+// @match                   https://player.cycdm01.top/?url=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
@@ -128,7 +130,7 @@
 // @run-at                  document-end
 // ==/UserScript==
 
-'use strict';
+"use strict";
 
 const INFO = `
 
@@ -145,8 +147,8 @@ const INFO = `
 `;
 // gm key
 const KEY = {
-    config: "config"
-}
+    config: "config",
+};
 // 默认配置
 const DEFAULT_CONFIG = {
     player: "mpv",
@@ -169,30 +171,31 @@ const DEFAULT_CONFIG = {
         name: "customplayer",
         path: "",
         params: {
-            videoUrl: 'iina://weblink?url=${EvideoUrl}',
-            audioUrl: '',
-            subtitleUrl: '',
-            title: '',
-            startTime: '',
-            referer: '',
-            origin: '&mpv_http-header-fields=origin%3A%20${Eorigin}',
-            proxy: '',
-            other: ''
-        }
+            videoUrl: "iina://weblink?url=${EvideoUrl}",
+            audioUrl: "",
+            subtitleUrl: "",
+            title: "",
+            startTime: "",
+            referer: "",
+            origin: "&mpv_http-header-fields=origin%3A%20${Eorigin}",
+            proxy: "",
+            other: "",
+        },
     },
     transform: {
         xOffset: 0,
-        yOffset: 0
+        yOffset: 0,
     },
-    version: "20230922"
+    version: "20230922",
 };
 var currentConfig;
 // 视频链接匹配正则
-const VIDEO_URL_REGEX = /https?:\/\/(?![^"^']*http)[^"^']+(\.|%2e)(m3u8|m3u|mp4|mkv|flv|avi)(\?[\w&=-]+|)/g;
+const VIDEO_URL_REGEX =
+    /https?:\/\/(?![^"^']*http)[^"^']+(\.|%2e)(m3u8|m3u|mp4|mkv|flv|avi)(\?[\w&=-]+|)/g;
 // 父子页面方法名
 const METHOD = {
     pause: "PAUSE",
-    report: "REPORT"
+    report: "REPORT",
 };
 // 时间 ms
 const TIME = {
@@ -202,12 +205,12 @@ const TIME = {
     reportInterval: 600,
     pauseInterval: 2000,
     showButton: 5000,
-}
+};
 // 尝试次数
 var tryTime = 0;
 const TRY_TIME = {
     maxPause: 5,
-    maxParse: 8
+    maxParse: 8,
 };
 // 播放器配置
 const PLAYER = {
@@ -218,30 +221,30 @@ const PLAYER = {
             audioUrl: ' --audio-file="${audioUrl}"',
             subtitleUrl: ' --sub-file="${subtitleUrl}"',
             title: ' --force-media-title="${title}"',
-            startTime: ' --start=${startTime}',
+            startTime: " --start=${startTime}",
             referer: ' --http-header-fields="referer: ${referer}"',
             origin: ' --http-header-fields="origin: ${origin}"',
-            proxy: ' --http-proxy=${proxy} --ytdl-raw-options=proxy=[${proxy}]',
-            other: ' ${other}'
-        }
+            proxy: " --http-proxy=${proxy} --ytdl-raw-options=proxy=[${proxy}]",
+            other: " ${other}",
+        },
     },
     potplayer: {
         name: "potplayer",
         params: {
-            videoUrl: 'potplayer://${videoUrl} /current',
+            videoUrl: "potplayer://${videoUrl} /current",
             subtitleUrl: ' /sub="${subtitleUrl}"',
             title: ' /title="${title}"',
-            startTime: ' /seek=${startTime}',
+            startTime: " /seek=${startTime}",
             referer: ' /referer="${referer}"',
             origin: ' /headers="origin: ${origin}"',
-            proxy: ' /user_agent="${proxy}"'
-        }
+            proxy: ' /user_agent="${proxy}"',
+        },
     },
     customplayer: {
         name: "customplayer",
-        params: undefined
-    }
-}
+        params: undefined,
+    },
+};
 // 页面信息
 var page = {
     host: undefined,
@@ -291,8 +294,8 @@ const ID = {
     proxyParamInput: `${PREFIX}-proxy-param-input`,
     refererParamInput: `${PREFIX}-referer-param-input`,
     originParamInput: `${PREFIX}-origin-param-input`,
-    nxParserIframe: `${PREFIX}-nx-parser-iframe`
-}
+    nxParserIframe: `${PREFIX}-nx-parser-iframe`,
+};
 // 组件 class
 const CLASS = {
     button: `${PREFIX}-button`,
@@ -307,18 +310,19 @@ const CLASS = {
     readOnly: `${PREFIX}-read-only-class`,
     footerA: `${PREFIX}-footer-a-class`,
     infoInput: `${PREFIX}-info-input-class`,
-}
+};
 // 消息类型
 const TOAST_TYPE = {
     info: "info",
     warn: "warn",
-    error: "error"
-}
+    error: "error",
+};
 // 图标
 const ICON_BASE64 = {
-    customplayer: "url('data:image/png;base64,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')",
+    customplayer:
+        "url('data:image/png;base64,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')",
     back: "url('data:image/png;base64,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')",
-}
+};
 const CSS = `
 #${ID.loadingDiv} {
     display: none;
@@ -1091,8 +1095,7 @@ const HTML = `
     </span>
 </div>
 `;
-const REG =
-    `Windows Registry Editor Version 5.00
+const REG = `Windows Registry Editor Version 5.00
 [HKEY_LOCAL_MACHINE\\SOFTWARE\\Policies\\Google\\Chrome]
 "ExternalProtocolDialogShowAlwaysOpenCheckbox"=dword:00000001
 
@@ -1114,11 +1117,10 @@ const REG =
 
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
 @="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \\\\\\\"\${SOFTWARE_PATH}\\\\\\\" -ArgumentList $PARAMS}\\""
-`
-const REG_DELETE =
-    `Windows Registry Editor Version 5.00
+`;
+const REG_DELETE = `Windows Registry Editor Version 5.00
 [-HKEY_CLASSES_ROOT\\\${PLAYER_NAME}]
-`
+`;
 function appendCSS() {
     let css = document.createElement("style");
     css.innerHTML = CSS.trim();
@@ -1176,13 +1178,19 @@ function playButtonClick(player) {
         init();
         return;
     }
-    if (currentConfig.player == PLAYER.mpv.name || currentConfig.player == PLAYER.potplayer.name) {
+    if (
+        currentConfig.player == PLAYER.mpv.name ||
+        currentConfig.player == PLAYER.potplayer.name
+    ) {
         let message = undefined;
         if (!currentConfig[currentConfig.player].path) {
             message = "请先进行设置";
         } else if (!currentConfig[currentConfig.player].regVersion) {
             message = "请先下载注册表";
-        } else if (currentConfig[currentConfig.player].regVersion != DEFAULT_CONFIG[currentConfig.player].regVersion) {
+        } else if (
+            currentConfig[currentConfig.player].regVersion !=
+            DEFAULT_CONFIG[currentConfig.player].regVersion
+        ) {
             message = "注册表有更新，请重新下载注册表";
         }
         if (message) {
@@ -1196,7 +1204,10 @@ function playButtonClick(player) {
     try {
         playLimit();
         handler.play();
-        if (currentConfig.closeAuto == 1 && page.url !== "https://www.lckp.top/play-with-mpv/index.html") {
+        if (
+            currentConfig.closeAuto == 1 &&
+            page.url !== "https://www.lckp.top/play-with-mpv/index.html"
+        ) {
             setTimeout(() => {
                 if (history.length === 1) {
                     window.location.href = "about:blank";
@@ -1233,7 +1244,9 @@ function addListener() {
     let buttonDiv = document.getElementById(ID.buttonDiv);
     let mpvPlayButton = document.getElementById(ID.mpvPlayButton);
     let potplayerPlayButton = document.getElementById(ID.potplayerPlayButton);
-    let customplayerPlayButton = document.getElementById(ID.customplayerPlayButton);
+    let customplayerPlayButton = document.getElementById(
+        ID.customplayerPlayButton
+    );
     let settingButton = document.getElementById(ID.settingButton);
     let settingDiv = document.getElementById(ID.settingDiv);
     let settingTable = document.getElementById(ID.settingTable);
@@ -1249,11 +1262,17 @@ function addListener() {
     let closeButtons = document.getElementsByClassName(CLASS.closeButton);
     let infoButton = document.getElementById(ID.infoButton);
     let infoDiv = document.getElementById(ID.infoDiv);
-    let customplayerSettingTable = document.getElementById(ID.customplayerSettingTable);
-    let customplayerSettingButton = document.getElementById(ID.customplayerSettingButton);
+    let customplayerSettingTable = document.getElementById(
+        ID.customplayerSettingTable
+    );
+    let customplayerSettingButton = document.getElementById(
+        ID.customplayerSettingButton
+    );
     let videoUrlParamInput = document.getElementById(ID.videoUrlParamInput);
     let audioUrlParamInput = document.getElementById(ID.audioUrlParamInput);
-    let subtitleUrlParamInput = document.getElementById(ID.subtitleUrlParamInput);
+    let subtitleUrlParamInput = document.getElementById(
+        ID.subtitleUrlParamInput
+    );
     let titleParamInput = document.getElementById(ID.titleParamInput);
     let startTimeParamInput = document.getElementById(ID.startTimeParamInput);
     let proxyParamInput = document.getElementById(ID.proxyParamInput);
@@ -1278,7 +1297,7 @@ function addListener() {
         // 拖动过程中不隐藏面板
         showPanelForDuration();
         console.log("开始拖动");
-    }
+    };
 
     let dragEnd = (e) => {
         currentX = e.clientX - initialX;
@@ -1292,18 +1311,27 @@ function addListener() {
         currentConfig.transform.xOffset += xOffset;
         currentConfig.transform.yOffset -= yOffset;
 
-        setPosOffset(currentConfig.transform.xOffset, currentConfig.transform.yOffset, buttonDiv);
+        setPosOffset(
+            currentConfig.transform.xOffset,
+            currentConfig.transform.yOffset,
+            buttonDiv
+        );
         GM_setValue(KEY.config, currentConfig);
-        console.log("存储偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset);
+        console.log(
+            "存储偏移量：xOffset " +
+                currentConfig.transform.xOffset +
+                " yOffset " +
+                currentConfig.transform.yOffset
+        );
 
         isDragging = false;
-    }
+    };
     //修改拖动过程中的光标为可放置的样式，但可能会破坏原有的交互
     //document.addEventListener('dragover', (event) => {
     //    event.preventDefault();
     //});
-    buttonDiv.addEventListener('dragstart', dragStart);
-    buttonDiv.addEventListener('dragend', dragEnd);
+    buttonDiv.addEventListener("dragstart", dragStart);
+    buttonDiv.addEventListener("dragend", dragEnd);
 
     // 播放按钮
     mpvPlayButton.onclick = function () {
@@ -1311,17 +1339,17 @@ function addListener() {
     };
     potplayerPlayButton.onclick = function () {
         playButtonClick(PLAYER.potplayer.name);
-    }
+    };
     customplayerPlayButton.onclick = function () {
         playButtonClick(PLAYER.customplayer.name);
-    }
+    };
     // 播放快捷键 CTRL + P
     window.onkeydown = async function () {
         if (event.ctrlKey && event.keyCode === 80 && !event.shiftKey) {
             event.preventDefault();
             playButtonClick(currentConfig.player);
         }
-    }
+    };
     // 设置按钮
     settingButton.onclick = function () {
         let display = settingDiv.style.display;
@@ -1333,24 +1361,41 @@ function addListener() {
             // 加载配置
             softwarePathInput.value = currentConfig[currentConfig.player].path;
             proxyInput.value = currentConfig.proxy;
-            $(`input:radio[name="${ID.bestQualityRadio}"][value="${currentConfig.bestQuality}"]`).prop('checked', true);
-            $(`input:radio[name="${ID.bilibiliCodecsRadio}"][value="${currentConfig.bilibiliCodecs}"]`).prop('checked', true);
-            $(`input:radio[name="${ID.playerRadio}"][value="${currentConfig.player}"]`).prop('checked', true);
+            $(
+                `input:radio[name="${ID.bestQualityRadio}"][value="${currentConfig.bestQuality}"]`
+            ).prop("checked", true);
+            $(
+                `input:radio[name="${ID.bilibiliCodecsRadio}"][value="${currentConfig.bilibiliCodecs}"]`
+            ).prop("checked", true);
+            $(
+                `input:radio[name="${ID.playerRadio}"][value="${currentConfig.player}"]`
+            ).prop("checked", true);
             playAutoInput.checked = currentConfig.playAuto == 1 ? true : false;
-            closeAutoInput.checked = currentConfig.closeAuto == 1 ? true : false;
-            syncStartTimeInput.checked = currentConfig.syncStartTime == 1 ? true : false;
-            $(`input:radio[name="${ID.subtitlePreferRadio}"][value="${currentConfig.subtitlePrefer}"]`).prop('checked', true);
-            switchPlayer($(`input:radio[name="${ID.playerRadio}"]:checked`).val());
+            closeAutoInput.checked =
+                currentConfig.closeAuto == 1 ? true : false;
+            syncStartTimeInput.checked =
+                currentConfig.syncStartTime == 1 ? true : false;
+            $(
+                `input:radio[name="${ID.subtitlePreferRadio}"][value="${currentConfig.subtitlePrefer}"]`
+            ).prop("checked", true);
+            switchPlayer(
+                $(`input:radio[name="${ID.playerRadio}"]:checked`).val()
+            );
         }
-    }
+    };
     // 播放器选择框
     $(`input:radio[name="${ID.playerRadio}"]`).change(function () {
         switchPlayer(this.value);
     });
     // 保存按钮
     saveButton.onclick = function () {
-        let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
-        if (playerChecked == PLAYER.mpv.name || playerChecked == PLAYER.potplayer.name) {
+        let playerChecked = $(
+            `input:radio[name="${ID.playerRadio}"]:checked`
+        ).val();
+        if (
+            playerChecked == PLAYER.mpv.name ||
+            playerChecked == PLAYER.potplayer.name
+        ) {
             let oldSoftwarePath = currentConfig[playerChecked].path;
             let newSoftwarePath = softwarePathInput.value;
             if (!newSoftwarePath) {
@@ -1362,12 +1407,18 @@ function addListener() {
                 return;
             }
             newSoftwarePath = newSoftwarePath.replace(/[\\|/]+/g, "//");
-            if (!newSoftwarePath.endsWith(".com") && !newSoftwarePath.endsWith(".exe")) {
+            if (
+                !newSoftwarePath.endsWith(".com") &&
+                !newSoftwarePath.endsWith(".exe")
+            ) {
                 if (!newSoftwarePath.endsWith("//")) {
                     newSoftwarePath = newSoftwarePath + "//";
                 }
                 if (playerChecked == PLAYER.mpv.name) {
-                    if (newSoftwarePath.toLowerCase().indexOf("mpvnet") != -1 || newSoftwarePath.toLowerCase().indexOf("mpv.net") != -1) {
+                    if (
+                        newSoftwarePath.toLowerCase().indexOf("mpvnet") != -1 ||
+                        newSoftwarePath.toLowerCase().indexOf("mpv.net") != -1
+                    ) {
                         newSoftwarePath = newSoftwarePath + "mpvnet.exe";
                     } else {
                         newSoftwarePath = newSoftwarePath + "mpv.exe";
@@ -1378,16 +1429,25 @@ function addListener() {
             }
             softwarePathInput.value = newSoftwarePath;
             currentConfig[playerChecked].path = newSoftwarePath;
-            switchStatus(downloadButton, softwarePathInput.value ? true : false);
+            switchStatus(
+                downloadButton,
+                softwarePathInput.value ? true : false
+            );
             if (oldSoftwarePath != newSoftwarePath) {
                 currentConfig[playerChecked].regVersion = "00000000";
             }
         }
         currentConfig.proxy = proxyInput.value;
-        currentConfig.bestQuality = $(`input:radio[name="${ID.bestQualityRadio}"]:checked`).val();
-        currentConfig.bilibiliCodecs = $(`input:radio[name="${ID.bilibiliCodecsRadio}"]:checked`).val();
+        currentConfig.bestQuality = $(
+            `input:radio[name="${ID.bestQualityRadio}"]:checked`
+        ).val();
+        currentConfig.bilibiliCodecs = $(
+            `input:radio[name="${ID.bilibiliCodecsRadio}"]:checked`
+        ).val();
         currentConfig.player = playerChecked;
-        currentConfig.subtitlePrefer = $(`input:radio[name="${ID.subtitlePreferRadio}"]:checked`).val();
+        currentConfig.subtitlePrefer = $(
+            `input:radio[name="${ID.subtitlePreferRadio}"]:checked`
+        ).val();
         currentConfig.playAuto = playAutoInput.checked ? 1 : 0;
         currentConfig.closeAuto = closeAutoInput.checked ? 1 : 0;
         currentConfig.syncStartTime = syncStartTimeInput.checked ? 1 : 0;
@@ -1400,42 +1460,53 @@ function addListener() {
         if (currentConfig.playAuto == 1) {
             playLimit();
         }
-        if (document.getElementById("iptv") && localStorage.category == "iptv") {
+        if (
+            document.getElementById("iptv") &&
+            localStorage.category == "iptv"
+        ) {
             localStorage.player = JSON.stringify(PLAYER[currentConfig.player]);
             document.getElementById("iptv").click();
         }
         init();
-    }
+    };
     // 下载按钮
     downloadButton.onclick = function () {
-        let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
-        currentConfig[playerChecked].regVersion = DEFAULT_CONFIG[playerChecked].regVersion;
+        let playerChecked = $(
+            `input:radio[name="${ID.playerRadio}"]:checked`
+        ).val();
+        currentConfig[playerChecked].regVersion =
+            DEFAULT_CONFIG[playerChecked].regVersion;
         GM_setValue(KEY.config, currentConfig);
-        let reg = REG.replace("${SOFTWARE_PATH}", currentConfig[playerChecked].path);
+        let reg = REG.replace(
+            "${SOFTWARE_PATH}",
+            currentConfig[playerChecked].path
+        );
         reg = reg.replace(/\$\{PLAYER_NAME\}/g, playerChecked);
-        let a = document.createElement('a');
-        let blob = new Blob([reg], { 'type': 'application/octet-stream' });
+        let a = document.createElement("a");
+        let blob = new Blob([reg], { type: "application/octet-stream" });
         a.href = window.URL.createObjectURL(blob);
         a.download = `${playerChecked}-install.reg`;
         a.click();
-    }
+    };
     deleteButton.onclick = function () {
-        let playerChecked = $(`input:radio[name="${ID.playerRadio}"]:checked`).val();
+        let playerChecked = $(
+            `input:radio[name="${ID.playerRadio}"]:checked`
+        ).val();
         currentConfig[playerChecked].regVersion = "00000000";
         GM_setValue(KEY.config, currentConfig);
         let reg = REG_DELETE.replace(/\$\{PLAYER_NAME\}/g, playerChecked);
-        let a = document.createElement('a');
-        let blob = new Blob([reg], { 'type': 'application/octet-stream' });
+        let a = document.createElement("a");
+        let blob = new Blob([reg], { type: "application/octet-stream" });
         a.href = window.URL.createObjectURL(blob);
         a.download = `${playerChecked}-delete.reg`;
         a.click();
-    }
+    };
     // 关闭按钮
     for (let closeButton of closeButtons) {
         closeButton.onclick = function () {
             settingDiv.style.display = "none";
             infoDiv.style.display = "none";
-        }
+        };
     }
     // 信息按钮
     infoButton.onclick = function () {
@@ -1459,19 +1530,26 @@ function addListener() {
                         this.select();
                         navigator.clipboard.writeText(this.value);
                         toast("已复制到剪贴板");
-                    }
+                    };
                 }
             }
         }
-    }
+    };
     let bestQualityRadios = document.getElementsByName(ID.bestQualityRadio);
-    let bilibiliCodecsRadios = document.getElementsByName(ID.bilibiliCodecsRadio);
-    let subtitlePreferRadios = document.getElementsByName(ID.subtitlePreferRadio);
+    let bilibiliCodecsRadios = document.getElementsByName(
+        ID.bilibiliCodecsRadio
+    );
+    let subtitlePreferRadios = document.getElementsByName(
+        ID.subtitlePreferRadio
+    );
     // 切换播放器
     function switchPlayer(player) {
         player = PLAYER[player];
         // mpv 和 potplayer 专属
-        if (player.name == PLAYER.mpv.name || player.name == PLAYER.potplayer.name) {
+        if (
+            player.name == PLAYER.mpv.name ||
+            player.name == PLAYER.potplayer.name
+        ) {
             switchStatus(softwarePathInput, true);
             softwarePathInput.value = currentConfig[player.name].path;
             if (softwarePathInput.value) {
@@ -1523,27 +1601,38 @@ function addListener() {
                 toast("视频参数不能为空", TOAST_TYPE.error);
                 return;
             }
-            currentConfig.customplayer.params.videoUrl = videoUrlParamInput.value;
-            currentConfig.customplayer.params.audioUrl = audioUrlParamInput.value;
-            currentConfig.customplayer.params.subtitleUrl = subtitleUrlParamInput.value;
+            currentConfig.customplayer.params.videoUrl =
+                videoUrlParamInput.value;
+            currentConfig.customplayer.params.audioUrl =
+                audioUrlParamInput.value;
+            currentConfig.customplayer.params.subtitleUrl =
+                subtitleUrlParamInput.value;
             currentConfig.customplayer.params.title = titleParamInput.value;
-            currentConfig.customplayer.params.startTime = startTimeParamInput.value;
+            currentConfig.customplayer.params.startTime =
+                startTimeParamInput.value;
             currentConfig.customplayer.params.proxy = proxyParamInput.value;
             currentConfig.customplayer.params.referer = refererParamInput.value;
             currentConfig.customplayer.params.origin = originParamInput.value;
             PLAYER.customplayer = currentConfig.customplayer;
             GM_setValue(KEY.config, currentConfig);
-            switchPlayer($(`input:radio[name="${ID.playerRadio}"]:checked`).val());
+            switchPlayer(
+                $(`input:radio[name="${ID.playerRadio}"]:checked`).val()
+            );
             settingTable.style.display = "flex";
             customplayerSettingTable.style.display = "none";
-            customplayerSettingButton.style.backgroundImage = ICON_BASE64.customplayer;
+            customplayerSettingButton.style.backgroundImage =
+                ICON_BASE64.customplayer;
             customplayerSettingButton.dataset.tip = "设置自定义播放器";
         } else {
-            videoUrlParamInput.value = currentConfig.customplayer.params.videoUrl;
-            audioUrlParamInput.value = currentConfig.customplayer.params.audioUrl;
-            subtitleUrlParamInput.value = currentConfig.customplayer.params.subtitleUrl;
+            videoUrlParamInput.value =
+                currentConfig.customplayer.params.videoUrl;
+            audioUrlParamInput.value =
+                currentConfig.customplayer.params.audioUrl;
+            subtitleUrlParamInput.value =
+                currentConfig.customplayer.params.subtitleUrl;
             titleParamInput.value = currentConfig.customplayer.params.title;
-            startTimeParamInput.value = currentConfig.customplayer.params.startTime;
+            startTimeParamInput.value =
+                currentConfig.customplayer.params.startTime;
             proxyParamInput.value = currentConfig.customplayer.params.proxy;
             refererParamInput.value = currentConfig.customplayer.params.referer;
             originParamInput.value = currentConfig.customplayer.params.origin;
@@ -1552,7 +1641,7 @@ function addListener() {
             customplayerSettingButton.style.backgroundImage = ICON_BASE64.back;
             customplayerSettingButton.dataset.tip = "保存并返回";
         }
-    }
+    };
 }
 // 切换元素状态
 function switchStatus(element, flag) {
@@ -1567,7 +1656,7 @@ function switchStatus(element, flag) {
     }
 }
 function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise((resolve) => setTimeout(resolve, ms));
 }
 // 加载配置
 function loadConfig() {
@@ -1584,7 +1673,7 @@ function loadConfig() {
             }
             if (!currentConfig.mpv.path && currentConfig.mpvPath) {
                 currentConfig.mpv.path = currentConfig.mpvPath;
-                delete currentConfig['mpvPath'];
+                delete currentConfig["mpvPath"];
             }
             currentConfig.version = DEFAULT_CONFIG.version;
             GM_setValue(KEY.config, currentConfig);
@@ -1599,16 +1688,24 @@ function showPanelForDuration() {
     document.getElementById(ID.infoButton).style.visibility = "visible";
     document.getElementById(ID.settingButton).style.visibility = "visible";
     document.getElementById(ID.mpvPlayButton).style.visibility = "visible";
-    document.getElementById(ID.potplayerPlayButton).style.visibility = "visible";
-    document.getElementById(ID.customplayerPlayButton).style.visibility = "visible";
+    document.getElementById(ID.potplayerPlayButton).style.visibility =
+        "visible";
+    document.getElementById(ID.customplayerPlayButton).style.visibility =
+        "visible";
     var hiddenInterval = setInterval(() => {
-        if(!isDragging){ //拖动时不隐藏
-            clearInterval(hiddenInterval)
+        if (!isDragging) {
+            //拖动时不隐藏
+            clearInterval(hiddenInterval);
             document.getElementById(ID.infoButton).style.visibility = "hidden";
-            document.getElementById(ID.settingButton).style.visibility = "hidden";
-            document.getElementById(ID.mpvPlayButton).style.visibility = "hidden";
-            document.getElementById(ID.potplayerPlayButton).style.visibility = "hidden";
-            document.getElementById(ID.customplayerPlayButton).style.visibility = "hidden";
+            document.getElementById(ID.settingButton).style.visibility =
+                "hidden";
+            document.getElementById(ID.mpvPlayButton).style.visibility =
+                "hidden";
+            document.getElementById(ID.potplayerPlayButton).style.visibility =
+                "hidden";
+            document.getElementById(
+                ID.customplayerPlayButton
+            ).style.visibility = "hidden";
         }
     }, TIME.showButton);
 }
@@ -1639,7 +1736,10 @@ class Media {
             }
             if (document.getElementById(ID.buttonDiv)) {
                 document.getElementById(ID.buttonDiv).style.display = "flex";
-                if (currentConfig.playAuto == 1 && page.url !== "https://www.lckp.top/play-with-mpv/index.html") {
+                if (
+                    currentConfig.playAuto == 1 &&
+                    page.url !== "https://www.lckp.top/play-with-mpv/index.html"
+                ) {
                     playButtonClick(currentConfig.player);
                 }
                 showPanelForDuration();
@@ -1670,7 +1770,10 @@ class Media {
     // 检查视频链接是否有效
     check(videoUrl) {
         if (videoUrl && videoUrl.startsWith("http")) {
-            if (videoUrl.match(/(\.m3u|\.m3u8)/g) && videoUrl != localStorage.iptvUrl) {
+            if (
+                videoUrl.match(/(\.m3u|\.m3u8)/g) &&
+                videoUrl != localStorage.iptvUrl
+            ) {
                 let m3u8 = "";
                 $.ajax({
                     type: "GET",
@@ -1678,10 +1781,12 @@ class Media {
                     async: false,
                     success: function (res) {
                         m3u8 = res;
-                    }
+                    },
                 });
                 if (m3u8 && m3u8.indexOf("png") != -1) {
-                    console.log("Play-With-MPV：m3u8 链接无法播放：" + videoUrl);
+                    console.log(
+                        "Play-With-MPV：m3u8 链接无法播放：" + videoUrl
+                    );
                     return false;
                 }
             }
@@ -1710,8 +1815,17 @@ class BaseHandler {
                 console.log(INFO);
                 appendCSS();
                 appendHTML();
-                console.log("加载偏移量：xOffset " + currentConfig.transform.xOffset + " yOffset " + currentConfig.transform.yOffset);
-                setPosOffset(currentConfig.transform.xOffset, currentConfig.transform.yOffset, document.getElementById(ID.buttonDiv));
+                console.log(
+                    "加载偏移量：xOffset " +
+                        currentConfig.transform.xOffset +
+                        " yOffset " +
+                        currentConfig.transform.yOffset
+                );
+                setPosOffset(
+                    currentConfig.transform.xOffset,
+                    currentConfig.transform.yOffset,
+                    document.getElementById(ID.buttonDiv)
+                );
                 addListener();
             }
             document.getElementById(ID.buttonDiv).style.display = "none";
@@ -1720,7 +1834,7 @@ class BaseHandler {
     initCheck() {
         return window.location.href != page.url;
     }
-    async parse() { }
+    async parse() {}
     pause() {
         let videos = document.getElementsByTagName("video");
         if (videos && videos.length > 0) {
@@ -1759,15 +1873,15 @@ class BaseHandler {
             let value = this.media[key];
             if (value) {
                 let param = this.player.params[key];
-                let matchKey = '${' + key + '}';
+                let matchKey = "${" + key + "}";
                 while (param.indexOf(matchKey) != -1) {
                     param = param.replace(matchKey, value);
                 }
-                matchKey = '${E' + key + '}';
+                matchKey = "${E" + key + "}";
                 while (param.indexOf(matchKey) != -1) {
                     param = param.replace(matchKey, encodeURIComponent(value));
                 }
-                matchKey = '${D' + key + '}';
+                matchKey = "${D" + key + "}";
                 while (param.indexOf(matchKey) != -1) {
                     param = param.replace(matchKey, decodeURIComponent(value));
                 }
@@ -1778,10 +1892,10 @@ class BaseHandler {
             let maxLength = 1950 - link.length;
             let title = encodeURIComponent(this.media.title);
             if (title.length > maxLength) {
-                title = title.substring(0, maxLength) + '...';
+                title = title.substring(0, maxLength) + "...";
             }
             let param = this.player.params.title;
-            param = param.replace('${title}', title);
+            param = param.replace("${title}", title);
             link = link + param;
         }
         window.open(link, "_self");
@@ -1789,33 +1903,44 @@ class BaseHandler {
     // 监听子页面事件
     addIframeListener() {
         let that = this;
-        window.addEventListener("message", function (event) {
-            that.iframe = event.source;
-            if (event.data.method == METHOD.pause) {
-                that.pause();
-            } else if (event.data.method == METHOD.report) {
-                that.media.setStartTime(event.data.media.startTime);
-                if (!that.media.videoUrl) {
-                    that.media.setVideoUrl(event.data.media.videoUrl);
+        window.addEventListener(
+            "message",
+            function (event) {
+                that.iframe = event.source;
+                if (event.data.method == METHOD.pause) {
+                    that.pause();
+                } else if (event.data.method == METHOD.report) {
+                    that.media.setStartTime(event.data.media.startTime);
+                    if (!that.media.videoUrl) {
+                        that.media.setVideoUrl(event.data.media.videoUrl);
+                    }
                 }
-            }
-        }, false);
+            },
+            false
+        );
     }
     // 监听顶层页面事件
     addTopListener() {
         let that = this;
-        window.addEventListener("message", function (event) {
-            if (event.data.method == METHOD.pause) {
-                that.pause();
-            }
-        }, false);
+        window.addEventListener(
+            "message",
+            function (event) {
+                if (event.data.method == METHOD.pause) {
+                    that.pause();
+                }
+            },
+            false
+        );
         // 定时上报当前视频信息
         setInterval(() => {
             let video = document.getElementsByTagName("video")[0];
             if (video) {
                 this.media.setStartTime(video.currentTime);
             }
-            window.top.postMessage({ method: METHOD.report, media: that.media }, "*");
+            window.top.postMessage(
+                { method: METHOD.report, media: that.media },
+                "*"
+            );
         }, TIME.reportInterval);
     }
     // yt-dlp 支持网站解析器
@@ -1882,7 +2007,10 @@ async function getBilibiliPlayUrl(avid, cid) {
     if (handler.player.name == PLAYER.mpv.name) {
         handler.media.setOther(`--script-opts="cid=${cid}"`);
     }
-    if (!handler.player.params.audioUrl || await getBilibiliVideoDash(avid, cid) == -1) {
+    if (
+        !handler.player.params.audioUrl ||
+        (await getBilibiliVideoDash(avid, cid)) == -1
+    ) {
         getBilibiliVideoDurl(avid, cid);
     }
     if (currentConfig.subtitlePrefer != "off") {
@@ -1896,12 +2024,15 @@ async function getBilibiliVideoDash(avid, cid) {
         type: "GET",
         url: `https://api.bilibili.com/x/player/playurl?qn=120&otype=json&fourk=1&fnver=0&fnval=4048&avid=${avid}&cid=${cid}`,
         xhrFields: {
-            withCredentials: true
+            withCredentials: true,
         },
         async: false,
         success: function (res) {
             if (!res.data) {
-                toast("Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面", TOAST_TYPE.error);
+                toast(
+                    "Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面",
+                    TOAST_TYPE.error
+                );
                 tryTime = TRY_TIME.maxParse;
                 return;
             }
@@ -1922,7 +2053,11 @@ async function getBilibiliVideoDash(avid, cid) {
                 audioUrl = dash.audio[0].baseUrl;
             }
             let i = 0;
-            while (i < dash.video.length && dash.video[i].id > BEST_QUALITY.bilibili[currentConfig.bestQuality]) {
+            while (
+                i < dash.video.length &&
+                dash.video[i].id >
+                    BEST_QUALITY.bilibili[currentConfig.bestQuality]
+            ) {
                 i++;
             }
             videoUrl = dash.video[i].baseUrl;
@@ -1940,7 +2075,7 @@ async function getBilibiliVideoDash(avid, cid) {
             handler.media.setAudioUrl(audioUrl);
             handler.media.setVideoUrl(videoUrl);
             result = 1;
-        }
+        },
     });
     return result;
 }
@@ -1950,17 +2085,20 @@ function getBilibiliVideoDurl(avid, cid) {
         type: "GET",
         url: `https://api.bilibili.com/x/player/playurl?qn=120&otype=json&fourk=1&fnver=0&fnval=128&avid=${avid}&cid=${cid}`,
         xhrFields: {
-            withCredentials: true
+            withCredentials: true,
         },
         async: false,
         success: function (res) {
             if (!res.data) {
-                toast("Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面", TOAST_TYPE.error);
+                toast(
+                    "Play-With-MPV 获取视频失败，如未登录请先登录并刷新页面",
+                    TOAST_TYPE.error
+                );
                 tryTime = TRY_TIME.maxParse;
                 return;
             }
             handler.media.setVideoUrl(res.data.durl[0].url);
-        }
+        },
     });
 }
 // 获取B站视频字幕
@@ -1969,16 +2107,23 @@ function getBilibiliVideoSubtitle(avid, cid) {
         type: "GET",
         url: `https://api.bilibili.com/x/player/v2?aid=${avid}&cid=${cid}`,
         xhrFields: {
-            withCredentials: true
+            withCredentials: true,
         },
         async: false,
         success: function (res) {
-            if (res.code == 0 && res.data.subtitle && res.data.subtitle.subtitles.length > 0) {
+            if (
+                res.code == 0 &&
+                res.data.subtitle &&
+                res.data.subtitle.subtitles.length > 0
+            ) {
                 let subtitles = res.data.subtitle.subtitles;
                 let url = "https:" + subtitles[0].subtitle_url;
                 let lan = subtitles[0].lan;
                 for (const subtitle of subtitles) {
-                    if (currentConfig.subtitlePrefer.startsWith("zh") && subtitle.lan.startsWith("zh")) {
+                    if (
+                        currentConfig.subtitlePrefer.startsWith("zh") &&
+                        subtitle.lan.startsWith("zh")
+                    ) {
                         url = "https:" + subtitle.subtitle_url;
                         lan = subtitle.lan;
                     }
@@ -1988,9 +2133,11 @@ function getBilibiliVideoSubtitle(avid, cid) {
                         break;
                     }
                 }
-                handler.media.setSubtitleUrl(`https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`);
+                handler.media.setSubtitleUrl(
+                    `https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`
+                );
             }
-        }
+        },
     });
 }
 // 获取B站视频 aid 和 cid
@@ -2022,44 +2169,42 @@ function getBilibiliVideoId() {
     }
     let videoId = {
         aid: aid,
-        cid: cid
+        cid: cid,
     };
     return videoId;
 }
 const BEST_QUALITY = {
     bilibili: {
-        "unlimited": 127,
+        unlimited: 127,
         "2160p": 126,
         "1440p": 116,
         "1080p": 116,
         "720p": 74,
-        "480p": 32
+        "480p": 32,
     },
     bilibiliLive: {
-        "unlimited": 4,
+        unlimited: 4,
         "2160p": 4,
         "1440p": 4,
         "1080p": 4,
         "720p": 3,
-        "480p": 2
+        "480p": 2,
     },
     ytdlp: {
-        "unlimited": "",
+        unlimited: "",
         "2160p": "--ytdl-format=bestvideo[height<=?2160]%2Bbestaudio/best",
         "1440p": "--ytdl-format=bestvideo[height<=?1440]%2Bbestaudio/best",
         "1080p": "--ytdl-format=bestvideo[height<=?1080]%2Bbestaudio/best",
         "720p": "--ytdl-format=bestvideo[height<=?720]%2Bbestaudio/best",
-        "480p": "--ytdl-format=bestvideo[height<=?480]%2Bbestaudio/best"
-    }
-}
+        "480p": "--ytdl-format=bestvideo[height<=?480]%2Bbestaudio/best",
+    },
+};
 var websiteList = [
     {
         // ✅ https://www.bilibili.com/bangumi/play/ep508404
         // ✅ https://www.bilibili.com/bangumi/play/ep319063
         name: "B站影视",
-        home: [
-            "https://www.bilibili.com"
-        ],
+        home: ["https://www.bilibili.com"],
         regex: /^https:\/\/www\.bilibili\.com\/bangumi\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -2079,14 +2224,23 @@ var websiteList = [
                 if (epid && epid[1]) {
                     epid = epid[1];
                 } else {
-                    let epidElement = document.getElementsByClassName("ep-item cursor visited")[0];
+                    let epidElement = document.getElementsByClassName(
+                        "ep-item cursor visited"
+                    )[0];
                     if (!epidElement) {
-                        epidElement = document.getElementsByClassName('ep-item cursor')[0];
+                        epidElement =
+                            document.getElementsByClassName(
+                                "ep-item cursor"
+                            )[0];
                     }
                     if (epidElement) {
-                        epid = epidElement.getElementsByTagName('a')[0].href.match(/ep(\d+)/)[1];
+                        epid = epidElement
+                            .getElementsByTagName("a")[0]
+                            .href.match(/ep(\d+)/)[1];
                     } else {
-                        epidElement = document.getElementsByClassName("squirtle-pagelist-select-item active squirtle-blink")[0];
+                        epidElement = document.getElementsByClassName(
+                            "squirtle-pagelist-select-item active squirtle-blink"
+                        )[0];
                         if (epidElement) {
                             epid = epidElement.dataset.value;
                         }
@@ -2099,7 +2253,7 @@ var websiteList = [
                     type: "GET",
                     url: `https://api.bilibili.com/pgc/view/web/season?ep_id=${epid}`,
                     xhrFields: {
-                        withCredentials: true
+                        withCredentials: true,
                     },
                     async: false,
                     success: function (res) {
@@ -2121,9 +2275,12 @@ var websiteList = [
                                 break;
                             }
                         }
-                        getBilibiliPlayUrl(currentEpisode.aid, currentEpisode.cid);
-                    }
-                })
+                        getBilibiliPlayUrl(
+                            currentEpisode.aid,
+                            currentEpisode.cid
+                        );
+                    },
+                });
             }
         },
     },
@@ -2178,7 +2335,7 @@ var websiteList = [
                     type: "GET",
                     url: `https://api.bilibili.com/x/web-interface/view?${param}`,
                     xhrFields: {
-                        withCredentials: true
+                        withCredentials: true,
                     },
                     async: false,
                     success: function (res) {
@@ -2194,8 +2351,8 @@ var websiteList = [
                             cid = res.data.pages[p - 1].cid;
                         }
                         getBilibiliPlayUrl(aid, cid);
-                    }
-                })
+                    },
+                });
             }
         },
     },
@@ -2226,7 +2383,11 @@ var websiteList = [
                     getBilibiliPlayUrl(videoId.aid, videoId.cid);
                     return;
                 } else {
-                    toast("Play-With-MPV 读取视频数据失败，请尝试清理B站缓存后刷新重试", TOAST_TYPE.error, 5000);
+                    toast(
+                        "Play-With-MPV 读取视频数据失败，请尝试清理B站缓存后刷新重试",
+                        TOAST_TYPE.error,
+                        5000
+                    );
                     tryTime = TRY_TIME.maxParse;
                 }
             }
@@ -2235,16 +2396,16 @@ var websiteList = [
     {
         // ✅ https://live.bilibili.com/7777
         name: "B站直播",
-        home: [
-            "https://live.bilibili.com"
-        ],
+        home: ["https://live.bilibili.com"],
         regex: /^https:\/\/live\.bilibili\.com\/\d+.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 let iframes = document.getElementsByTagName("iframe");
                 let roomid = undefined;
                 for (let iframe of iframes) {
-                    let roomids = iframe.src.match(/^https:\/\/live\.bilibili\.com.*(roomid=\d+|blanc\/\d+).*/);
+                    let roomids = iframe.src.match(
+                        /^https:\/\/live\.bilibili\.com.*(roomid=\d+|blanc\/\d+).*/
+                    );
                     if (roomids && roomids[1]) {
                         roomid = roomids[1].match(/\d+/)[0];
                         break;
@@ -2258,14 +2419,16 @@ var websiteList = [
                 let that = this;
                 $.ajax({
                     type: "GET",
-                    url: `https://api.live.bilibili.com/room/v1/Room/playUrl?quality=${BEST_QUALITY.bilibiliLive[currentConfig.bestQuality]}&cid=${roomid}`,
+                    url: `https://api.live.bilibili.com/room/v1/Room/playUrl?quality=${
+                        BEST_QUALITY.bilibiliLive[currentConfig.bestQuality]
+                    }&cid=${roomid}`,
                     async: false,
                     xhrFields: {
-                        withCredentials: true
+                        withCredentials: true,
                     },
                     success: function (res) {
                         that.media.setVideoUrl(res.data.durl[0].url);
-                    }
+                    },
                 });
             }
         },
@@ -2273,9 +2436,7 @@ var websiteList = [
     {
         // ✅ https://www.ixigua.com/
         name: "西瓜视频",
-        home: [
-            "https://www.ixigua.com"
-        ],
+        home: ["https://www.ixigua.com"],
         regex: /^https:\/\/www\.ixigua\.com\/\d.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -2290,28 +2451,45 @@ var websiteList = [
                     async: false,
                     success: function (res) {
                         try {
-                            let _SSR_HYDRATED_DATA = (new Function("return " + res.match(/<script id="SSR_HYDRATED_DATA"[^<]*window._SSR_HYDRATED_DATA=({[^<]*})[^<]*<\/script>/)[1]))();
-                            let packerData = _SSR_HYDRATED_DATA.anyVideo.gidInformation.packerData;
+                            let _SSR_HYDRATED_DATA = new Function(
+                                "return " +
+                                    res.match(
+                                        /<script id="SSR_HYDRATED_DATA"[^<]*window._SSR_HYDRATED_DATA=({[^<]*})[^<]*<\/script>/
+                                    )[1]
+                            )();
+                            let packerData =
+                                _SSR_HYDRATED_DATA.anyVideo.gidInformation
+                                    .packerData;
                             let main_url = undefined;
                             if (packerData.video) {
-                                let videoList = packerData.video.videoResource.normal.video_list;
+                                let videoList =
+                                    packerData.video.videoResource.normal
+                                        .video_list;
                                 if (videoList) {
                                     let video = undefined;
                                     for (const key in videoList) {
-                                        if (!video || videoList[key].vheight > video.vheight) {
+                                        if (
+                                            !video ||
+                                            videoList[key].vheight >
+                                                video.vheight
+                                        ) {
                                             video = videoList[key];
                                         }
                                     }
                                     main_url = video.main_url;
                                 }
-                                that.media.setVideoUrl(window.atob(main_url).replace("http://", "https://"));
+                                that.media.setVideoUrl(
+                                    window
+                                        .atob(main_url)
+                                        .replace("http://", "https://")
+                                );
                                 return;
                             }
                         } catch (error) {
                             console.error("解析出错：" + error);
                         }
                         that.nxParser();
-                    }
+                    },
                 });
             }
         },
@@ -2328,7 +2506,11 @@ var websiteList = [
             async parse() {
                 let url = this.videoParser();
                 if (url.startsWith("blob")) {
-                    for (let index = 0; index < sessionStorage.key.length; index++) {
+                    for (
+                        let index = 0;
+                        index < sessionStorage.key.length;
+                        index++
+                    ) {
                         url = sessionStorage.key(index);
                         url = url.match(/http[^#]*/g);
                         if (url && url.length > 0) {
@@ -2343,29 +2525,39 @@ var websiteList = [
     {
         // ✅ https://ddys.art/bleach-thousand-year-blood-war
         name: "低端影视",
-        home: [
-            "https://ddys.art",
-            "https://ddys.pro"
-        ],
+        home: ["https://ddys.art", "https://ddys.pro"],
         regex: /^https:\/\/(ddys\.art|ddys\.pro)\/.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 let video = document.getElementsByTagName("video")[0];
                 if (video.paused) {
-                    document.getElementsByClassName('vjs-big-play-button')[0].click();
+                    document
+                        .getElementsByClassName("vjs-big-play-button")[0]
+                        .click();
                 }
                 let url = this.videoParser();
                 if (url) {
                     let index = url.indexOf("?");
                     if (index != -1) {
-                        url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                        url =
+                            url.substring(0, index + 1) +
+                            encodeURIComponent(url.substring(index + 1));
                     }
                     this.media.setVideoUrl(url);
-                    let playing = document.getElementsByClassName("wp-playlist-playing")[0];
+                    let playing = document.getElementsByClassName(
+                        "wp-playlist-playing"
+                    )[0];
                     if (playing) {
-                        let episode = playing.textContent.replace(/(\n|\t|\d\.)/g, "");
+                        let episode = playing.textContent.replace(
+                            /(\n|\t|\d\.)/g,
+                            ""
+                        );
                         if (episode != " 全") {
-                            this.media.title = document.getElementsByClassName("post-title")[0].textContent + episode + " - 低端影视";
+                            this.media.title =
+                                document.getElementsByClassName("post-title")[0]
+                                    .textContent +
+                                episode +
+                                " - 低端影视";
                         }
                     }
                 }
@@ -2379,7 +2571,7 @@ var websiteList = [
             "https://www.libvio.cc",
             "https://libvio.fun",
             "https://libvio.me",
-            "https://www.libvio.me"
+            "https://www.libvio.me",
         ],
         regex: /^https?:\/\/.*\.libvio\..*\/play.*/g,
         handler: class Handler extends BaseHandler {
@@ -2387,7 +2579,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "LIBVIO播放器",
@@ -2401,32 +2593,30 @@ var websiteList = [
                 let url = urls;
                 let index = url.indexOf("?");
                 if (index != -1) {
-                    url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                    url =
+                        url.substring(0, index + 1) +
+                        encodeURIComponent(url.substring(index + 1));
                 }
                 this.media.setVideoUrl(url);
             }
-        }
+        },
     },
     {
         // ✅ https://www.nivod.tv/UXEwMmLqnUjHG5e4MwmlvmVnWiAJ9rIQ-RofV7wPhhed3uoi50mYsftLPq4mYyIhB-720-0-0-play.html?x=1
         name: "泥视频",
-        home: [
-            "https://www.nivod.tv",
-        ],
+        home: ["https://www.nivod.tv"],
         regex: /^https:\/\/www\.nivod\.tv\/.*play\.html?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 this.media.setVideoUrl(__dp.options.video.url);
                 this.media.setTitle(document.title);
             }
-        }
+        },
     },
     {
         // ✅ https://www.pkmkv.com/py/268677-2-11.html
         name: "片库",
-        home: [
-            "https://www.pkmkv.com",
-        ],
+        home: ["https://www.pkmkv.com"],
         regex: /^https:\/\/www\.pkmkv\.com\/py\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -2436,7 +2626,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(player_aaaa.url);
             }
-        }
+        },
     },
     {
         name: "片库播放器",
@@ -2446,7 +2636,7 @@ var websiteList = [
                 super();
                 this.addTopListener();
             }
-        }
+        },
     },
     {
         // ✅ https://tgbook.coolkv.com/play/1048-0-4.html
@@ -2458,7 +2648,7 @@ var websiteList = [
                 this.addIframeListener();
                 this.media.setReferer("https://tgbook.coolkv.com/");
             }
-        }
+        },
     },
     {
         // https://tgbook.coolkv.com/js/player/dm.html
@@ -2470,7 +2660,7 @@ var websiteList = [
                 this.addTopListener();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         // https://tgbook.coolkv.com/js/player/dmplayer/player/index.php?url=https://99vv.yandex.com/file/bz2022/2021/yyyx/yyyx05/playlist.m3u8&next=/play/1048-0-5.html&vid=1048-0-4&nextdz=https://99vv.yandex.com/file/bz2022/2021/yyyx/yyyx06/playlist.m3u8
@@ -2482,11 +2672,15 @@ var websiteList = [
                 this.addTopListener();
             }
             async parse() {
-                if (config.url.indexOf(".m3u8") > 0 || config.url.indexOf(".mp4") > 0 || config.url.indexOf(".flv") > 0) {
+                if (
+                    config.url.indexOf(".m3u8") > 0 ||
+                    config.url.indexOf(".mp4") > 0 ||
+                    config.url.indexOf(".flv") > 0
+                ) {
                     this.media.setVideoUrl(config.url);
                 }
             }
-        }
+        },
     },
     {
         // ✅ https://www.btnull.org/py/BBnLd_9.html?167094
@@ -2502,7 +2696,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.htmlParser());
             }
-        }
+        },
     },
     {
         // ✅ https://www.916dm.com/play/6792-1-91.html
@@ -2516,7 +2710,7 @@ var websiteList = [
             "http://www.916dm.com",
             "http://www.dmlaa.com",
             "http://www.qdmsh.com",
-            "http://www.ntdm8.com"
+            "http://www.ntdm8.com",
         ],
         regex: /^https?:\/\/www\.(\d+dm|dmlaa|qdmsh|ntdm8)\.com\/play\/.*/g,
         handler: class Handler extends BaseHandler {
@@ -2524,7 +2718,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "樱花动漫网播放器",
@@ -2537,21 +2731,19 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
             }
-        }
+        },
     },
     {
         // ✅ https://dick.xfani.com/watch/582/1/11.html
         name: "稀饭动漫",
-        home: [
-            "https://dick.xfani.com"
-        ],
+        home: ["https://dick.xfani.com"],
         regex: /^https:\/\/dick\.xfani\.com\/watch\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "稀饭动漫播放器",
@@ -2562,24 +2754,33 @@ var websiteList = [
                 this.addTopListener();
             }
             async parse() {
-                if (config.url.indexOf(".m3u8") > 0 || config.url.indexOf(".mp4") > 0 || config.url.indexOf(".flv") > 0) {
+                if (
+                    config.url.indexOf(".m3u8") > 0 ||
+                    config.url.indexOf(".mp4") > 0 ||
+                    config.url.indexOf(".flv") > 0
+                ) {
                     this.media.setVideoUrl(config.url);
                 } else {
                     let that = this;
                     $.ajax({
                         type: "POST",
                         url: "api_currentConfig.php",
-                        data: { "url": config.url, "time": config.time, "key": config.key, "title": config.title },
+                        data: {
+                            url: config.url,
+                            time: config.time,
+                            key: config.key,
+                            title: config.title,
+                        },
                         async: false,
                         success: function (res) {
                             if (res.code == "200") {
                                 that.media.setVideoUrl(res.url);
                             }
-                        }
+                        },
                     });
                 }
             }
-        }
+        },
     },
     {
         name: "稀饭动漫播放器",
@@ -2592,14 +2793,12 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.urlParser());
             }
-        }
+        },
     },
     {
         // ✅ https://www.mgnacg.com/bangumi/426-6-12
         name: "橘子动漫",
-        home: [
-            "https://www.mgnacg.com"
-        ],
+        home: ["https://www.mgnacg.com"],
         regex: /^https:\/\/www\.mgnacg\.com\/bangumi\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -2607,7 +2806,7 @@ var websiteList = [
                 this.addIframeListener();
                 this.media.setReferer("https://play.mknacg.top:8585/");
             }
-        }
+        },
     },
     {
         name: "橘子动漫播放器",
@@ -2620,21 +2819,19 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(art.option.url);
             }
-        }
+        },
     },
     {
         // ✅ https://www.omofun.top/index.php/vod/play/id/17295/sid/2/nid/7.html
         name: "OmoFun",
-        home: [
-            "https://www.omofun.top"
-        ],
+        home: ["https://www.omofun.top"],
         regex: /^https:\/\/www\.omofun\.top\/index.php\/vod\/play\/id\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "OmoFun播放器",
@@ -2647,21 +2844,19 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.urlParser());
             }
-        }
+        },
     },
     {
         // ✅ https://spdcat.net/vodplay/135443-1-23
         name: "迅猫动漫",
-        home: [
-            "https://spdcat.net"
-        ],
+        home: ["https://spdcat.net"],
         regex: /^https:\/\/spdcat\.net\/vodplay\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "迅猫动漫播放器",
@@ -2674,27 +2869,26 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(config.url);
                 setTimeout(() => {
-                    let conplay = document.getElementsByClassName("conplay-jump")[0];
+                    let conplay =
+                        document.getElementsByClassName("conplay-jump")[0];
                     if (conplay) {
                         conplay.click();
                     }
                 }, 1000);
             }
-        }
+        },
     },
     {
         // ✅ http://www.dm88.me/player/8480-0-11.html
         name: "樱花动漫",
-        home: [
-            "http://www.dm88.me"
-        ],
+        home: ["http://www.dm88.me"],
         regex: /^http:\/\/www\.dm88\.me\/player\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "樱花动漫播放器",
@@ -2707,21 +2901,19 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(url);
             }
-        }
+        },
     },
     {
         // ✅ https://www.kk151.com/play/15257-2-11.html
         name: "动漫之家",
-        home: [
-            "https://www.kk151.com"
-        ],
+        home: ["https://www.kk151.com"],
         regex: /^https:\/\/www\.kk151\.com\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "动漫之家播放器",
@@ -2734,7 +2926,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.urlParser());
             }
-        }
+        },
     },
     {
         // ✅ https://hdzyk.com/?m=vod-play-id-27537-src-2-num-11.html
@@ -2746,7 +2938,7 @@ var websiteList = [
             "https://1080zyk2.com",
             "https://1080zyk3.com",
             "https://1080zyk4.com",
-            "https://1080zyk5.com"
+            "https://1080zyk5.com",
         ],
         regex: /^https:\/\/(hdzyk\.com|1080zyk[1-5]\.com)\/\?m=.*/g,
         handler: class Handler extends BaseHandler {
@@ -2754,7 +2946,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "优质资源库播放器",
@@ -2767,7 +2959,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.urlParser());
             }
-        }
+        },
     },
     {
         name: "优质资源库播放器",
@@ -2780,14 +2972,12 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl("https://" + location.host + main);
             }
-        }
+        },
     },
     {
         // ✅ https://www.bdys10.com/play/22729-8.htm
         name: "哔嘀影视",
-        home: [
-            "https://www.bdys10.com"
-        ],
+        home: ["https://www.bdys10.com"],
         regex: /^https:\/\/www\.bdys10\.com\/.*play\/.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
@@ -2799,14 +2989,12 @@ var websiteList = [
                     }
                 }
             }
-        }
+        },
     },
     {
         // ✅ https://www.dora-family.com/Resource:TV
         name: "哆啦A梦新番",
-        home: [
-            "https://www.dora-family.com/Resource:TV"
-        ],
+        home: ["https://www.dora-family.com/Resource:TV"],
         regex: /^https:\/\/www\.dora-family\.com\/Resource:TV/g,
         handler: class Handler extends BaseHandler {
             initCheck() {
@@ -2823,14 +3011,12 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
             }
-        }
+        },
     },
     {
         // ✅ https://mypikpak.com/drive/all
         name: "PikPak",
-        home: [
-            "https://mypikpak.com/drive/all"
-        ],
+        home: ["https://mypikpak.com/drive/all"],
         regex: /^https:\/\/mypikpak\.com\/drive\/.*/g,
         handler: class Handler extends BaseHandler {
             initCheck() {
@@ -2849,23 +3035,27 @@ var websiteList = [
                     await sleep(1000);
                 }
                 this.media.setVideoUrl(this.videoParser());
-                this.media.setTitle(document.getElementsByClassName("player-title")[0].textContent);
+                this.media.setTitle(
+                    document.getElementsByClassName("player-title")[0]
+                        .textContent
+                );
             }
-        }
+        },
     },
     {
         // ✅ https://www.olehdtv.com/player/vod/1/43671/1
         name: "欧乐影院",
-        home: [
-            "https://www.olehdtv.com/"
-        ],
+        home: ["https://www.olehdtv.com/"],
         regex: /^https:\/\/www\.olehdtv\.com\/player\/vod\/\d+\/\d+\/\d+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                let ids = page.url.match(/^https:\/\/www\.olehdtv\.com\/player\/vod\/(\d+)\/(\d+)\/(\d+)/);
+                let ids = page.url.match(
+                    /^https:\/\/www\.olehdtv\.com\/player\/vod\/(\d+)\/(\d+)\/(\d+)/
+                );
                 let id = ids[2];
                 let index = ids[3];
-                let t = Date.parse(new Date) / 1e3, r = t % 20;
+                let t = Date.parse(new Date()) / 1e3,
+                    r = t % 20;
                 let _vv = MD5(t - r + "new.olelive.com");
                 let that = this;
                 $.ajax({
@@ -2874,27 +3064,29 @@ var websiteList = [
                     async: false,
                     success: function (res) {
                         if (res.code == 0) {
-                            that.media.setVideoUrl(res.data.urls[index - 1].url);
+                            that.media.setVideoUrl(
+                                res.data.urls[index - 1].url
+                            );
                         }
-                    }
-                })
+                    },
+                });
             }
             play() {
                 this.media.setTitle(document.title);
                 super.play();
             }
-        }
+        },
     },
     {
         // ✅ https://www.olehdtv.com/player/live/tv/CCTV5HD/49
         name: "欧乐影院直播",
-        home: [
-            "https://www.olehdtv.com/"
-        ],
+        home: ["https://www.olehdtv.com/"],
         regex: /^https:\/\/www\.olehdtv\.com\/player\/live\/tv\/[^/]+\/\d+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                let ids = page.url.match(/^https:\/\/www\.olehdtv\.com\/player\/live\/tv\/([^/]+)\/(\d+)/);
+                let ids = page.url.match(
+                    /^https:\/\/www\.olehdtv\.com\/player\/live\/tv\/([^/]+)\/(\d+)/
+                );
                 let id = ids[2];
                 let streamId = ids[1];
                 let today = new Date();
@@ -2908,7 +3100,8 @@ var websiteList = [
                     day = "0" + day;
                 }
                 let date = year + "-" + month + "-" + day;
-                let t = Date.parse(today) / 1e3, r = t % 20;
+                let t = Date.parse(today) / 1e3,
+                    r = t % 20;
                 let _vv = MD5(t - r + "new.olelive.com");
                 let that = this;
                 $.ajax({
@@ -2917,16 +3110,18 @@ var websiteList = [
                     async: false,
                     success: function (res) {
                         if (res.code == 0) {
-                            that.media.setVideoUrl(res.data.detail.hls.replace("_360", ""));
+                            that.media.setVideoUrl(
+                                res.data.detail.hls.replace("_360", "")
+                            );
                         }
-                    }
-                })
+                    },
+                });
             }
             play() {
                 this.media.setTitle(document.title);
                 super.play();
             }
-        }
+        },
     },
     {
         // ✅ https://tkznp.com/vodplay/337990-1-2.html
@@ -2946,7 +3141,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "天空影视播放器",
@@ -2960,21 +3155,19 @@ var websiteList = [
                 this.media.setVideoUrl(config.url);
                 this.media.setTitle(config.title);
             }
-        }
+        },
     },
     {
         // ✅ https://www.anfuns.cc/play/1572-1-1.html
         name: "AnFuns",
-        home: [
-            "https://www.anfuns.cc"
-        ],
+        home: ["https://www.anfuns.cc"],
         regex: /^https:\/\/www\.anfuns\.cc\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "AnFuns播放器",
@@ -2987,25 +3180,28 @@ var websiteList = [
             async parse() {
                 let url = config.url;
                 if (url) {
-                    if (!url.startsWith("https://fata.peizq.online/cache/") && !url.startsWith("https://media-oss.anfuns.cn/m3u8/")) {
+                    if (
+                        !url.startsWith("https://fata.peizq.online/cache/") &&
+                        !url.startsWith("https://media-oss.anfuns.cn/m3u8/")
+                    ) {
                         this.media.setVideoUrl(config.url);
                     } else {
                         tryTime = TRY_TIME.maxParse;
                     }
                 }
             }
-        }
+        },
     },
     {
         // ✅ https://www.youtube.com/watch?v=IkGuTYaTsLo
         name: "YouTube",
-        home: [
-            "https://www.youtube.com"
-        ],
+        home: ["https://www.youtube.com"],
         regex: /^https:\/\/www\.youtube\.com\/(watch|playlist)\?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3014,13 +3210,13 @@ var websiteList = [
     {
         // ✅ https://odysee.com/@jjlin:8/%E6%9E%97%E4%BF%8A%E5%82%91-jj-lin%E3%80%8Ajj20%E4%B8%96%E7%95%8C%E5%B7%A1%E8%BF%B4%E6%BC%94%E5%94%B1%E6%9C%83%E3%80%8B-2:8
         name: "Odysee",
-        home: [
-            "https://odysee.com"
-        ],
+        home: ["https://odysee.com"],
         regex: /^https:\/\/odysee\.com\/[^$].+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3029,13 +3225,13 @@ var websiteList = [
     {
         // ✅ https://rumble.com/v2mfr78-valheim-viking-survival-w-chaos-tricks-you-can-affect-my-game-chat-opinions.html
         name: "Rumble",
-        home: [
-            "https://rumble.com"
-        ],
+        home: ["https://rumble.com"],
         regex: /^https:\/\/rumble\.com\/v.+\.html/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3044,13 +3240,13 @@ var websiteList = [
     {
         // ✅ https://www.bitchute.com/video/NoodZjmfKHXS/
         name: "BitChute",
-        home: [
-            "https://www.bitchute.com"
-        ],
+        home: ["https://www.bitchute.com"],
         regex: /^https:\/\/www\.bitchute\.com\/video\/.+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3059,9 +3255,7 @@ var websiteList = [
     {
         // ✅ https://ani.gamer.com.tw/animeVideo.php?sn=32227
         name: "巴哈姆特",
-        home: [
-            "https://ani.gamer.com.tw"
-        ],
+        home: ["https://ani.gamer.com.tw"],
         regex: /^https:\/\/ani\.gamer\.com\.tw\/animeVideo.php\?sn=.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
@@ -3083,19 +3277,23 @@ var websiteList = [
                     url: `https://ani.gamer.com.tw/ajax/m3u8.php?sn=${sn}&device=${device}`,
                     async: false,
                     xhrFields: {
-                        withCredentials: true
+                        withCredentials: true,
                     },
                     success: function (json) {
                         res = JSON.parse(json);
-                    }
-                })
+                    },
+                });
                 if (res.error) {
                     if (res.error.code == 1015) {
-                        let oldDuration = document.getElementsByClassName("vjs-duration-display")[0].innerHTML;
+                        let oldDuration = document.getElementsByClassName(
+                            "vjs-duration-display"
+                        )[0].innerHTML;
                         let newDuration = oldDuration;
                         while (oldDuration == newDuration) {
                             await sleep(1000);
-                            newDuration = document.getElementsByClassName("vjs-duration-display")[0].innerHTML;
+                            newDuration = document.getElementsByClassName(
+                                "vjs-duration-display"
+                            )[0].innerHTML;
                         }
                         tryTime = 0;
                     }
@@ -3109,9 +3307,7 @@ var websiteList = [
     {
         // ✅ https://hanime1.me/watch?v=26262
         name: "Hanime1.me",
-        home: [
-            "https://hanime1.me"
-        ],
+        home: ["https://hanime1.me"],
         regex: /^https:\/\/hanime1\.me\/watch\?v=.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
@@ -3129,9 +3325,7 @@ var websiteList = [
     {
         // ✅ https://jable.tv/videos/fsdss-484/
         name: "Jable.TV",
-        home: [
-            "https://jable.tv"
-        ],
+        home: ["https://jable.tv"],
         regex: /^https:\/\/jable\.tv\/videos\/.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
@@ -3145,13 +3339,13 @@ var websiteList = [
     {
         // ✅ https://ok.ru/video/2035990725937
         name: "OK",
-        home: [
-            "https://ok.ru/video"
-        ],
+        home: ["https://ok.ru/video"],
         regex: /^https:\/\/ok\.ru\/video\/\d+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3160,13 +3354,13 @@ var websiteList = [
     {
         // ✅ https://tver.jp/episodes/epsta1xs0z
         name: "TVer",
-        home: [
-            "https://tver.jp"
-        ],
+        home: ["https://tver.jp"],
         regex: /^https:\/\/tver\.jp\/episodes\/\w+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3175,9 +3369,7 @@ var websiteList = [
     {
         // ✅ https://www.lckp.top/play-with-mpv/index.html
         name: "电视直播",
-        home: [
-            "https://www.lckp.top/play-with-mpv/index.html"
-        ],
+        home: ["https://www.lckp.top/play-with-mpv/index.html"],
         regex: /^https?:\/\/(www.lckp.top\/play-with-mpv|127.0.0.1:5502\/web\/tampermonkey\/Play-With-MPV)\/index.html/g,
         handler: class Handler extends BaseHandler {
             async parse() {
@@ -3190,9 +3382,7 @@ var websiteList = [
     {
         // ✅ https://www.douyin.com/
         name: "抖音",
-        home: [
-            "https://www.douyin.com/"
-        ],
+        home: ["https://www.douyin.com/"],
         regex: /^https?:\/\/www\.douyin\.com\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -3218,7 +3408,9 @@ var websiteList = [
                 if (videos && videos.length > 0) {
                     this.index = videos.length > 2 ? 1 : 0;
                 }
-                let url = document.getElementsByTagName("video")[this.index].getElementsByTagName("source")[0].src;
+                let url = document
+                    .getElementsByTagName("video")
+                    [this.index].getElementsByTagName("source")[0].src;
                 if (url) {
                     return url;
                 }
@@ -3228,16 +3420,14 @@ var websiteList = [
     {
         // ✅ https://www.mengfan.tv/play/kx666U/1/3/
         name: "萌番",
-        home: [
-            "https://www.mengfan.tv"
-        ],
+        home: ["https://www.mengfan.tv"],
         regex: /^https:\/\/www\.mengfan\.tv\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "萌番播放器",
@@ -3250,21 +3440,19 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.scriptParser());
             }
-        }
+        },
     },
     {
         // ✅ https://www.haitu.tv/vod/play/id/47100/sid/1/nid/4.html
         name: "海兔影院",
-        home: [
-            "https://www.haitu.tv"
-        ],
+        home: ["https://www.haitu.tv"],
         regex: /^https:\/\/www\.haitu\.tv\/vod\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "海兔影院播放器",
@@ -3277,7 +3465,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(config.url);
             }
-        }
+        },
     },
     {
         // ✅ https://www.icourse163.org/learn/ZJU-200001?tid=1470096517#/learn/content?type=detail&id=1254347726&cid=1285600901
@@ -3288,9 +3476,11 @@ var websiteList = [
                 let res = this.htmlParser();
                 if (!res) return;
                 this.media.setVideoUrl(res);
-                this.media.setTitle(document.querySelector('.current > .unit-name').innerText);
+                this.media.setTitle(
+                    document.querySelector(".current > .unit-name").innerText
+                );
             }
-        }
+        },
     },
     {
         // ✅ https://www.iole.tv/vodplay/23711-1-1.html
@@ -3301,7 +3491,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "ioleTV播放器",
@@ -3314,7 +3504,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(parent.MacPlayer.PlayUrl);
             }
-        }
+        },
     },
     {
         // ✅ https://www.zhihu.com/zvideo/1650574385558937600
@@ -3327,7 +3517,13 @@ var websiteList = [
                 this.currentUrl = "";
                 //拦截请求以更新Url
                 const originOpen = XMLHttpRequest.prototype.open;
-                XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+                XMLHttpRequest.prototype.open = function (
+                    method,
+                    url,
+                    async,
+                    user,
+                    password
+                ) {
                     originOpen.apply(this, arguments);
                     if (url.match(VIDEO_URL_REGEX)) {
                         that.currentUrl = url;
@@ -3337,7 +3533,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.currentUrl);
             }
-        }
+        },
     },
     {
         // ✅ https://www.tucao.cam/play/h4092670/#1
@@ -3347,7 +3543,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
             }
-        }
+        },
     },
     {
         // ✅ http://www.susudm8.com/acg/69815/3.html
@@ -3358,7 +3554,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "速速电影院播放器",
@@ -3371,7 +3567,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
             }
-        }
+        },
     },
     {
         name: "速速电影院播放器",
@@ -3384,7 +3580,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.scriptParser());
             }
-        }
+        },
     },
     {
         // ✅ https://v.mksec.cn/index.php/vod/play/id/165438/sid/2/nid/1.html
@@ -3398,7 +3594,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(player_aaaa.url);
             }
-        }
+        },
     },
     {
         name: "小见子的视频站播放器",
@@ -3411,7 +3607,7 @@ var websiteList = [
             async parse() {
                 tryTime = TRY_TIME.maxParse;
             }
-        }
+        },
     },
     {
         // ✅ https://jh642t.dshryadqp.com/index.php/vod/play/id/51434/sid/1/nid/1.html
@@ -3425,7 +3621,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(player_aaaa.url);
             }
-        }
+        },
     },
     {
         name: "大师兄电影网播放器",
@@ -3438,14 +3634,12 @@ var websiteList = [
             async parse() {
                 tryTime = TRY_TIME.maxParse;
             }
-        }
+        },
     },
     {
         // ✅ https://www.twitch.tv/yulihong22
         name: "Twitch",
-        home: [
-            "https://www.twitch.tv"
-        ],
+        home: ["https://www.twitch.tv"],
         regex: /^https:\/\/www\.twitch\.tv\/\w+/g,
         handler: class Handler extends BaseHandler {
             async parse() {
@@ -3453,7 +3647,9 @@ var websiteList = [
                     tryTime = TRY_TIME.maxParse;
                     return;
                 }
-                this.media.setOther(BEST_QUALITY.ytdlp[currentConfig.bestQuality]);
+                this.media.setOther(
+                    BEST_QUALITY.ytdlp[currentConfig.bestQuality]
+                );
                 this.media.setVideoUrl(this.ytDlpParser());
                 this.media.setTitle("");
             }
@@ -3461,11 +3657,9 @@ var websiteList = [
     },
     {
         // ✅ https://jiohub.top/watch/264
-	// ✅ https://jiohub.top/watch/27686
+        // ✅ https://jiohub.top/watch/27686
         name: "JOJO",
-        home: [
-            "https://jiohub.top"
-        ],
+        home: ["https://jiohub.top"],
         regex: /^https:\/\/jiohub\.top\/watch\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -3474,7 +3668,13 @@ var websiteList = [
                 this.currentUrl = "";
                 //拦截请求以更新Url
                 const originOpen = XMLHttpRequest.prototype.open;
-                XMLHttpRequest.prototype.open = function (method, url, async, user, password) {
+                XMLHttpRequest.prototype.open = function (
+                    method,
+                    url,
+                    async,
+                    user,
+                    password
+                ) {
                     originOpen.apply(this, arguments);
                     if (url.match(VIDEO_URL_REGEX)) {
                         that.currentUrl = url;
@@ -3482,13 +3682,13 @@ var websiteList = [
                 };
             }
             async parse() {
-                if(this.currentUrl){
+                if (this.currentUrl) {
                     this.media.setVideoUrl(this.currentUrl);
                 } else {
                     this.media.setVideoUrl(this.videoParser());
                 }
             }
-        }
+        },
     },
     {
         // ✅ https://www.agemys.org/play/20220403/1/1
@@ -3499,7 +3699,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "AGE动漫播放器",
@@ -3512,7 +3712,7 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
             }
-        }
+        },
     },
     {
         // ✅ https://anime.girigirilove.com/playGV25353-1-1/
@@ -3523,7 +3723,7 @@ var websiteList = [
                 super();
                 this.addIframeListener();
             }
-        }
+        },
     },
     {
         name: "girigiri爱动漫播放器",
@@ -3536,7 +3736,41 @@ var websiteList = [
             async parse() {
                 this.media.setVideoUrl(config.url);
             }
-        }
+        },
+    },
+    {
+        // ✅ https://www.cycdm01.top/watch/3388/1/1.html
+        name: "次元城动漫",
+        home: ["https://www.cycdm01.top"],
+        regex: /^https:\/\/www\.cycdm01\.top\/watch\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        },
+    },
+    {
+        name: "次元城动漫播放器",
+        regex: /^https:\/\/player\.cycdm01\.top\/\?url=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                let url = this.videoParser();
+                if (url) {
+                    let index = url.indexOf("?");
+                    if (index != -1) {
+                        url =
+                            url.substring(0, index + 1) +
+                            encodeURIComponent(url.substring(index + 1));
+                    }
+                    this.media.setVideoUrl(url);
+                }
+            }
+        },
     },
     {
         name: "AList",
@@ -3546,7 +3780,7 @@ var websiteList = [
                 let url = this.videoParser();
                 let data = {
                     path: decodeURIComponent(location.pathname),
-                    password: ""
+                    password: "",
                 };
                 if (!url && tryTime < 3) {
                     $.ajax({
@@ -3555,10 +3789,10 @@ var websiteList = [
                         dataType: "json",
                         data: JSON.stringify(data),
                         xhrFields: {
-                            withCredentials: true
+                            withCredentials: true,
                         },
                         headers: {
-                            "Authorization": localStorage.getItem("token")
+                            Authorization: localStorage.getItem("token"),
                         },
                         async: false,
                         contentType: "application/json",
@@ -3566,20 +3800,22 @@ var websiteList = [
                             if (res.code == 200) {
                                 url = res.data.raw_url;
                             }
-                        }
+                        },
                     });
                 }
                 if (url) {
                     let index = url.indexOf("?");
                     if (index != -1) {
-                        url = url.substring(0, index + 1) + encodeURIComponent(url.substring(index + 1));
+                        url =
+                            url.substring(0, index + 1) +
+                            encodeURIComponent(url.substring(index + 1));
                     }
                     this.media.setVideoUrl(url);
                     this.media.setTitle(document.title);
                 }
             }
-        }
-    }
+        },
+    },
 ];
 // 初始化
 async function init(flag) {
@@ -3587,7 +3823,7 @@ async function init(flag) {
     page = {
         host: window.location.host,
         url: window.location.href,
-        isFullScreen: false
+        isFullScreen: false,
     };
     // 清除 handler
     if (handler) {
@@ -3615,7 +3851,7 @@ async function init(flag) {
                 try {
                     await handler.parse();
                 } catch (error) {
-                    console.log('Play-With-MPV：解析失败：' + error);
+                    console.log("Play-With-MPV：解析失败：" + error);
                 }
             }
             tryTime++;
