@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.9.4
+// @version                 3.9.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -2015,6 +2015,9 @@ async function getBilibiliPlayUrl(avid, cid) {
     }
     if (currentConfig.subtitlePrefer != "off") {
         getBilibiliVideoSubtitle(avid, cid);
+        setInterval(() => {
+            getBilibiliVideoSubtitle(avid, cid);
+        }, 10 * 60 * 1000);
     }
 }
 // 获取B站 DASH 格式视频
