@@ -98,6 +98,7 @@
 // @match                   https://www.douyin.com/video/*
 // @match                   https://www.douyin.com/discover?modal_id=*
 // @match                   https://www.mengfan.tv/play/*
+// @match                   https://www.mfan.tv/play/*
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
 // @match                   https://mypikpak.com/drive/*
@@ -3421,10 +3422,11 @@ var websiteList = [
         },
     },
     {
+	// ✅ https://www.mfan.tv/play/Na666U/1/1/
         // ✅ https://www.mengfan.tv/play/kx666U/1/3/
         name: "萌番",
-        home: ["https://www.mengfan.tv"],
-        regex: /^https:\/\/www\.mengfan\.tv\/play\/.*/g,
+        home: ["https://www.mengfan.tv", "https://www.mfan.tv"],
+        regex: /^https:\/\/www\.(mengfan|mfan)\.tv\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
