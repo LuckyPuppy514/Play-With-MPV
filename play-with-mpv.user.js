@@ -23,7 +23,7 @@
 // @include                 *://*.libvio.*
 // @match                   https://*.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
 // @match                   https://*.cfnode1.xyz/*?url=*
-// @match                   https://www.nivod.tv/*
+// @include                 https://www.nivod*.tv/*
 // @match                   https://www.pkmkv.com/py/*
 // @match                   https://www.pkmkv.com/addons/dplayer/?url=*
 // @match                   https://www.btnull.org/py/*
@@ -2607,9 +2607,10 @@ var websiteList = [
     },
     {
         // ✅ https://www.nivod.tv/UXEwMmLqnUjHG5e4MwmlvmVnWiAJ9rIQ-RofV7wPhhed3uoi50mYsftLPq4mYyIhB-720-0-0-play.html?x=1
+	// ✅ https://www.nivod4.tv/YeClpGXOt58F3QmAp9bx5CnaBrO4txhU-27-0-0-0-play.html?sc=6bb1aa9619ece1f6a00124a66a6fb8b6
         name: "泥视频",
         home: ["https://www.nivod.tv"],
-        regex: /^https:\/\/www\.nivod\.tv\/.*play\.html?.*/g,
+        regex: /^https:\/\/www\.nivod.*\.tv\/.*play\.html?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 this.media.setVideoUrl(__dp.options.video.url);
