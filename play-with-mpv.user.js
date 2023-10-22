@@ -21,7 +21,7 @@
 // @match                   https://ddys.art/*
 // @match                   https://ddys.pro/*
 // @include                 *://*.libvio.*
-// @match                   https://*.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
+// @include                 https://*.chinaeast2.cloudapp.chinacloudapi.cn*/*
 // @match                   https://*.cfnode1.xyz/*?url=*
 // @include                 https://www.nivod*.tv/*
 // @match                   https://www.pkmkv.com/py/*
@@ -128,7 +128,7 @@
 // @require                 https://unpkg.com/md5@2.3.0/dist/md5.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
-// @run-at                  document-end
+// @run-at                  document-body
 // ==/UserScript==
 
 "use strict";
@@ -2569,7 +2569,7 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://www.libvio.cc/play/714634-1-11.html
+        // ✅ https://www.libvio.pro/play/714890512-1-2.html
         name: "LIBVIO",
         home: [
             "https://www.libvio.cc",
@@ -2587,21 +2587,41 @@ var websiteList = [
     },
     {
         name: "LIBVIO播放器",
-        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)\/.*\?url=.*/g,
+        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)(:\d+)?\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addTopListener();
-            }
+                let that = this;
+                this.currentUrl = "";
+                //拦截请求以更新Url
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (
+                    method,
+                    url,
+                    async,
+                    user,
+                    password
+                ) {
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = encodeURIComponent(url);
+                    }
+                };
+             }
             async parse() {
-                let url = urls;
-                let index = url.indexOf("?");
-                if (index != -1) {
-                    url =
-                        url.substring(0, index + 1) +
-                        encodeURIComponent(url.substring(index + 1));
+                if (this.currentUrl){
+                    this.media.setVideoUrl(this.currentUrl);
+                }else{
+                    let url = urls;
+                    let index = url.indexOf("?");
+                    if (index != -1) {
+                        url =
+                            url.substring(0, index + 1) +
+                            encodeURIComponent(url.substring(index + 1));
+                    }
+                    this.media.setVideoUrl(url);
                 }
-                this.media.setVideoUrl(url);
             }
         },
     },
