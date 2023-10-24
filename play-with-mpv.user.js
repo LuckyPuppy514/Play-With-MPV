@@ -21,9 +21,9 @@
 // @match                   https://ddys.art/*
 // @match                   https://ddys.pro/*
 // @include                 *://*.libvio.*
-// @match                   https://*.chinaeast2.cloudapp.chinacloudapi.cn/*?url=*
+// @include                 https://*.chinaeast2.cloudapp.chinacloudapi.cn*/*
 // @match                   https://*.cfnode1.xyz/*?url=*
-// @match                   https://www.nivod.tv/*
+// @include                 https://www.nivod*.tv/*
 // @match                   https://www.pkmkv.com/py/*
 // @match                   https://www.pkmkv.com/addons/dplayer/?url=*
 // @match                   https://www.btnull.org/py/*
@@ -98,6 +98,7 @@
 // @match                   https://www.douyin.com/video/*
 // @match                   https://www.douyin.com/discover?modal_id=*
 // @match                   https://www.mengfan.tv/play/*
+// @match                   https://www.mfan.tv/play/*
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
 // @match                   https://mypikpak.com/drive/*
@@ -127,7 +128,7 @@
 // @require                 https://unpkg.com/md5@2.3.0/dist/md5.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
-// @run-at                  document-end
+// @run-at                  document-body
 // ==/UserScript==
 
 "use strict";
@@ -2568,7 +2569,7 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://www.libvio.cc/play/714634-1-11.html
+        // ✅ https://www.libvio.pro/play/714890512-1-2.html
         name: "LIBVIO",
         home: [
             "https://www.libvio.cc",
@@ -2586,29 +2587,50 @@ var websiteList = [
     },
     {
         name: "LIBVIO播放器",
-        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)\/.*\?url=.*/g,
+        regex: /^https:\/\/(.*\.chinaeast2\.cloudapp\.chinacloudapi\.cn|.*\.cfnode1\.xyz)(:\d+)?\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addTopListener();
-            }
+                let that = this;
+                this.currentUrl = "";
+                //拦截请求以更新Url
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (
+                    method,
+                    url,
+                    async,
+                    user,
+                    password
+                ) {
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = encodeURIComponent(url);
+                    }
+                };
+             }
             async parse() {
-                let url = urls;
-                let index = url.indexOf("?");
-                if (index != -1) {
-                    url =
-                        url.substring(0, index + 1) +
-                        encodeURIComponent(url.substring(index + 1));
+                if (this.currentUrl){
+                    this.media.setVideoUrl(this.currentUrl);
+                }else{
+                    let url = urls;
+                    let index = url.indexOf("?");
+                    if (index != -1) {
+                        url =
+                            url.substring(0, index + 1) +
+                            encodeURIComponent(url.substring(index + 1));
+                    }
+                    this.media.setVideoUrl(url);
                 }
-                this.media.setVideoUrl(url);
             }
         },
     },
     {
         // ✅ https://www.nivod.tv/UXEwMmLqnUjHG5e4MwmlvmVnWiAJ9rIQ-RofV7wPhhed3uoi50mYsftLPq4mYyIhB-720-0-0-play.html?x=1
+	// ✅ https://www.nivod4.tv/YeClpGXOt58F3QmAp9bx5CnaBrO4txhU-27-0-0-0-play.html?sc=6bb1aa9619ece1f6a00124a66a6fb8b6
         name: "泥视频",
         home: ["https://www.nivod.tv"],
-        regex: /^https:\/\/www\.nivod\.tv\/.*play\.html?.*/g,
+        regex: /^https:\/\/www\.nivod.*\.tv\/.*play\.html?.*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 this.media.setVideoUrl(__dp.options.video.url);
@@ -3421,10 +3443,11 @@ var websiteList = [
         },
     },
     {
+	// ✅ https://www.mfan.tv/play/Na666U/1/1/
         // ✅ https://www.mengfan.tv/play/kx666U/1/3/
         name: "萌番",
-        home: ["https://www.mengfan.tv"],
-        regex: /^https:\/\/www\.mengfan\.tv\/play\/.*/g,
+        home: ["https://www.mengfan.tv", "https://www.mfan.tv"],
+        regex: /^https:\/\/www\.(mengfan|mfan)\.tv\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
