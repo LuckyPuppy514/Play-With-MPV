@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.9.6
+// @version                 3.9.7
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1365,33 +1365,31 @@ function addListener() {
         ) {
             let oldSoftwarePath = currentConfig[playerChecked].path;
             let newSoftwarePath = softwarePathInput.value;
-            if (!newSoftwarePath) {
-                toast("软件路径不能为空", TOAST_TYPE.error);
-                return;
-            }
-            if (/.*[\u4e00-\u9fa5]+.*/g.test(newSoftwarePath)) {
-                toast("软件路径不能包含中文", TOAST_TYPE.error);
-                return;
-            }
-            newSoftwarePath = newSoftwarePath.replace(/[\\|/]+/g, "//");
-            if (
-                !newSoftwarePath.endsWith(".com") &&
-                !newSoftwarePath.endsWith(".exe")
-            ) {
-                if (!newSoftwarePath.endsWith("//")) {
-                    newSoftwarePath = newSoftwarePath + "//";
+            if (newSoftwarePath) {
+                if (/.*[\u4e00-\u9fa5]+.*/g.test(newSoftwarePath)) {
+                    toast("软件路径不能包含中文", TOAST_TYPE.error);
+                    return;
                 }
-                if (playerChecked == PLAYER.mpv.name) {
-                    if (
-                        newSoftwarePath.toLowerCase().indexOf("mpvnet") != -1 ||
-                        newSoftwarePath.toLowerCase().indexOf("mpv.net") != -1
-                    ) {
-                        newSoftwarePath = newSoftwarePath + "mpvnet.exe";
-                    } else {
-                        newSoftwarePath = newSoftwarePath + "mpv.exe";
+                newSoftwarePath = newSoftwarePath.replace(/[\\|/]+/g, "//");
+                if (
+                    !newSoftwarePath.endsWith(".com") &&
+                    !newSoftwarePath.endsWith(".exe")
+                ) {
+                    if (!newSoftwarePath.endsWith("//")) {
+                        newSoftwarePath = newSoftwarePath + "//";
                     }
-                } else if (playerChecked == PLAYER.potplayer.name) {
-                    newSoftwarePath = newSoftwarePath + "PotPlayerMini64.exe";
+                    if (playerChecked == PLAYER.mpv.name) {
+                        if (
+                            newSoftwarePath.toLowerCase().indexOf("mpvnet") != -1 ||
+                            newSoftwarePath.toLowerCase().indexOf("mpv.net") != -1
+                        ) {
+                            newSoftwarePath = newSoftwarePath + "mpvnet.exe";
+                        } else {
+                            newSoftwarePath = newSoftwarePath + "mpv.exe";
+                        }
+                    } else if (playerChecked == PLAYER.potplayer.name) {
+                        newSoftwarePath = newSoftwarePath + "PotPlayerMini64.exe";
+                    }
                 }
             }
             softwarePathInput.value = newSoftwarePath;
@@ -1565,10 +1563,6 @@ function addListener() {
     // 自定义播放器按钮
     customplayerSettingButton.onclick = function () {
         if (customplayerSettingTable.style.display == "flex") {
-            if (!videoUrlParamInput.value) {
-                toast("视频参数不能为空", TOAST_TYPE.error);
-                return;
-            }
             currentConfig.customplayer.params.videoUrl =
                 videoUrlParamInput.value;
             currentConfig.customplayer.params.audioUrl =
@@ -1628,7 +1622,7 @@ function updatePlayButtonVisibility(currentConfig) {
     let mpv_button = document.getElementById(ID.mpvPlayButton)
     let potplayer_enabled = currentConfig.potplayer.path;
     let potplayer_button = document.getElementById(ID.potplayerPlayButton)
-    let customplayer_enabled = currentConfig.customplayer.path;
+    let customplayer_enabled = currentConfig.customplayer.params.videoUrl;
     let customplayerplay_button = document.getElementById(ID.customplayerPlayButton)
     if (!mpv_enabled && !potplayer_enabled && !customplayer_enabled) {
         mpv_button.style.display = "inline";
