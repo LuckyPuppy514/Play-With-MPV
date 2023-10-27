@@ -81,6 +81,10 @@
 - v2rayN 默认：`http://127.0.0.1:10809`
 - clash 默认：`http://127.0.0.1:7890`
 
+#### 4.5. 其他设置
+
+同时开启自动播放和自动关闭后，如需修改设置，请到导航页进行操作：[https://www.lckp.top/play-with-mpv/index.html](https://www.lckp.top/play-with-mpv/index.html)
+
 ## ✅ 效果展示
 
 ![20230225005523](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-02-25/20230225005523.webp)
