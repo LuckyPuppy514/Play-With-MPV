@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.9.7
+// @version                 3.9.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -31,8 +31,6 @@
 // @match                   https://www.btnull.nu/py/*
 // @match                   https://www.btnull.in/py/*
 // @include                 *://www.*dm.com/play/*
-// @match                   *://www.dmlaa.com/play/*
-// @match                   *://www.qdmsh.com/play/*
 // @match                   *://www.ntdm8.com/play/*
 // @match                   https://danmu.yhdmjx.com/*?url=*
 // @match                   https://dick.xfani.com/watch/*
@@ -1380,15 +1378,18 @@ function addListener() {
                     }
                     if (playerChecked == PLAYER.mpv.name) {
                         if (
-                            newSoftwarePath.toLowerCase().indexOf("mpvnet") != -1 ||
-                            newSoftwarePath.toLowerCase().indexOf("mpv.net") != -1
+                            newSoftwarePath.toLowerCase().indexOf("mpvnet") !=
+                                -1 ||
+                            newSoftwarePath.toLowerCase().indexOf("mpv.net") !=
+                                -1
                         ) {
                             newSoftwarePath = newSoftwarePath + "mpvnet.exe";
                         } else {
                             newSoftwarePath = newSoftwarePath + "mpv.exe";
                         }
                     } else if (playerChecked == PLAYER.potplayer.name) {
-                        newSoftwarePath = newSoftwarePath + "PotPlayerMini64.exe";
+                        newSoftwarePath =
+                            newSoftwarePath + "PotPlayerMini64.exe";
                     }
                 }
             }
@@ -1619,20 +1620,24 @@ function switchStatus(element, flag) {
 }
 function updatePlayButtonVisibility(currentConfig) {
     let mpv_enabled = currentConfig.mpv.path;
-    let mpv_button = document.getElementById(ID.mpvPlayButton)
+    let mpv_button = document.getElementById(ID.mpvPlayButton);
     let potplayer_enabled = currentConfig.potplayer.path;
-    let potplayer_button = document.getElementById(ID.potplayerPlayButton)
+    let potplayer_button = document.getElementById(ID.potplayerPlayButton);
     let customplayer_enabled = currentConfig.customplayer.params.videoUrl;
-    let customplayerplay_button = document.getElementById(ID.customplayerPlayButton)
+    let customplayerplay_button = document.getElementById(
+        ID.customplayerPlayButton
+    );
     if (!mpv_enabled && !potplayer_enabled && !customplayer_enabled) {
         mpv_button.style.display = "inline";
         potplayer_button.style.display = "inline";
         customplayerplay_button.style.display = "inline";
         return;
-    };
+    }
     mpv_button.style.display = mpv_enabled ? "inline" : "none";
     potplayer_button.style.display = potplayer_enabled ? "inline" : "none";
-    customplayerplay_button.style.display = customplayer_enabled ? "inline" : "none";
+    customplayerplay_button.style.display = customplayer_enabled
+        ? "inline"
+        : "none";
 }
 function sleep(ms) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -2587,11 +2592,11 @@ var websiteList = [
                         that.currentUrl = encodeURIComponent(url);
                     }
                 };
-             }
+            }
             async parse() {
-                if (this.currentUrl){
+                if (this.currentUrl) {
                     this.media.setVideoUrl(this.currentUrl);
-                }else{
+                } else {
                     let url = urls;
                     let index = url.indexOf("?");
                     if (index != -1) {
@@ -2606,7 +2611,7 @@ var websiteList = [
     },
     {
         // ✅ https://www.nivod.tv/UXEwMmLqnUjHG5e4MwmlvmVnWiAJ9rIQ-RofV7wPhhed3uoi50mYsftLPq4mYyIhB-720-0-0-play.html?x=1
-	// ✅ https://www.nivod4.tv/YeClpGXOt58F3QmAp9bx5CnaBrO4txhU-27-0-0-0-play.html?sc=6bb1aa9619ece1f6a00124a66a6fb8b6
+        // ✅ https://www.nivod4.tv/YeClpGXOt58F3QmAp9bx5CnaBrO4txhU-27-0-0-0-play.html?sc=6bb1aa9619ece1f6a00124a66a6fb8b6
         name: "泥视频",
         home: ["https://www.nivod.tv"],
         regex: /^https:\/\/www\.nivod.*\.tv\/.*play\.html?.*/g,
@@ -2703,20 +2708,11 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://www.916dm.com/play/6792-1-91.html
-        // ✅ http://www.916dm.com/play/7800-1-10.html
-        // ✅ http://www.dmlaa.com/play/7696-1-10.html
-        // ✅ http://www.qdmsh.com/play/7663-1-10.html
+        // ✅ https://www.816dm.com/play/6792-1-91.html
         // ✅ http://www.ntdm8.com/play/4973-1-1.html
         name: "樱花动漫网",
-        home: [
-            "https://www.916dm.com",
-            "http://www.916dm.com",
-            "http://www.dmlaa.com",
-            "http://www.qdmsh.com",
-            "http://www.ntdm8.com",
-        ],
-        regex: /^https?:\/\/www\.(\d+dm|dmlaa|qdmsh|ntdm8)\.com\/play\/.*/g,
+        home: ["https://www.816dm.com", "http://www.ntdm8.com"],
+        regex: /^https?:\/\/www\.(\d+dm|ntdm8)\.com\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
@@ -3422,7 +3418,7 @@ var websiteList = [
         },
     },
     {
-	// ✅ https://www.mfan.tv/play/Na666U/1/1/
+        // ✅ https://www.mfan.tv/play/Na666U/1/1/
         // ✅ https://www.mengfan.tv/play/kx666U/1/3/
         name: "萌番",
         home: ["https://www.mengfan.tv", "https://www.mfan.tv"],
@@ -3785,7 +3781,7 @@ var websiteList = [
                 let url = this.videoParser();
                 let data = {
                     path: decodeURIComponent(location.pathname),
-                    password: "",
+                    password: localStorage.getItem("browser-password"),
                 };
                 if (!url && tryTime < 3) {
                     $.ajax({
@@ -3795,9 +3791,6 @@ var websiteList = [
                         data: JSON.stringify(data),
                         xhrFields: {
                             withCredentials: true,
-                        },
-                        headers: {
-                            Authorization: localStorage.getItem("token"),
                         },
                         async: false,
                         contentType: "application/json",
