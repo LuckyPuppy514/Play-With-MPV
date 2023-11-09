@@ -1877,7 +1877,18 @@ class BaseHandler {
             let maxLength = 1950 - link.length;
             let title = encodeURIComponent(this.media.title);
             if (title.length > maxLength) {
-                title = title.substring(0, maxLength) + "...";
+                title = title.substring(0, maxLength);
+                // 为防止尾部中文字符转义序列被截断造成乱码，尝试解码
+                for (; ; ) {
+                    try {
+                        decodeURIComponent(title);
+                        break;
+                    } catch (e) {
+                        // UTF-8编码单字符最多占用4字节，最多循环4次可剔除尾部异常部分
+                        title = title.substring(0, title.lastIndexOf("%"));
+                    }
+                }
+                title = title + "...";
             }
             let param = this.player.params.title;
             param = param.replace("${title}", title);
