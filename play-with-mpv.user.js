@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 3.9.8
+// @version                 3.9.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -1874,14 +1874,19 @@ class BaseHandler {
             }
         }
         if (this.media.title) {
-            let maxLength = 1950 - link.length;
-            let title = encodeURIComponent(this.media.title);
-            if (title.length > maxLength) {
-                title = title.substring(0, maxLength) + "...";
+            let maxLength = 2000 - link.length;
+            if(maxLength > 2){
+                let title = this.media.title;
+                let encodeTitle = encodeURIComponent(title);
+                while (encodeTitle.length > maxLength) {
+                    let index = (maxLength / encodeTitle.length) * title.length;
+                    title = title.substring(0, index);
+                    encodeTitle = encodeURIComponent(title + "...");
+                }
+                let param = this.player.params.title;
+                param = param.replace("${title}", encodeTitle);
+                link = link + param;
             }
-            let param = this.player.params.title;
-            param = param.replace("${title}", title);
-            link = link + param;
         }
         window.open(link, "_self");
     }
