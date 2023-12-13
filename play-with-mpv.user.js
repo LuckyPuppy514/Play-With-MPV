@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 4.0.0
+// @version                 4.0.1
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -95,7 +95,7 @@
 // @match                   https://www.douyin.com/
 // @match                   https://www.douyin.com/video/*
 // @match                   https://www.douyin.com/discover?modal_id=*
-// @match                   https://www.mengfan.tv/play/*
+// @match                   https://www.mitang.tv/m/*
 // @match                   https://www.mfan.tv/play/*
 // @match                   https://video1.beijcloud.com/player/?url=*
 // @match                   https://www.tucao.cam/play/*
@@ -1875,7 +1875,7 @@ class BaseHandler {
         }
         if (this.media.title) {
             let maxLength = 1950 - link.length;
-            if(maxLength > 2){
+            if (maxLength > 2) {
                 let title = this.media.title;
                 let encodeTitle = encodeURIComponent(title);
                 while (encodeTitle.length > maxLength) {
@@ -2713,10 +2713,10 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://www.816dm.com/play/6792-1-91.html
+        // ✅ https://www.856dm.com/play/6792-1-91.html
         // ✅ http://www.ntdm8.com/play/4973-1-1.html
         name: "樱花动漫网",
-        home: ["https://www.816dm.com", "http://www.ntdm8.com"],
+        home: ["https://www.856dm.com", "http://www.ntdm8.com"],
         regex: /^https?:\/\/www\.(\d+dm|ntdm8)\.com\/play\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
@@ -3423,11 +3423,10 @@ var websiteList = [
         },
     },
     {
-        // ✅ https://www.mfan.tv/play/Na666U/1/1/
-        // ✅ https://www.mengfan.tv/play/kx666U/1/3/
+        // ✅ https://www.mitang.tv/play/kx666U/1/3/
         name: "萌番",
-        home: ["https://www.mengfan.tv", "https://www.mfan.tv"],
-        regex: /^https:\/\/www\.(mengfan|mfan)\.tv\/play\/.*/g,
+        home: ["https://www.mitang.tv"],
+        regex: /^https:\/\/www\.mitang\.tv\/m\/.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();

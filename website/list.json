@@ -32,7 +32,7 @@
         "title": "樱花动漫网",
         "logo": "./website/logo/yhdmw.png",
         "url": [
-            "https://www.816dm.com",
+            "https://www.856dm.com",
             "http://www.ntdm8.com"
         ],
         "category": "anime",
@@ -40,9 +40,9 @@
     },
     {
         "title": "萌番",
-        "logo": "./website/logo/mengfan.png",
+        "logo": "./website/logo/mitang.png",
         "url": [
-            "https://www.mengfan.tv/"
+            "https://www.mitang.tv/"
         ],
         "category": "anime",
         "resolution": "高清"
