@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 4.0.1
+// @version                 4.0.2
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -32,6 +32,8 @@
 // @match                   https://www.btnull.in/py/*
 // @include                 *://www.*dm.com/play/*
 // @match                   *://www.ntdm8.com/play/*
+// @include                 *://www.mxdm.tv/*
+// @include                 *://www.mxdm*.com/*
 // @match                   https://danmu.yhdmjx.com/*?url=*
 // @match                   https://dick.xfani.com/watch/*
 // @match                   https://dick.xfani.com/addons/dp/player/*
@@ -1995,7 +1997,11 @@ class BaseHandler {
 // 获取B站视频播放链接
 async function getBilibiliPlayUrl(avid, cid) {
     if (handler.player.name == PLAYER.mpv.name) {
-        handler.media.setOther(`--script-opts="cid=${cid}"`);
+        if (currentConfig.mpv.path.endsWith("mpvnet.exe")) {
+            handler.media.setOther(`--script-opts="cid=${cid}"`);
+        } else {
+            handler.media.setOther(`--script-opts-append="cid=${cid}"`);
+        }
     }
     if (
         !handler.player.params.audioUrl ||
@@ -2726,15 +2732,45 @@ var websiteList = [
         },
     },
     {
+        // ✅ https://www.mxdm9.com/dongmanplay/8371-1-1.html
+        name: "MX动漫网",
+        home: ["https://www.mxdm.tv", "https://www.mxdm9.com"],
+        regex: /^https?:\/\/www\.mxdm\d*\.(tv|com)\/dongmanplay\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        },
+    },
+    {
         name: "樱花动漫网播放器",
         regex: /^https:\/\/danmu\.yhdmjx\.com\/.*php\?url=.*/g,
         handler: class Handler extends BaseHandler {
             constructor() {
                 super();
                 this.addTopListener();
+                //拦截请求以更新Url
+                let that = this;
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (
+                    method,
+                    url,
+                    async,
+                    user,
+                    password
+                ) {
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = url;
+                    }
+                };
             }
             async parse() {
                 this.media.setVideoUrl(this.videoParser());
+                if (!this.media.videoUrl && this.currentUrl) {
+                    this.media.setVideoUrl(this.currentUrl);
+                }
             }
         },
     },

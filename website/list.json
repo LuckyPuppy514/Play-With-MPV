@@ -39,6 +39,16 @@
         "resolution": "高清"
     },
     {
+        "title": "MX动漫",
+        "logo": "./website/logo/mxdm.png",
+        "url": [
+            "https://www.mxdm.tv",
+            "https://www.mxdm9.com"
+        ],
+        "category": "anime",
+        "resolution": "高清"
+    },
+    {
         "title": "萌番",
         "logo": "./website/logo/mitang.png",
         "url": [
