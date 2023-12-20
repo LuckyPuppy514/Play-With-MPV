@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 4.0.3
+// @version                 4.0.4
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -124,8 +124,8 @@
 // @match                   https://player.cycdm01.top/?url=*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
-// @require                 https://unpkg.com/jquery@3.2.1/dist/jquery.min.js
-// @require                 https://unpkg.com/md5@2.3.0/dist/md5.min.js
+// @require                 https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.2.1/jquery.min.js
+// @require                 https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-y/spark-md5/3.0.2/spark-md5.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
 // @run-at                  document-body
