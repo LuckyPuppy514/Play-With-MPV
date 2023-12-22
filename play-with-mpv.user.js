@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 4.0.4
+// @version                 4.0.5
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -120,6 +120,7 @@
 // @match                   https://www.agemys.org/play/*
 // @include                 https://vip.sp-flv.com:*?url=*
 // @match                   https://anime.girigirilove.com/*
+// @match                   https://play.girigirilove.top/love?url=*
 // @match                   https://www.cycdm01.top/*
 // @match                   https://player.cycdm01.top/?url=*
 // @connect                 api.bilibili.com
@@ -3795,6 +3796,19 @@ var websiteList = [{
             }
             async parse() {
                 this.media.setVideoUrl(config.url);
+            }
+        },
+    },
+    {
+        name: "girigiri爱动漫播放器",
+        regex: /^https:\/\/play\.girigirilove\.top\/love\?url=.+/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(this.urlParser());
             }
         },
     },
