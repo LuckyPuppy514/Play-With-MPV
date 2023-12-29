@@ -123,6 +123,9 @@
 // @match                   https://play.girigirilove.top/love?url=*
 // @match                   https://www.cycdm01.top/*
 // @match                   https://player.cycdm01.top/?url=*
+// @match                   https://www.xgcartoon.com/video/*
+// @match                   https://pframe.xgcartoon.com/player.htm?vid=*
+// @match                   https://iframe.mediadelivery.net/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
 // @require                 https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.2.1/jquery.min.js
@@ -3843,6 +3846,63 @@ var websiteList = [{
                     }
                     this.media.setVideoUrl(url);
                 }
+            }
+        },
+    },
+    {
+        // ✅ https://www.xgcartoon.com/video/haizeiwangriyu-weitianrongyilang/QMqftG5xrN.html
+        name: "西瓜卡通",
+        home: ["https://www.xgcartoon.com"],
+        regex: /^https:\/\/www\.xgcartoon\.com\/video\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addIframeListener();
+            }
+        },
+    },
+    {
+        // ✅ https://pframe.xgcartoon.com/player.htm?vid=ffc8786e-5da3-46a9-8014-d640a75265b0&autoplay=false
+        name: "西瓜卡通播放器",
+        regex: /^https:\/\/pframe\.xgcartoon\.com\/player\.htm\?vid=.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+                let that = this;
+                this.currentUrl = "";
+                //拦截请求以更新Url
+                const originOpen = XMLHttpRequest.prototype.open;
+                XMLHttpRequest.prototype.open = function (
+                    method,
+                    url,
+                    async,
+                    user,
+                    password
+                ) {
+                    originOpen.apply(this, arguments);
+                    if (url.match(VIDEO_URL_REGEX)) {
+                        that.currentUrl = url;
+                    }
+                };
+            }
+            async parse() {
+                if (this.currentUrl) {
+                    this.media.setVideoUrl(this.currentUrl);
+                }
+            }
+        },
+    },
+    {
+        name: "西瓜卡通播放器",
+        regex: /^https:\/\/iframe\.mediadelivery\.net\/.*/g,
+        handler: class Handler extends BaseHandler {
+            constructor() {
+                super();
+                this.addTopListener();
+            }
+            async parse() {
+                this.media.setVideoUrl(hls.url);
             }
         },
     },

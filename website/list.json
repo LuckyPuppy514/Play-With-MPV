@@ -18,17 +18,6 @@
         "resolution": "超高清"
     },
     {
-        "title": "LIBVIO",
-        "logo": "./website/logo/libvio.png",
-        "url": [
-            "https://libvio.fun",
-            "https://libvio.me",
-            "https://www.libvio.me"
-        ],
-        "category": "anime, serial, movie",
-        "resolution": "高清"
-    },
-    {
         "title": "樱花动漫网",
         "logo": "./website/logo/yhdmw.png",
         "url": [
@@ -74,6 +63,15 @@
             "https://ddys.pro"
         ],
         "category": "anime, serial, movie",
+        "resolution": "高清"
+    },
+    {
+        "title": "西瓜卡通",
+        "logo": "./website/logo/xgcartoon.png",
+        "url": [
+            "https://www.xgcartoon.com"
+        ],
+        "category": "anime",
         "resolution": "高清"
     },
     {
@@ -372,6 +370,17 @@
             "https://www.tkznp5.com/"
         ],
         "category": "anime, serial, movie, show",
+        "resolution": "高清"
+    },
+    {
+        "title": "LIBVIO",
+        "logo": "./website/logo/libvio.png",
+        "url": [
+            "https://libvio.fun",
+            "https://libvio.me",
+            "https://www.libvio.me"
+        ],
+        "category": "anime, serial, movie",
         "resolution": "高清"
     }
 ]
