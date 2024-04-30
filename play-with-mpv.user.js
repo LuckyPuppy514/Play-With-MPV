@@ -89,7 +89,6 @@
 // @match                   https://rumble.com/*
 // @match                   https://www.bitchute.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
-// @match                   https://jable.tv/videos/*
 // @match                   https://ok.ru/*
 // @match                   https://tver.jp/*
 // @match                   https://www.lckp.top/play-with-mpv/index.html
@@ -3369,20 +3368,6 @@ var websiteList = [{
                     that.media.setProxy(currentConfig.proxy);
                     that.media.setVideoUrl(res.src);
                 }
-            }
-        },
-    },
-    {
-        // ✅ https://jable.tv/videos/fsdss-484/
-        name: "Jable.TV",
-        home: ["https://jable.tv"],
-        regex: /^https:\/\/jable\.tv\/videos\/.*/g,
-        handler: class Handler extends BaseHandler {
-            async parse() {
-                let url = hls.url;
-                url = url ? url : hlsUrl;
-                url = url ? url : page.url;
-                this.media.setVideoUrl(url);
             }
         },
     },
