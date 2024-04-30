@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 4.0.7
+// @version                 4.0.8
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -89,7 +89,6 @@
 // @match                   https://rumble.com/*
 // @match                   https://www.bitchute.com/*
 // @match                   https://ani.gamer.com.tw/animeVideo.php?sn=*
-// @match                   https://hanime1.me/watch?v=*
 // @match                   https://jable.tv/videos/*
 // @match                   https://ok.ru/*
 // @match                   https://tver.jp/*
@@ -3370,24 +3369,6 @@ var websiteList = [{
                     that.media.setProxy(currentConfig.proxy);
                     that.media.setVideoUrl(res.src);
                 }
-            }
-        },
-    },
-    {
-        // ✅ https://hanime1.me/watch?v=26262
-        name: "Hanime1.me",
-        home: ["https://hanime1.me"],
-        regex: /^https:\/\/hanime1\.me\/watch\?v=.*/g,
-        handler: class Handler extends BaseHandler {
-            async parse() {
-                let url = this.videoParser();
-                if (!url) {
-                    url = this.iframeParser();
-                }
-                if (!url) {
-                    url = page.url;
-                }
-                this.media.setVideoUrl(url);
             }
         },
     },
