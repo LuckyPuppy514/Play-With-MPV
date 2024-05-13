@@ -222,7 +222,7 @@ const PLAYER = {
         params: {
             videoUrl: 'mpv://"${videoUrl}"',
             audioUrl: ' --audio-file="${audioUrl}"',
-            subtitleUrl: ' --sub-file="${subtitleUrl}"',
+            originalSubtitleUrl: ' --script-opts-append=bili_sub-url="${originalSubtitleUrl}"',
             title: ' --force-media-title="${title}"',
             startTime: " --start=${startTime}",
             referer: ' --http-header-fields="referer: ${referer}"',
@@ -1716,6 +1716,7 @@ class Media {
         this.videoUrl = "";
         this.audioUrl = "";
         this.subtitleUrl = "";
+        this.originalSubtitleUrl = "";
         this.startTime = "";
         this.referer = "";
         this.origin = "";
@@ -1752,6 +1753,9 @@ class Media {
     }
     setSubtitleUrl(subtitleUrl) {
         this.subtitleUrl = subtitleUrl;
+    }
+    setOriginalSubtitleUrl(originalSubtitleUrl) {
+        this.originalSubtitleUrl = originalSubtitleUrl;
     }
     setStartTime(startTime) {
         this.startTime = Math.floor(startTime);
@@ -2158,6 +2162,7 @@ function getBilibiliVideoSubtitle(avid, cid) {
                 handler.media.setSubtitleUrl(
                     `https://www.lckp.top/common/bilibili/jsonToSrt/?url=${url}&lan=${lan}`
                 );
+                handler.media.setOriginalSubtitleUrl(url)
             }
         },
     });
