@@ -25,6 +25,7 @@ function process()
     end
     msg.info('转换为srt字幕...')
     local response_body = utils.parse_json(res.stdout)
+    local lang = response_body.lang
     local title = '哔哩哔哩字幕'
     if response_body.type then title = title .. ' [' .. response_body.type .. ']' end
     local srt_content = ''
@@ -42,7 +43,8 @@ function process()
     file:write(srt_content)
     file:close()
     msg.info('加载srt字幕...')
-    local success = mp.commandv('sub-add', srt_file, 'select', title)
+    local success = lang and mp.commandv('sub-add', srt_file, 'select', title, lang)
+                         or  mp.commandv('sub-add', srt_file, 'select', title)
     msg.info('srt字幕加载' .. (success and '成功' or '失败'))
 end
 
