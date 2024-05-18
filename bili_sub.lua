@@ -1,6 +1,6 @@
 -- 下载哔哩哔哩json字幕转换为srt字幕
--- mpv系列播放器使用，放在~/scripts目录下
--- 使用方式：启动参数 --scrpit-opts-append=bili_sub-url="https://.............."
+-- mpv系列播放器使用，放在~~/scripts目录下
+-- 使用方式：启动参数添加字幕地址 --scrpit-opts-append=bili_sub-url="https://......"
 
 local msg = require 'mp.msg'
 local utils = require 'mp.utils'
@@ -46,6 +46,7 @@ function process()
     local success = lang and mp.commandv('sub-add', srt_file, 'select', title, lang)
                          or  mp.commandv('sub-add', srt_file, 'select', title)
     msg.info('srt字幕加载' .. (success and '成功' or '失败'))
+    mp.unregister_event(process)
 end
 
 -- 秒数转换为srt字幕的时间格式
