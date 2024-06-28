@@ -284,8 +284,6 @@ const ID = {
     closeAutoInput: `${PREFIX}-close-auto-input`,
     syncStartTimeInput: `${PREFIX}-sync-start-time-input`,
     syncStartTimeSpan: `${PREFIX}-sync-start-time-span`,
-    infoDiv: `${PREFIX}-info-div`,
-    infoTable: `${PREFIX}-info-table`,
     subtitlePreferRadio: `${PREFIX}-subtitle-prefer-radio`,
     customplayerSettingButton: `${PREFIX}-customplayer-setting-button`,
     customplayerSettingTable: `${PREFIX}-customplayer-setting-table`,
