@@ -2424,7 +2424,7 @@ var websiteList = [{
         // ✅ https://live.bilibili.com/7777
         name: "B站直播",
         home: ["https://live.bilibili.com"],
-        regex: /^https:\/\/live\.bilibili\.com\/\d+.*/g,
+        regex: /^https:\/\/live\.bilibili\.com\/((blanc\/)?\d+|blackboard\/era\/\w+\.html).*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 let iframes = document.getElementsByTagName("iframe");
