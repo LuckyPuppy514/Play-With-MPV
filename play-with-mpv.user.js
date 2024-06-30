@@ -284,8 +284,6 @@ const ID = {
     closeAutoInput: `${PREFIX}-close-auto-input`,
     syncStartTimeInput: `${PREFIX}-sync-start-time-input`,
     syncStartTimeSpan: `${PREFIX}-sync-start-time-span`,
-    infoDiv: `${PREFIX}-info-div`,
-    infoTable: `${PREFIX}-info-table`,
     subtitlePreferRadio: `${PREFIX}-subtitle-prefer-radio`,
     customplayerSettingButton: `${PREFIX}-customplayer-setting-button`,
     customplayerSettingTable: `${PREFIX}-customplayer-setting-table`,
@@ -2424,7 +2422,7 @@ var websiteList = [{
         // ✅ https://live.bilibili.com/7777
         name: "B站直播",
         home: ["https://live.bilibili.com"],
-        regex: /^https:\/\/live\.bilibili\.com\/\d+.*/g,
+        regex: /^https:\/\/live\.bilibili\.com\/((blanc\/)?\d+|blackboard\/era\/\w+\.html).*/g,
         handler: class Handler extends BaseHandler {
             async parse() {
                 let iframes = document.getElementsByTagName("iframe");
