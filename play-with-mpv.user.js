@@ -126,12 +126,15 @@
 // @match                   https://iframe.mediadelivery.net/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
-// @require                 https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.2.1/jquery.min.js
+// @resource                jquery https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.2.1/jquery.min.js
 // @require                 https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-y/spark-md5/3.0.2/spark-md5.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
+// @grant                   GM_getResourceText
 // @run-at                  document-body
 // ==/UserScript==
+trustedTypes?.createPolicy?.('default', {createScriptURL: s => s, createScript: s => s, createHTML: s => s})
+eval(GM_getResourceText('jquery'))
 
 "use strict";
 
