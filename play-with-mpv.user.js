@@ -1087,7 +1087,7 @@ const REG = `Windows Registry Editor Version 5.00
 @=""
 
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
-@="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '\${PLAYER_NAME}://(.*?)\\"https', '$1\\"https:' -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \\\\\\\"\${SOFTWARE_PATH}\\\\\\\" -ArgumentList $PARAMS}\\""
+@="C:\\Windows\\System32\\WindowsPowerShell\\v1.0\\powershell.exe -WindowStyle Hidden -Command \"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1')); if($PARAMS -notmatch '\${PLAYER_NAME}://(.*?)\\\"https:') {$PARAMS = $PARAMS -replace '\${PLAYER_NAME}://(.*?)\\\"https', '$1\\\"https:'} $PARAMS = $PARAMS -replace '^\${PLAYER_NAME}://'; Start-Process -FilePath \\\"\${SOFTWARE_PATH}\\\" -ArgumentList $PARAMS}\""
 `;
 const REG_DELETE = `Windows Registry Editor Version 5.00
 [-HKEY_CLASSES_ROOT\\\${PLAYER_NAME}]
