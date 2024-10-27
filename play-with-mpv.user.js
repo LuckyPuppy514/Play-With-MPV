@@ -2,7 +2,7 @@
 // @name                    Play-With-MPV
 // @name:zh                 使用 MPV 播放
 // @namespace               https://github.com/LuckyPuppy514
-// @version                 4.0.8
+// @version                 4.0.9
 // @author                  LuckyPuppy514
 // @copyright               2023, Grant LuckyPuppy514 (https://github.com/LuckyPuppy514)
 // @license                 MIT
@@ -126,12 +126,15 @@
 // @match                   https://iframe.mediadelivery.net/*
 // @connect                 api.bilibili.com
 // @connect                 api.live.bilibili.com
-// @require                 https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.2.1/jquery.min.js
+// @resource                jquery https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-y/jquery/3.2.1/jquery.min.js
 // @require                 https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-y/spark-md5/3.0.2/spark-md5.min.js
 // @grant                   GM_setValue
 // @grant                   GM_getValue
+// @grant                   GM_getResourceText
 // @run-at                  document-body
 // ==/UserScript==
+trustedTypes?.createPolicy?.('default', {createScriptURL: s => s, createScript: s => s, createHTML: s => s})
+eval(GM_getResourceText('jquery'))
 
 "use strict";
 
@@ -1084,7 +1087,7 @@ const REG = `Windows Registry Editor Version 5.00
 @=""
 
 [HKEY_CLASSES_ROOT\\\${PLAYER_NAME}\\shell\\open\\command]
-@="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1') -replace '^\${PLAYER_NAME}://'); Start-Process -FilePath \\\\\\\"\${SOFTWARE_PATH}\\\\\\\" -ArgumentList $PARAMS}\\""
+@="C:\\\\Windows\\\\System32\\\\WindowsPowerShell\\\\v1.0\\\\powershell.exe -WindowStyle Hidden -Command \\"& {Add-Type -AssemblyName System.Web;$PARAMS=([System.Web.HTTPUtility]::UrlDecode('%1')); if($PARAMS -notmatch '\${PLAYER_NAME}://(.*?)\\"https:') {$PARAMS = $PARAMS -replace '\${PLAYER_NAME}://(.*?)\\"https', '$1\\"https:'} $PARAMS = $PARAMS -replace '^\${PLAYER_NAME}://'; Start-Process -FilePath \\\\\\\"\${SOFTWARE_PATH}\\\\\\\" -ArgumentList $PARAMS}\\""
 `;
 const REG_DELETE = `Windows Registry Editor Version 5.00
 [-HKEY_CLASSES_ROOT\\\${PLAYER_NAME}]
