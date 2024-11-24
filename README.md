@@ -1,3 +1,7 @@
+**本项目不再维护，请移步至新项目**
+
+[External Player](https://github.com/LuckyPuppy514/external-player)
+
 # Play-With-MPV
 
 ![20230414193858](https://github.com/LuckyPuppy514/image/raw/main/2023/2023-04-14/20230414193858.gif)
